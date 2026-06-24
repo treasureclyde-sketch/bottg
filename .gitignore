@@ -1,0 +1,9 @@
+node_modules/
+package-lock.json
+.env
+__pycache__/
+*.pyc
+
+# ui-ux-pro-max skill data is large (~2MB) and is re-installed on session
+# start by .claude/skills/install-ui-ux-pro-max.sh, so it is not vendored here.
+.claude/skills/ui-ux-pro-max/
