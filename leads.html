@@ -98,21 +98,28 @@
 
   .swipe{
     position:absolute;inset:0;background:var(--card);border:1px solid var(--border);
-    border-radius:22px;box-shadow:var(--shadow);padding:20px;display:flex;flex-direction:column;
+    border-radius:22px;box-shadow:var(--shadow);padding:0;overflow:hidden;display:flex;flex-direction:column;
     will-change:transform;touch-action:none;user-select:none;
   }
+  .swipe-media{position:relative;height:150px;flex:0 0 auto;background-size:cover;background-position:center}
+  .media-map{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border:0}
+  .media-shade{position:absolute;inset:0;background:linear-gradient(160deg,rgba(15,23,42,.10),rgba(15,23,42,.48))}
+  .media-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;color:rgba(255,255,255,.94)}
+  .media-fallback svg{width:30px;height:30px;opacity:.9}
+  .media-fallback span{font-family:'Poppins';font-weight:800;font-size:52px;line-height:1}
+  .swipe-body{flex:1;display:flex;flex-direction:column;padding:15px 18px 18px}
   .badge-weak{
-    align-self:flex-start;font-family:'Poppins';font-weight:700;font-size:13px;color:#fff;
-    padding:7px 13px;border-radius:999px;display:flex;align-items:center;gap:7px;
+    position:absolute;left:12px;bottom:12px;z-index:2;font-family:'Poppins';font-weight:700;font-size:13px;color:#fff;
+    padding:7px 12px;border-radius:999px;display:flex;align-items:center;gap:6px;box-shadow:0 4px 10px rgba(0,0,0,.25);
   }
+  .badge-weak svg{width:15px;height:15px}
   .score-ring{
-    margin-left:auto;align-self:flex-start;font-family:'Poppins';font-weight:800;font-size:13px;
-    color:var(--fg);background:var(--muted);border:1px solid var(--border);border-radius:999px;padding:6px 11px;
+    position:absolute;right:12px;top:12px;z-index:2;font-family:'Poppins';font-weight:800;font-size:12px;
+    color:var(--fg);background:rgba(255,255,255,.92);border-radius:999px;padding:6px 11px;
   }
-  .swipe .top{display:flex;align-items:flex-start;gap:8px}
-  .swipe h3{font-size:24px;font-weight:800;letter-spacing:-.02em;margin:18px 0 2px;line-height:1.15}
+  .swipe h3{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:0 0 2px;line-height:1.15}
   .swipe .cat-tag{font-size:13px;color:var(--primary);font-weight:700}
-  .rows{margin-top:auto;display:flex;flex-direction:column;gap:9px;padding-top:18px}
+  .rows{margin-top:auto;display:flex;flex-direction:column;gap:9px;padding-top:16px}
   .row{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--fg)}
   .row .ic{width:20px;flex:0 0 auto;color:var(--sub)}
   .row.mut{color:var(--sub)}
@@ -164,6 +171,9 @@
   .back{border:1px solid var(--border);background:var(--card);border-radius:11px;width:40px;height:40px;display:grid;place-items:center;color:var(--fg)}
   .topbar h2{font-size:19px;font-weight:800;flex:1}
   .export{border:1px solid var(--border);background:var(--card);border-radius:11px;padding:9px 12px;font-size:12px;font-weight:700;color:var(--fg)}
+  .saved-tabs{display:flex;gap:8px;padding:12px 16px 0}
+  .stab{flex:1;border:1px solid var(--border);background:var(--card);border-radius:11px;padding:9px;font-family:'Poppins';font-weight:700;font-size:13px;color:var(--sub);transition:.15s}
+  .stab.on{background:var(--fg);color:#fff;border-color:var(--fg)}
   .empty-s{text-align:center;color:var(--sub);padding:50px 20px;font-size:14px}
 
   @media (prefers-reduced-motion: reduce){*{transition:none!important;animation-duration:.01ms!important}}
@@ -220,8 +230,12 @@
   <section class="screen" id="s-saved">
     <div class="topbar">
       <button class="back" onclick="show(lastScreen)" id="backIc"></button>
-      <h2>В работе</h2>
+      <h2>Моя база</h2>
       <button class="export" onclick="exportCSV()">Экспорт CSV</button>
+    </div>
+    <div class="saved-tabs">
+      <button class="stab on" data-t="work" id="tabWork" onclick="setSavedTab('work')">В работе</button>
+      <button class="stab" data-t="hidden" id="tabHidden" onclick="setSavedTab('hidden')">Скрытые</button>
     </div>
     <div class="saved-wrap" id="savedList"></div>
   </section>
@@ -279,11 +293,24 @@ const WEAK = {
 /* ---------- состояние ---------- */
 let selectedCat=null;
 let deck=[], top=0;
-let saved=[], seen=[];
-let lastScreen='setup';
+let saved=[], disliked=[], seen=[];
+let lastScreen='setup', savedTab='work';
 try{saved=JSON.parse(localStorage.getItem('ls_saved')||'[]')}catch(e){}
+try{disliked=JSON.parse(localStorage.getItem('ls_disliked')||'[]')}catch(e){}
 try{seen=JSON.parse(localStorage.getItem('ls_seen')||'[]')}catch(e){}
-function persist(){try{localStorage.setItem('ls_saved',JSON.stringify(saved));localStorage.setItem('ls_seen',JSON.stringify(seen))}catch(e){}}
+function persist(){try{
+  localStorage.setItem('ls_saved',JSON.stringify(saved));
+  localStorage.setItem('ls_disliked',JSON.stringify(disliked));
+  localStorage.setItem('ls_seen',JSON.stringify(seen));
+}catch(e){}}
+function mapImg(b){
+  if(!(b.lat&&b.lon))return '';
+  const z=16,n=Math.pow(2,z);
+  const x=Math.floor((b.lon+180)/360*n);
+  const la=b.lat*Math.PI/180;
+  const y=Math.floor((1-Math.asinh(Math.tan(la))/Math.PI)/2*n);
+  return `https://a.basemaps.cartocdn.com/light_all/${z}/${x}/${y}.png`;
+}
 
 /* ---------- иконки в разметку ---------- */
 document.getElementById('logo').innerHTML=ICON.bolt;
@@ -370,7 +397,7 @@ function toBusiness(el){
   const phone=t.phone||t['contact:phone']||'';
   const site=t.website||t['contact:website']||t.url||'';
   const social=t['contact:vk']||t['contact:instagram']||t['contact:facebook']||t['contact:telegram']||'';
-  return {id:el.type+'/'+el.id,name,lat,lon,addr,phone,site,weak:classify(site,social),catLabel:selectedCat.label};
+  return {id:el.type+'/'+el.id,name,lat,lon,addr,phone,site,weak:classify(site,social),catLabel:selectedCat.label,icon:selectedCat.icon};
 }
 function classify(site,social){
   if(!site)return social?WEAK.social:WEAK.none;
@@ -403,18 +430,25 @@ function buildCard(b){
                       : `<div class="row mut"><span class="ic">${ICON.globe}</span><span>сайт не указан</span></div>`;
   const phone = b.phone ? `<div class="row"><span class="ic">${ICON.phone}</span><span>${escapeH(b.phone)}</span></div>` : '';
   const addr = b.addr ? `<div class="row"><span class="ic">${ICON.pin}</span><span>${escapeH(b.addr)}</span></div>` : '';
+  const grad=`linear-gradient(140deg, ${b.weak.color}, #1f2937)`;
+  const initial=escapeH((b.name.trim()[0]||'?').toUpperCase());
   c.innerHTML=`
-    <div class="top">
+    <div class="swipe-media" style="background-image:${grad}">
+      <div class="media-fallback">${CATICON[b.icon]||''}<span>${initial}</span></div>
+      ${b.lat?`<img class="media-map" src="${mapImg(b)}" loading="lazy" alt="" onerror="this.remove()">`:''}
+      <div class="media-shade"></div>
       <span class="badge-weak" style="background:${b.weak.color}">${ICON.bolt}${b.weak.label}</span>
       <span class="score-ring">лид ${b.weak.score}</span>
     </div>
-    <h3>${escapeH(b.name)}</h3>
-    <div class="cat-tag">${escapeH(b.catLabel)}</div>
-    <div class="rows">${addr}${phone}${site}
-      <div class="links">
-        <a href="https://yandex.ru/maps/?text=${encodeURIComponent(b.name+' '+b.addr)}" target="_blank" rel="noopener">Яндекс.Карты</a>
-        <a href="https://2gis.ru/search/${encodeURIComponent(b.name+' '+b.addr)}" target="_blank" rel="noopener">2ГИС</a>
-        ${b.site?`<a href="${fixUrl(b.site)}" target="_blank" rel="noopener">Сайт</a>`:''}
+    <div class="swipe-body">
+      <h3>${escapeH(b.name)}</h3>
+      <div class="cat-tag">${escapeH(b.catLabel)}</div>
+      <div class="rows">${addr}${phone}${site}
+        <div class="links">
+          <a href="https://yandex.ru/maps/?text=${encodeURIComponent(b.name+' '+b.addr)}" target="_blank" rel="noopener">Яндекс.Карты</a>
+          <a href="https://2gis.ru/search/${encodeURIComponent(b.name+' '+b.addr)}" target="_blank" rel="noopener">2ГИС</a>
+          ${b.site?`<a href="${fixUrl(b.site)}" target="_blank" rel="noopener">Сайт</a>`:''}
+        </div>
       </div>
     </div>
     <div class="stamp like">В работу</div>
@@ -450,6 +484,7 @@ function fling(card,dir,b){
 }
 function decide(b,liked){
   if(liked){if(!saved.find(x=>x.id===b.id))saved.unshift(b)}
+  else{if(!disliked.find(x=>x.id===b.id))disliked.unshift(b)}
   if(!seen.includes(b.id))seen.push(b.id);
   top++;persist();updateCount();
 }
@@ -467,10 +502,20 @@ function openMaps(){
 
 /* ---------- сохранённые ---------- */
 function updateCount(){document.getElementById('savedCnt').textContent=saved.length}
+function setSavedTab(t){savedTab=t;renderSaved()}
 function renderSaved(){
+  document.getElementById('tabWork').textContent='В работе ('+saved.length+')';
+  document.getElementById('tabHidden').textContent='Скрытые ('+disliked.length+')';
+  document.querySelectorAll('.stab').forEach(x=>x.classList.toggle('on',x.dataset.t===savedTab));
   const el=document.getElementById('savedList');
-  if(!saved.length){el.innerHTML='<div class="empty-s">Пока пусто. Свайпай карточки вправо — они попадут сюда.</div>';return}
-  el.innerHTML=saved.map(b=>`
+  const list = savedTab==='work' ? saved : disliked;
+  if(!list.length){
+    el.innerHTML='<div class="empty-s">'+(savedTab==='work'
+      ? 'Пока пусто. Свайпай карточки вправо — лиды попадут сюда.'
+      : 'Тут пусто. Свайпнутые влево складываются сюда, чтобы больше не показываться. Можно вернуть в показ.')+'</div>';
+    return;
+  }
+  el.innerHTML=list.map(b=>`
     <div class="lead">
       <div class="lh"><h4>${escapeH(b.name)}</h4><span class="mini-badge" style="background:${b.weak.color}">${b.weak.label}</span></div>
       <div class="meta">${escapeH([b.catLabel,b.addr].filter(Boolean).join(' · '))}${b.phone?' · '+escapeH(b.phone):''}</div>
@@ -479,11 +524,14 @@ function renderSaved(){
         <a href="https://2gis.ru/search/${encodeURIComponent(b.name+' '+b.addr)}" target="_blank" rel="noopener">2ГИС</a>
         ${b.phone?`<a href="tel:${b.phone.replace(/[^\d+]/g,'')}">Позвонить</a>`:''}
         ${b.site?`<a href="${fixUrl(b.site)}" target="_blank" rel="noopener">Сайт</a>`:''}
-        <button class="del" onclick="removeSaved('${b.id}')">убрать</button>
+        ${ savedTab==='work'
+            ? `<button class="del" onclick="removeSaved('${b.id}')">убрать</button>`
+            : `<button class="del" onclick="restoreHidden('${b.id}')">вернуть в показ</button>` }
       </div>
     </div>`).join('');
 }
 function removeSaved(id){saved=saved.filter(x=>x.id!==id);persist();updateCount();renderSaved()}
+function restoreHidden(id){disliked=disliked.filter(x=>x.id!==id);seen=seen.filter(x=>x!==id);persist();renderSaved()}
 function exportCSV(){
   if(!saved.length)return;
   const head=['Название','Ниша','Статус сайта','Лид-балл','Адрес','Телефон','Сайт'];
