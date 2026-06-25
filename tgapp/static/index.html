@@ -204,8 +204,6 @@
 const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
 if(tg){ tg.ready(); tg.expand(); try{tg.setHeaderColor('#020203');tg.setBackgroundColor('#020203')}catch(e){} }
 function haptic(t){try{tg&&tg.HapticFeedback&&tg.HapticFeedback.impactOccurred(t||'light')}catch(e){}}
-const INIT = tg ? tg.initData : '';                       // подпись для бэкенда
-const UID  = (tg && tg.initDataUnsafe && tg.initDataUnsafe.user && tg.initDataUnsafe.user.id) ? String(tg.initDataUnsafe.user.id) : 'local';
 
 const ICON={
   heart:'<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.6-4.7-10-9.4C.5 8.3 2.4 5 6 5c2.1 0 3.3 1.1 4 2.3C10.7 6.1 11.9 5 14 5c3.6 0 5.5 3.3 4 6.6C19.6 16.3 12 21 12 21z"/></svg>',
@@ -288,29 +286,40 @@ function go(name){
   if(name==='swipe'&&!shops.length&&!loading)loadShops();
 }
 
-/* ===== база (лайки/дизы) ===== */
+/* ===== база (лайки/дизы) — Telegram CloudStorage + localStorage запас ===== */
 let liked=[], hidden=[], seen=[];
 let baseTab='like', loading=false;
-try{liked=JSON.parse(localStorage.getItem('bl_liked')||'[]')}catch(e){}
-try{hidden=JSON.parse(localStorage.getItem('bl_hidden')||'[]')}catch(e){}
-try{seen=JSON.parse(localStorage.getItem('bl_seen')||'[]')}catch(e){}
-function saveLocal(){try{localStorage.setItem('bl_liked',JSON.stringify(liked));localStorage.setItem('bl_hidden',JSON.stringify(hidden));localStorage.setItem('bl_seen',JSON.stringify(seen))}catch(e){}}
-let pushT=null;
-function persist(){saveLocal();updateCnt();if(INIT){clearTimeout(pushT);pushT=setTimeout(pushBase,700)}}
 function updateCnt(){document.getElementById('baseCnt').textContent=liked.length?liked.length:''}
 
-async function pullBase(){
-  if(!INIT)return;
-  try{
-    const r=await fetch('/api/base',{headers:{'X-Init-Data':INIT}});
-    if(!r.ok)return;
-    const d=await r.json();
-    if(d&&Array.isArray(d.liked)){liked=d.liked;hidden=d.hidden||[];seen=d.seen||[];saveLocal();updateCnt();renderBase()}
-  }catch(e){}
+function cloudSet(key,str,cb){
+  if(tg&&tg.CloudStorage){
+    const size=3800,parts=[];for(let i=0;i<str.length;i+=size)parts.push(str.slice(i,i+size));
+    let pending=parts.length+1;const done=()=>{if(--pending<=0)cb&&cb()};
+    tg.CloudStorage.setItem(key+'_n',String(parts.length),done);
+    parts.forEach((p,i)=>tg.CloudStorage.setItem(key+'_'+i,p,done));
+    try{localStorage.setItem(key,str)}catch(e){}
+  }else{try{localStorage.setItem(key,str)}catch(e){}cb&&cb()}
 }
-async function pushBase(){
-  if(!INIT)return;
-  try{await fetch('/api/base',{method:'PUT',headers:{'Content-Type':'application/json','X-Init-Data':INIT},body:JSON.stringify({liked,hidden,seen})})}catch(e){}
+function cloudGet(key,cb){
+  if(tg&&tg.CloudStorage){
+    tg.CloudStorage.getItem(key+'_n',(e,n)=>{
+      n=parseInt(n||'0',10);
+      if(!n){let v=null;try{v=localStorage.getItem(key)}catch(_){}cb(v);return}
+      const keys=[];for(let i=0;i<n;i++)keys.push(key+'_'+i);
+      tg.CloudStorage.getItems(keys,(e2,obj)=>{
+        if(e2||!obj){let v=null;try{v=localStorage.getItem(key)}catch(_){}cb(v);return}
+        let s='';for(let i=0;i<n;i++)s+=(obj[key+'_'+i]||'');cb(s);
+      });
+    });
+  }else{let v=null;try{v=localStorage.getItem(key)}catch(e){}cb(v)}
+}
+let saveT=null;
+function persist(){updateCnt();clearTimeout(saveT);saveT=setTimeout(()=>cloudSet('blbase',JSON.stringify({liked,hidden,seen})),500)}
+function loadBase(){
+  cloudGet('blbase',s=>{
+    if(s){try{const d=JSON.parse(s);liked=d.liked||[];hidden=d.hidden||[];seen=d.seen||[]}catch(e){}}
+    updateCnt();renderBase();
+  });
 }
 
 /* ===== свайпер ===== */
@@ -329,10 +338,10 @@ async function loadShops(){
   try{
     let list=[];
     try{
-      const r=await fetch('/api/shops',{headers:INIT?{'X-Init-Data':INIT}:{}});
-      if(r.ok){const d=await r.json();if(Array.isArray(d.shops))list=d.shops}
+      const r=await fetch('barbershops.json',{cache:'no-store'});
+      if(r.ok){const d=await r.json();list=Array.isArray(d)?d:(d.shops||[])}
     }catch(e){}
-    if(!list.length)list=SAMPLE.slice();        // оффлайн / до подключения 2ГИС
+    if(!list.length)list=SAMPLE.slice();        // демо, пока не сгенерирован список 2ГИС
     const used=new Set([...liked.map(x=>x.id),...hidden.map(x=>x.id),...seen]);
     shops=list.filter(s=>!used.has(s.id));
     if(!shops.length){setState('st-empty');loading=false;return}
@@ -447,7 +456,7 @@ function escapeH(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&a
 function fmtRev(n){n=n||0;return n>=1000?(n/1000).toFixed(1).replace('.0','')+'k':n}
 
 updateCnt();
-pullBase();
+loadBase();
 </script>
 </body>
 </html>
