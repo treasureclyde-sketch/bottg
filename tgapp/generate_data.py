@@ -69,10 +69,10 @@ def main():
 
     fields = "items.point,items.reviews,items.external_content,items.contact_groups,items.address"
     shops = []
-    for page in range(1, 6):
+    for page in range(1, 13):  # page_size demo-ключа ограничен 10
         res = get("https://catalog.api.2gis.com/3.0/items", {
             "q": QUERY, "region_id": region_id, "fields": fields,
-            "page": page, "page_size": 50, "key": KEY,
+            "page": page, "page_size": 10, "key": KEY,
         })
         page_items = (res.get("result") or {}).get("items") or []
         if not page_items:
