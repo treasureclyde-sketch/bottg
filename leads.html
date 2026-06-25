@@ -253,7 +253,20 @@
       <div class="label">Город</div>
       <input class="city-input" id="city" placeholder="Например: Тверь" autocomplete="off">
       <div class="label">Ниша</div>
-      <div class="cats" id="cats"></div>
+      <div class="cats" id="cats">
+        <button class="cat" data-id="cafe" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 8h13v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8z"/><path d="M17 9h2a2 2 0 0 1 0 4h-2"/><path d="M7 2v2M11 2v2"/></svg></span><span>Кафе / кофейни</span></button>
+        <button class="cat" data-id="restaurant" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v7a2 2 0 0 0 2 2h0v9M6 3v6M9 3v6M9 3v18M20 3c-2 0-3 2-3 5s1 4 3 4v9"/></svg></span><span>Рестораны</span></button>
+        <button class="cat" data-id="bar" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v7a2 2 0 0 0 2 2h0v9M6 3v6M9 3v6M9 3v18M20 3c-2 0-3 2-3 5s1 4 3 4v9"/></svg></span><span>Бары / пабы</span></button>
+        <button class="cat" data-id="fast_food" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 3v7a2 2 0 0 0 2 2h0v9M6 3v6M9 3v6M9 3v18M20 3c-2 0-3 2-3 5s1 4 3 4v9"/></svg></span><span>Фастфуд</span></button>
+        <button class="cat" data-id="hairdresser" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M14.5 14.5 20 20"/></svg></span><span>Барбершопы</span></button>
+        <button class="cat" data-id="beauty" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l2.5 5 5.5.8-4 4 1 5.4L12 16l-5 2.2 1-5.4-4-4 5.5-.8L12 3z"/></svg></span><span>Салоны красоты</span></button>
+        <button class="cat" data-id="dentist" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5c-2-2-6-2-7 1-1 4 1 6 1 10 0 2 1 3 2 3s1-3 2-5 2-2 2 0 1 5 2 5 2-1 2-3c0-4 2-6 1-10-1-3-5-3-7-1z"/></svg></span><span>Стоматологии</span></button>
+        <button class="cat" data-id="car_repair" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l2-5a2 2 0 0 1 2-1h10a2 2 0 0 1 2 1l2 5v5h-2M3 13v5h2M3 13h18"/><circle cx="7.5" cy="18" r="1.5"/><circle cx="16.5" cy="18" r="1.5"/></svg></span><span>Автосервисы</span></button>
+        <button class="cat" data-id="fitness" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12"/></svg></span><span>Фитнес / залы</span></button>
+        <button class="cat" data-id="clothes" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 9h16l-1 11H5L4 9z"/><path d="M9 9V6a3 3 0 0 1 6 0v3"/></svg></span><span>Одежда</span></button>
+        <button class="cat" data-id="florist" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3"/><path d="M12 11v10M12 21c-3 0-5-2-5-4M12 21c3 0 5-2 5-4"/></svg></span><span>Цветы</span></button>
+        <button class="cat" data-id="hotel" onclick="pickCat(this)"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 18v-6h18v6M3 12V7M21 12v6M3 12h18M7 12V9h5v3"/></svg></span><span>Отели / хостелы</span></button>
+      </div>
       <button class="go" id="goBtn" disabled onclick="run()"><span id="searchIc"></span> Найти бизнесы</button>
       <p class="hint">Данные — OpenStreetMap. Карточки можно открыть в Яндекс.Картах и 2ГИС.</p>
     </div>
@@ -373,14 +386,11 @@ document.getElementById('likeBtn').innerHTML=ICON.check;
 document.getElementById('mapBtn').innerHTML=ICON.map;
 
 /* ---------- настройка экрана ---------- */
-const catsEl=document.getElementById('cats');
-CATS.forEach(c=>{
-  const b=document.createElement('button');
-  b.className='cat';b.dataset.id=c.id;
-  b.innerHTML=`<span class="ic">${CATICON[c.icon]}</span><span>${c.label}</span>`;
-  b.onclick=()=>{selectedCat=c;document.querySelectorAll('.cat').forEach(x=>x.classList.toggle('sel',x===b));validate()};
-  catsEl.appendChild(b);
-});
+function pickCat(el){
+  selectedCat=CATS.find(c=>c.id===el.dataset.id)||null;
+  document.querySelectorAll('.cat').forEach(x=>x.classList.toggle('sel',x===el));
+  validate();
+}
 const cityEl=document.getElementById('city');
 cityEl.value=localStorage.getItem('ls_city')||'';
 cityEl.addEventListener('input',validate);
