@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урбаника — концепт премиум-сайта · Уфа</title>
+<meta name="description" content="ЖК Урбаника в Уфе. Двор без машин, подземный паркинг, комфорт-плюс. Концепт-редизайн.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --paper:#F7F5F0;
+    --paper-2:#FFFFFF;
+    --ink:#1A1916;
+    --muted:#6E6960;
+    --line:#E7E2D7;
+    --line-soft:#EFEBE2;
+    --accent:#9A7B4F;
+    --accent-deep:#7B6240;
+    --accent-wash:rgba(154,123,79,.08);
+    --shadow-s:0 1px 2px rgba(26,25,22,.04);
+    --shadow-m:0 18px 48px -24px rgba(26,25,22,.28);
+    --shadow-l:0 40px 80px -40px rgba(26,25,22,.45);
+    --r:18px;
+    --maxw:1180px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .serif{font-family:'Fraunces',Georgia,serif;font-weight:500;letter-spacing:-.01em}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .eyebrow{
+    font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--accent-deep);
+  }
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:none;
+    font-family:inherit;font-size:15px;font-weight:600;border-radius:999px;
+    padding:14px 26px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s var(--ease),color .25s var(--ease);
+  }
+  .btn-primary{background:var(--ink);color:#fff}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:var(--shadow-m)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+  .btn-light{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.32);backdrop-filter:blur(6px)}
+  .btn-light:hover{background:rgba(255,255,255,.22);transform:translateY(-2px)}
+  .btn svg{width:17px;height:17px}
+
+  /* ---------- header ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:50;
+    transition:background .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{background:rgba(247,245,240,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line);box-shadow:var(--shadow-s)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
+  .logo{display:flex;align-items:baseline;gap:9px;font-family:'Fraunces',serif;font-size:23px;font-weight:600;letter-spacing:.02em;color:#fff;transition:color .4s var(--ease)}
+  .logo b{font-weight:600}
+  .logo .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);align-self:center}
+  header.scrolled .logo{color:var(--ink)}
+  .nav-links{display:flex;gap:34px}
+  .nav-links a{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.86);transition:color .4s var(--ease);position:relative}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1.5px;background:var(--accent);transition:width .3s var(--ease)}
+  .nav-links a:hover::after{width:100%}
+  header.scrolled .nav-links a{color:var(--muted)}
+  header.scrolled .nav-links a:hover{color:var(--ink)}
+  .nav-right{display:flex;align-items:center;gap:20px}
+  .nav-phone{font-size:15px;font-weight:600;color:#fff;transition:color .4s var(--ease);white-space:nowrap}
+  header.scrolled .nav-phone{color:var(--ink)}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+  .burger span{width:24px;height:2px;background:#fff;transition:.3s}
+  header.scrolled .burger span{background:var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:-2}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);animation:slowzoom 18s var(--ease) forwards}
+  @keyframes slowzoom{to{transform:scale(1)}}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,.42) 0%,rgba(20,18,15,.12) 38%,rgba(20,18,15,.62) 100%);}
+  .hero-inner{padding-bottom:54px;padding-top:120px;width:100%}
+  .hero-tag{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.04em;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(6px);padding:8px 16px;border-radius:999px;margin-bottom:26px}
+  .hero-tag .ic{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(154,123,79,.35)}
+  .hero h1{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(46px,8vw,104px);line-height:.98;letter-spacing:-.02em;max-width:14ch}
+  .hero h1 em{font-style:italic;color:#EAD9BC}
+  .hero-sub{margin-top:24px;font-size:clamp(16px,1.6vw,19px);max-width:46ch;color:rgba(255,255,255,.9);font-weight:400}
+  .hero-cta{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap}
+  .hero-stats{display:flex;gap:48px;margin-top:52px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.2);padding-top:30px}
+  .hero-stats .st b{font-family:'Fraunces',serif;font-size:34px;font-weight:500;display:block;line-height:1}
+  .hero-stats .st span{font-size:13px;color:rgba(255,255,255,.72);letter-spacing:.02em}
+  .scrollcue{position:absolute;right:28px;bottom:46px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);writing-mode:vertical-rl}
+  .scrollcue .ln{width:1px;height:46px;background:rgba(255,255,255,.5);position:relative;overflow:hidden}
+  .scrollcue .ln::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:#fff;animation:cue 2s var(--ease) infinite}
+  @keyframes cue{to{top:100%}}
+
+  /* ---------- reveal ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}.reveal.d4{transition-delay:.32s}
+
+  /* ---------- section base ---------- */
+  section{position:relative}
+  .sec-pad{padding:clamp(80px,11vw,150px) 0}
+  .sec-head{max-width:680px;margin-bottom:60px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(34px,5vw,60px);line-height:1.02;letter-spacing:-.02em;margin-top:18px}
+  .sec-head h2 em{font-style:italic;color:var(--accent-deep)}
+  .sec-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:54ch}
+
+  /* ---------- advantages ---------- */
+  .adv-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+  .adv{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:34px 30px;transition:transform .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);position:relative;overflow:hidden}
+  .adv:hover{transform:translateY(-5px);box-shadow:var(--shadow-m);border-color:var(--line-soft)}
+  .adv .ico{width:50px;height:50px;border-radius:14px;background:var(--accent-wash);display:flex;align-items:center;justify-content:center;color:var(--accent-deep);margin-bottom:24px}
+  .adv .ico svg{width:25px;height:25px;stroke-width:1.5}
+  .adv h3{font-family:'Fraunces',serif;font-weight:500;font-size:22px;margin-bottom:10px}
+  .adv p{font-size:14.5px;color:var(--muted);line-height:1.6}
+  .adv.span-6{grid-column:span 6}.adv.span-3{grid-column:span 3}
+  .adv.feature{grid-column:span 6;grid-row:span 2;color:#fff;border:none;padding:0;min-height:340px}
+  .adv.feature .fwrap{position:absolute;inset:0;z-index:1;padding:34px 30px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(20,18,15,0) 30%,rgba(20,18,15,.78) 100%)}
+  .adv.feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+  .adv.feature:hover img{transform:scale(1.05)}
+  .adv.feature h3{font-size:30px;color:#fff;position:relative;z-index:1}
+  .adv.feature p{color:rgba(255,255,255,.85);position:relative;z-index:1;font-size:15.5px;max-width:36ch}
+  .adv.feature .ico{background:rgba(255,255,255,.14);color:#fff}
+
+  /* ---------- planirovki ---------- */
+  #plan{background:var(--paper-2)}
+  .plan-top{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:44px}
+  .filters{display:flex;gap:8px;flex-wrap:wrap;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px}
+  .filt{border:none;background:transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);padding:10px 20px;border-radius:999px;cursor:pointer;transition:.25s var(--ease);white-space:nowrap}
+  .filt:hover{color:var(--ink)}
+  .filt.active{background:var(--ink);color:#fff;box-shadow:var(--shadow-s)}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column;transition:transform .45s var(--ease),box-shadow .45s var(--ease),border-color .45s var(--ease);animation:cardin .5s var(--ease) both}
+  @keyframes cardin{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+  .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-l);border-color:var(--line-soft)}
+  .card .plan-svg{background:linear-gradient(135deg,#FBFAF6,#F1EDE3);padding:22px;aspect-ratio:1/.86;display:flex;align-items:center;justify-content:center;border-bottom:1px solid var(--line-soft);position:relative}
+  .card .plan-svg svg{width:100%;height:100%}
+  .card .badge{position:absolute;top:14px;left:14px;font-size:11px;font-weight:600;letter-spacing:.04em;background:var(--paper-2);border:1px solid var(--line);color:var(--accent-deep);padding:5px 11px;border-radius:999px}
+  .card .favo{position:absolute;top:12px;right:12px;width:34px;height:34px;border-radius:50%;background:var(--paper-2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);transition:.25s}
+  .card .favo:hover{color:var(--accent-deep);border-color:var(--accent)}
+  .card .favo svg{width:16px;height:16px}
+  .card .body{padding:22px;display:flex;flex-direction:column;gap:14px;flex:1}
+  .card .rooms{font-family:'Fraunces',serif;font-size:20px;font-weight:500}
+  .card .meta{display:flex;gap:18px;font-size:13px;color:var(--muted)}
+  .card .meta b{color:var(--ink);font-weight:600;display:block;font-size:15px;font-family:'Fraunces',serif}
+  .card .price-row{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding-top:16px;border-top:1px solid var(--line-soft)}
+  .card .price{font-family:'Fraunces',serif;font-size:23px;font-weight:600}
+  .card .price small{font-size:13px;color:var(--muted);font-weight:400;font-family:'Inter'}
+  .card .go{width:40px;height:40px;border-radius:50%;background:var(--ink);color:#fff;display:flex;align-items:center;justify-content:center;transition:.3s var(--ease)}
+  .card:hover .go{transform:rotate(-45deg)}
+  .card .go svg{width:18px;height:18px}
+  .empty{grid-column:1/-1;text-align:center;color:var(--muted);padding:60px 0;font-size:16px}
+  .plan-note{margin-top:34px;display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+  .plan-note svg{width:18px;height:18px;color:var(--accent-deep);flex-shrink:0}
+
+  /* ---------- cta ---------- */
+  .cta{position:relative;overflow:hidden;color:#fff}
+  .cta-bg{position:absolute;inset:0;z-index:-2}
+  .cta-bg img{width:100%;height:100%;object-fit:cover}
+  .cta-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,rgba(20,18,15,.88),rgba(20,18,15,.5))}
+  .cta-inner{padding:clamp(80px,11vw,140px) 0}
+  .cta h2{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(34px,5vw,62px);line-height:1.03;letter-spacing:-.02em;max-width:16ch}
+  .cta h2 em{font-style:italic;color:#EAD9BC}
+  .cta p{margin-top:20px;font-size:18px;color:rgba(255,255,255,.85);max-width:48ch}
+  .cta-form{margin-top:38px;display:flex;gap:12px;flex-wrap:wrap;max-width:560px}
+  .cta-form input{flex:1;min-width:200px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:inherit;font-size:15px;padding:15px 20px;border-radius:999px;backdrop-filter:blur(6px)}
+  .cta-form input::placeholder{color:rgba(255,255,255,.6)}
+  .cta-form input:focus{outline:none;border-color:var(--accent)}
+  .cta-tiny{margin-top:16px;font-size:12.5px;color:rgba(255,255,255,.55);max-width:46ch}
+  .cta-perks{margin-top:46px;display:flex;gap:40px;flex-wrap:wrap}
+  .cta-perks .pk{display:flex;align-items:center;gap:12px;font-size:14.5px;color:rgba(255,255,255,.9)}
+  .cta-perks .pk svg{width:22px;height:22px;color:#EAD9BC;flex-shrink:0}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--ink);color:rgba(255,255,255,.7);padding:60px 0 36px}
+  .foot{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .foot .logo{color:#fff;margin-bottom:14px}
+  .foot p{font-size:14px;max-width:34ch;line-height:1.6}
+  .foot-col h4{color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;font-weight:600}
+  .foot-col a{display:block;font-size:14.5px;margin-bottom:10px;color:rgba(255,255,255,.7);transition:.2s}
+  .foot-col a:hover{color:#fff}
+  .foot-bottom{margin-top:48px;padding-top:24px;border-top:1px solid rgba(255,255,255,.12);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(255,255,255,.45)}
+
+  /* concept ribbon */
+  .ribbon{position:fixed;z-index:60;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:500;padding:9px 18px;border-radius:999px;box-shadow:var(--shadow-l);display:flex;align-items:center;gap:9px}
+  .ribbon .dot{width:7px;height:7px;border-radius:50%;background:#7CC992;box-shadow:0 0 0 4px rgba(124,201,146,.25)}
+
+  /* ---------- responsive ---------- */
+  @media(max-width:980px){
+    .nav-links,.nav-phone{display:none}
+    .burger{display:flex}
+    .adv.span-6,.adv.feature{grid-column:span 12}
+    .adv.span-3{grid-column:span 6}
+    .cards{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 20px}
+    .hero-stats{gap:30px}
+    .hero-stats .st b{font-size:27px}
+    .cards{grid-template-columns:1fr}
+    .adv.span-3{grid-column:span 12}
+    .scrollcue{display:none}
+    .ribbon{font-size:11.5px;padding:8px 14px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#" class="logo"><b>УРБАНИКА</b><span class="dot"></span></a>
+    <nav class="nav-links">
+      <a href="#about">О комплексе</a>
+      <a href="#adv">Преимущества</a>
+      <a href="#plan">Планировки</a>
+      <a href="#cta">Покупка</a>
+    </nav>
+    <div class="nav-right">
+      <a href="tel:+73472220111" class="nav-phone">+7 (347) 222-01-11</a>
+      <a href="#cta" class="btn btn-light" style="padding:11px 22px;font-size:14px">Подобрать квартиру</a>
+      <button class="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="about">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80" alt="Архитектура ЖК Урбаника">
+  </div>
+  <div class="wrap hero-inner">
+    <span class="hero-tag"><span class="ic"></span> Уфа · ул. Минигали Губайдуллина · класс комфорт-плюс</span>
+    <h1 class="serif">Дом, в котором<br>дышится <em>свободно</em></h1>
+    <p class="hero-sub">Закрытый квартал в 10 минутах от центра. Двор без машин, подземный паркинг и архитектура, которую хочется называть домом.</p>
+    <div class="hero-cta">
+      <a href="#plan" class="btn btn-light">Смотреть планировки
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#cta" class="btn btn-light">Заказать звонок</a>
+    </div>
+    <div class="hero-stats">
+      <div class="st"><b>4</b><span>литера в квартале</span></div>
+      <div class="st"><b>от 4,5</b><span>млн ₽ за квартиру</span></div>
+      <div class="st"><b>от 6%</b><span>семейная ипотека</span></div>
+      <div class="st"><b>10 мин</b><span>до центра города</span></div>
+    </div>
+  </div>
+  <div class="scrollcue">Листайте вниз<span class="ln"></span></div>
+</section>
+
+<!-- ============ ADVANTAGES ============ -->
+<section class="sec-pad" id="adv">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Жизнь внутри квартала</span>
+      <h2 class="serif">Продумано до мелочей —<br>от <em>двора</em> до лифта</h2>
+      <p>Мы убрали из быта всё, что мешает. Осталось то, ради чего возвращаешься домой с удовольствием.</p>
+    </div>
+
+    <div class="adv-grid">
+      <div class="adv feature reveal">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Двор без машин">
+        <div class="fwrap">
+          <div class="ico">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 21h18" stroke-linecap="round"/></svg>
+          </div>
+          <h3 class="serif">Двор без автомобилей</h3>
+          <p>Приватная территория с видеонаблюдением по периметру. Дети гуляют сами — машины остаются под землёй.</p>
+        </div>
+      </div>
+
+      <div class="adv span-3 reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6l-8-4Z" stroke-linejoin="round"/></svg></div>
+        <h3 class="serif">Безопасность</h3>
+        <p>Закрытая территория, видеонаблюдение и единая система контроля доступа.</p>
+      </div>
+
+      <div class="adv span-3 reveal d2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-linecap="round"/></svg></div>
+        <h3 class="serif">Подземный паркинг</h3>
+        <p>Прямой доступ на лифте с любого этажа. Зимой — без снега и прогрева.</p>
+      </div>
+
+      <div class="adv span-3 reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3 class="serif">Эргономика</h3>
+        <p>Колясочные, велохранилища, ресепшн и зона отдыха в каждом литере.</p>
+      </div>
+
+      <div class="adv span-3 reveal d2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 0 0 18M12 3a14 14 0 0 1 0 18M3 12h18" /></svg></div>
+        <h3 class="serif">Спорт у дома</h3>
+        <p>Площадки для футбола, баскетбола и воркаута прямо в квартале.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PLANIROVKI ============ -->
+<section class="sec-pad" id="plan">
+  <div class="wrap">
+    <div class="plan-top">
+      <div class="sec-head reveal" style="margin-bottom:0">
+        <span class="eyebrow">Каталог квартир</span>
+        <h2 class="serif">Найдите <em>свою</em></h2>
+        <p>Светлые планировки от студий до трёхкомнатных. Выберите формат — остальное подберём вместе.</p>
+      </div>
+      <div class="filters reveal d1" role="tablist" id="filters">
+        <button class="filt active" data-f="all">Все</button>
+        <button class="filt" data-f="0">Студии</button>
+        <button class="filt" data-f="1">1-комн.</button>
+        <button class="filt" data-f="2">2-комн.</button>
+        <button class="filt" data-f="3">3-комн.</button>
+      </div>
+    </div>
+
+    <div class="cards" id="cards"><!-- JS --></div>
+
+    <div class="plan-note reveal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="9"/><path d="M12 8h.01M11 12h1v4h1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      В реальном проекте здесь — интерактивная шахматка корпусов: выбор этажа, статус квартиры и онлайн-бронь.
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta" id="cta">
+  <div class="cta-bg">
+    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=2000&q=80" alt="Интерьер квартиры">
+  </div>
+  <div class="wrap cta-inner reveal">
+    <span class="eyebrow" style="color:#EAD9BC">Первый шаг</span>
+    <h2 class="serif" style="margin-top:16px">Забронируйте квартиру <em>за 1 рубль</em></h2>
+    <p>Оставьте номер — менеджер подберёт планировку под ваш бюджет и рассчитает ипотеку от 6%. Без спама и навязчивых звонков.</p>
+    <form class="cta-form" onsubmit="return demoSubmit(this)">
+      <input type="text" placeholder="Как вас зовут" required>
+      <input type="tel" placeholder="+7 (___) ___-__-__" required>
+      <button class="btn btn-primary" type="submit" style="background:#fff;color:var(--ink)">Получить подбор</button>
+    </form>
+    <p class="cta-tiny">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p>
+    <div class="cta-perks">
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Семейная ипотека от 6%</div>
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Выгода до 15% в литере 4</div>
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Сдача 4 кв. 2028</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a href="#" class="logo"><b>УРБАНИКА</b><span class="dot"></span></a>
+      <p>Жилой квартал комфорт-плюс в Уфе. Застройщик «Первый трест».</p>
+    </div>
+    <div class="foot-col">
+      <h4>Навигация</h4>
+      <a href="#about">О комплексе</a>
+      <a href="#adv">Преимущества</a>
+      <a href="#plan">Планировки</a>
+      <a href="#cta">Как купить</a>
+    </div>
+    <div class="foot-col">
+      <h4>Контакты</h4>
+      <a href="tel:+73472220111">+7 (347) 222-01-11</a>
+      <a href="#">г. Уфа, ул. М. Губайдуллина</a>
+      <a href="#">Ежедневно 9:00–20:00</a>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© 2026 ЖК «Урбаника». Концепт-редизайн.</span>
+    <span>Дизайн-концепт · не является публичной офертой</span>
+  </div>
+</footer>
+
+<div class="ribbon"><span class="dot"></span> Концепт-редизайн · демо для презентации</div>
+
+<script>
+  /* header scroll state */
+  const hdr=document.getElementById('hdr');
+  const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+
+  /* reveal on scroll */
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.16});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* ---- floor plans (inline SVG generators) ---- */
+  const P={
+    studio:`<svg viewBox="0 0 200 170" fill="none" stroke="#9A7B4F" stroke-width="2">
+      <rect x="20" y="20" width="160" height="130" rx="3" stroke="#1A1916"/>
+      <path d="M20 95h70M90 20v130" stroke="#C9BFA8"/>
+      <rect x="32" y="32" width="28" height="20" rx="2" stroke="#9A7B4F"/>
+      <circle cx="46" cy="118" r="13" stroke="#C9BFA8"/>
+      <path d="M120 60h45M142 60v60" stroke="#C9BFA8"/>
+      <path d="M118 150v-12" stroke="#1A1916" stroke-width="4"/></svg>`,
+    one:`<svg viewBox="0 0 200 170" fill="none" stroke="#9A7B4F" stroke-width="2">
+      <rect x="18" y="20" width="164" height="130" rx="3" stroke="#1A1916"/>
+      <path d="M105 20v130M18 95h87" stroke="#C9BFA8"/>
+      <rect x="30" y="32" width="26" height="18" rx="2"/>
+      <circle cx="42" cy="120" r="12" stroke="#C9BFA8"/>
+      <path d="M130 55h40M150 55v55" stroke="#C9BFA8"/>
+      <path d="M70 150v-12" stroke="#1A1916" stroke-width="4"/>
+      <path d="M105 70h-14" stroke="#1A1916" stroke-width="4"/></svg>`,
+    two:`<svg viewBox="0 0 200 170" fill="none" stroke="#9A7B4F" stroke-width="2">
+      <rect x="14" y="18" width="172" height="134" rx="3" stroke="#1A1916"/>
+      <path d="M100 18v134M14 90h86M100 80h86" stroke="#C9BFA8"/>
+      <rect x="26" y="30" width="26" height="18" rx="2"/>
+      <circle cx="40" cy="120" r="12" stroke="#C9BFA8"/>
+      <path d="M120 40h46M143 40v34" stroke="#C9BFA8"/>
+      <path d="M150 110h26M163 110v34" stroke="#C9BFA8"/>
+      <path d="M60 152v-12M100 60h-12M100 100v14" stroke="#1A1916" stroke-width="4"/></svg>`,
+    three:`<svg viewBox="0 0 200 170" fill="none" stroke="#9A7B4F" stroke-width="2">
+      <rect x="12" y="16" width="176" height="138" rx="3" stroke="#1A1916"/>
+      <path d="M95 16v138M12 85h83M95 60h93M95 110h93" stroke="#C9BFA8"/>
+      <rect x="24" y="28" width="24" height="16" rx="2"/>
+      <circle cx="38" cy="120" r="11" stroke="#C9BFA8"/>
+      <path d="M115 36h44M138 36v22" stroke="#C9BFA8"/>
+      <path d="M145 130h36M163 130v22" stroke="#C9BFA8"/>
+      <path d="M55 154v-11M95 50h-11M95 84v12M95 124v12" stroke="#1A1916" stroke-width="4"/></svg>`
+  };
+
+  /* ---- apartment data (на основе реальных параметров ЖК) ---- */
+  const FLATS=[
+    {r:0,svg:P.studio,name:'Студия',area:'27,4',floor:'5/9',liter:'Литер 4',price:'4,5',badge:'Выгодно',tag:'liter4'},
+    {r:1,svg:P.one,name:'1-комнатная',area:'38,2',floor:'8/16',liter:'Литер 4',price:'5,9',badge:'−15%',tag:'liter4'},
+    {r:1,svg:P.one,name:'1-комнатная',area:'42,6',floor:'3/9',liter:'Литер 1–3',price:'8,5',badge:'Сдан',tag:'ready'},
+    {r:2,svg:P.two,name:'2-комнатная',area:'58,3',floor:'11/16',liter:'Литер 4',price:'7,8',badge:'−15%',tag:'liter4'},
+    {r:2,svg:P.two,name:'2-комнатная',area:'63,1',floor:'6/9',liter:'Литер 1–3',price:'9,1',badge:'Сдан',tag:'ready'},
+    {r:3,svg:P.three,name:'3-комнатная',area:'78,9',floor:'9/16',liter:'Литер 4',price:'10,4',badge:'Хит',tag:'liter4'},
+    {r:3,svg:P.three,name:'3-комнатная',area:'84,2',floor:'4/9',liter:'Литер 1–3',price:'12,2',badge:'Сдан',tag:'ready'},
+    {r:0,svg:P.studio,name:'Студия',area:'29,8',floor:'12/16',liter:'Литер 4',price:'4,9',badge:'Видовая',tag:'liter4'},
+  ];
+
+  const cardsEl=document.getElementById('cards');
+  const arrow=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M7 17 17 7M9 7h8v8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const heart=`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3.2 1.2 4 2.3.8-1.1 2-2.3 4-2.3 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21Z" stroke-width="1.6" stroke-linejoin="round"/></svg>`;
+
+  function render(filter='all'){
+    const list=filter==='all'?FLATS:FLATS.filter(f=>String(f.r)===filter);
+    if(!list.length){cardsEl.innerHTML='<div class="empty">По этому фильтру пока нет вариантов — оставьте заявку, подберём индивидуально.</div>';return}
+    cardsEl.innerHTML=list.map((f,i)=>`
+      <article class="card" style="animation-delay:${i*.05}s">
+        <div class="plan-svg">
+          <span class="badge">${f.badge}</span>
+          <div class="favo" title="В избранное">${heart}</div>
+          ${f.svg}
+        </div>
+        <div class="body">
+          <div class="rooms">${f.name}</div>
+          <div class="meta">
+            <span>Площадь<b>${f.area} м²</b></span>
+            <span>Этаж<b>${f.floor}</b></span>
+            <span>Корпус<b>${f.liter}</b></span>
+          </div>
+          <div class="price-row">
+            <div class="price">${f.price} млн <small>₽</small></div>
+            <a href="#cta" class="go" aria-label="Подробнее">${arrow}</a>
+          </div>
+        </div>
+      </article>`).join('');
+  }
+  render();
+
+  document.getElementById('filters').addEventListener('click',e=>{
+    const b=e.target.closest('.filt');if(!b)return;
+    document.querySelectorAll('.filt').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');render(b.dataset.f);
+  });
+
+  function demoSubmit(form){
+    const btn=form.querySelector('button');
+    btn.textContent='Заявка отправлена ✓';btn.style.background='#1f7a4d';btn.style.color='#fff';
+    setTimeout(()=>{btn.textContent='Получить подбор';btn.style.background='#fff';btn.style.color='var(--ink)';form.reset()},2600);
+    return false;
+  }
+</script>
+</body>
+</html>
