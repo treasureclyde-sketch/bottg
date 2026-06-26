@@ -1,10 +1,27 @@
-node_modules/
-package-lock.json
+# Секреты и БД — не коммитим
 .env
-.venv/
-__pycache__/
-*.pyc
+*.db
+*.db-journal
+*.sqlite3
 
-# ui-ux-pro-max skill data is large (~2MB) and is re-installed on session
-# start by .claude/skills/install-ui-ux-pro-max.sh, so it is not vendored here.
-.claude/skills/ui-ux-pro-max/
+# Данные клиентов (конвейер) и реальные брифы с токенами
+clients/
+/opt/bots/
+briefs/*.json
+!briefs/example.json
+works/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# OS / IDE
+.DS_Store
+.idea/
+.vscode/

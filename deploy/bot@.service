@@ -1,0 +1,28 @@
+# Шаблонный systemd-юнит: один экземпляр на клиента.
+# Установка:  sudo cp deploy/bot@.service /etc/systemd/system/
+#             sudo systemctl daemon-reload
+# Запуск клиента <slug>:  sudo systemctl enable --now bot@<slug>
+#
+# Предполагается раскладка:
+#   /opt/booking-bot/         — общий код этого репозитория + .venv
+#   /opt/bots/<slug>/         — данные клиента: .env, bot.db, works/
+#
+# %i подставляется как <slug> (имя экземпляра).
+
+[Unit]
+Description=Telegram booking bot (%i)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# при необходимости укажите своего пользователя
+User=ubuntu
+WorkingDirectory=/opt/bots/%i
+Environment=PYTHONPATH=/opt/booking-bot
+ExecStart=/opt/booking-bot/.venv/bin/python /opt/booking-bot/bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

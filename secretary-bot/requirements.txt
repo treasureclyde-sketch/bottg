@@ -1,0 +1,9 @@
+# Шаг 1 — скелет (голос + чат + business-подключение)
+aiogram
+openai
+
+# Шаг 2 — поиск по 2ГИС
+requests
+
+# общее
+python-dotenv

@@ -1,0 +1,45 @@
+{
+  "slug": "borodach",
+  "bot_token": "123456:PUT-REAL-TOKEN-FROM-BOTFATHER",
+  "admin_ids": [123456789],
+  "business_name": "Барбершоп «Бородач»",
+  "business_address": "г. Москва, ул. Пример, д. 1",
+  "business_phone": "+7 (900) 000-00-00",
+  "timezone": "Europe/Moscow",
+  "subscription_until": "2026-08-01",
+  "billing_db_path": "/opt/bots/billing.db",
+  "provider_contact": "@your_username",
+  "slot_step_min": 30,
+  "booking_horizon_days": 14,
+  "reminder_day_before_hour": 20,
+  "reminder_2h_enabled": true,
+  "services": [
+    {"title": "Мужская стрижка", "price": 1500, "duration_min": 45},
+    {"title": "Стрижка + борода", "price": 2200, "duration_min": 75},
+    {"title": "Оформление бороды", "price": 900, "duration_min": 30},
+    {"title": "Детская стрижка", "price": 1200, "duration_min": 40}
+  ],
+  "masters": [
+    {
+      "name": "Алексей",
+      "schedule": {
+        "0": ["10:00", "20:00"],
+        "1": ["10:00", "20:00"],
+        "2": ["10:00", "20:00"],
+        "3": ["10:00", "20:00"],
+        "4": ["10:00", "20:00"],
+        "5": ["11:00", "18:00"]
+      }
+    },
+    {
+      "name": "Игорь",
+      "schedule": {
+        "1": ["12:00", "21:00"],
+        "2": ["12:00", "21:00"],
+        "3": ["12:00", "21:00"],
+        "4": ["12:00", "21:00"],
+        "5": ["12:00", "21:00"]
+      }
+    }
+  ]
+}

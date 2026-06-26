@@ -1,0 +1,27 @@
+# systemd-юнит биллинг-бота провайдера (один на сервер, отдельный токен).
+# Установка:
+#   sudo cp deploy/billing-bot.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now billing-bot
+#
+# Предполагается:
+#   /opt/booking-bot/        — общий код + .venv
+#   /opt/bots/billing/.env   — конфиг биллинг-бота (BILLING_BOT_TOKEN и т.д.)
+#   /opt/bots/billing.db     — общая БД подписок (её же читают салонные боты)
+
+[Unit]
+Description=Billing bot (provider)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/bots/billing
+Environment=PYTHONPATH=/opt/booking-bot
+ExecStart=/opt/booking-bot/.venv/bin/python /opt/booking-bot/billing_bot.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
