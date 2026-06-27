@@ -155,6 +155,49 @@
   .adv.feature p{color:rgba(255,255,255,.85);position:relative;z-index:1;font-size:15.5px;max-width:36ch}
   .adv.feature .ico{background:rgba(255,255,255,.14);color:#fff}
 
+  /* ---------- liters / генплан ---------- */
+  #liters{background:var(--paper)}
+  .liters-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,4vw,56px);align-items:center}
+  .genplan{background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:clamp(22px,3vw,34px);box-shadow:var(--shadow-s)}
+  .genplan svg{width:100%;height:auto;display:block}
+  .gp-liter{cursor:pointer}
+  .gp-shape{fill:#EFEBE2;stroke:#D8D1C2;stroke-width:1.5;transition:fill .3s var(--ease),stroke .3s var(--ease)}
+  .gp-liter:hover .gp-shape{fill:#E4DBC8}
+  .gp-liter.active .gp-shape{fill:var(--accent);stroke:var(--accent-deep)}
+  .gp-num{font-family:'Fraunces',serif;font-size:18px;font-weight:600;fill:var(--muted);transition:fill .3s var(--ease)}
+  .gp-liter:hover .gp-num{fill:var(--ink)}
+  .gp-liter.active .gp-num{fill:#fff}
+  .gp-yard{fill:#EAF0E6;stroke:#D8E0D0;stroke-width:1.5}
+  .gp-green{fill:#CFE0C2;opacity:.7}
+  .gp-path{fill:none;stroke:#E2DBCC;stroke-width:2;stroke-dasharray:3 5}
+  .gp-stat{transition:opacity .3s}
+  .gp-legend{display:flex;gap:22px;margin-top:18px;font-size:12.5px;color:var(--muted);flex-wrap:wrap}
+  .gp-legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  .gp-legend .l-ready i{background:#2f8a57}.gp-legend .l-build i{background:var(--accent)}
+
+  .liter-tabs{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+  .lt{border:1px solid var(--line);background:var(--paper-2);font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);padding:9px 18px;border-radius:999px;cursor:pointer;transition:.25s var(--ease)}
+  .lt:hover{color:var(--ink);border-color:var(--ink)}
+  .lt.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .liter-card{animation:fadeUp .45s var(--ease)}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  .status{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;padding:6px 14px;border-radius:999px;margin-bottom:16px}
+  .status i{width:8px;height:8px;border-radius:50%}
+  .status.ready{background:rgba(47,138,87,.1);color:#2f8a57}.status.ready i{background:#2f8a57}
+  .status.build{background:var(--accent-wash);color:var(--accent-deep)}.status.build i{background:var(--accent);box-shadow:0 0 0 4px rgba(154,123,79,.2)}
+  .liter-name{font-family:'Fraunces',serif;font-weight:400;font-size:clamp(30px,4.5vw,46px);line-height:1.05;letter-spacing:-.02em}
+  .liter-desc{margin-top:14px;font-size:16px;color:var(--muted);max-width:46ch}
+  .liter-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;margin:28px 0}
+  .liter-stats .s span{font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+  .liter-stats .s b{display:block;font-family:'Fraunces',serif;font-size:22px;font-weight:500;margin-top:3px}
+  .liter-stats .s b small{font-size:14px;color:var(--muted);font-family:'Inter';font-weight:400}
+  .progress{margin:26px 0}
+  .progress-top{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin-bottom:8px}
+  .progress-top b{color:var(--ink);font-weight:600}
+  .progress .bar{height:7px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+  .progress .fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-deep));border-radius:99px;width:0;transition:width .8s var(--ease)}
+  .liter-cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+
   /* ---------- planirovki ---------- */
   #plan{background:var(--paper-2)}
   .plan-top{display:flex;align-items:flex-end;justify-content:space-between;gap:30px;flex-wrap:wrap;margin-bottom:44px}
@@ -225,6 +268,8 @@
     .adv.span-6,.adv.feature{grid-column:span 12}
     .adv.span-3{grid-column:span 6}
     .cards{grid-template-columns:repeat(2,1fr)}
+    .liters-grid{grid-template-columns:1fr;gap:36px}
+    .genplan{max-width:460px}
   }
   @media(max-width:560px){
     .wrap{padding:0 20px}
@@ -243,6 +288,19 @@
 </head>
 <body class="loading">
 
+<!--
+  ════════════════════════════════════════════════════════════════
+  ФОТО / РЕНДЕРЫ — заменить на реальные от застройщика.
+  Все <img> имеют onerror → при отсутствии фото остаётся премиум-градиент,
+  и фиксированный object-fit:cover — любой размер встанет без поломки.
+  Слоты:
+    1) HERO  — фасад/двор, рендер на весь экран        (.hero-bg img)
+    2) ДВОР  — двор без машин, крупный блок преимуществ (.adv.feature img)
+    3) CTA   — интерьер квартиры, тёмный фон            (.cta-bg img)
+    4) ПЛАНИРОВКИ — реальные PNG/SVG планов вместо нарисованных схем (объект P в скрипте)
+  ════════════════════════════════════════════════════════════════
+-->
+
 <!-- ============ INTRO / занавес ============ -->
 <div id="intro" aria-hidden="true">
   <div class="intro-c">
@@ -259,6 +317,7 @@
     <nav class="nav-links">
       <a href="#about">О комплексе</a>
       <a href="#adv">Преимущества</a>
+      <a href="#liters">Литеры</a>
       <a href="#plan">Планировки</a>
       <a href="#cta">Покупка</a>
     </nav>
@@ -343,6 +402,67 @@
   </div>
 </section>
 
+<!-- ============ LITERS / генплан ============ -->
+<section class="sec-pad" id="liters">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Квартал из 4 литеров</span>
+      <h2 class="serif">Выберите <em>свой дом</em></h2>
+      <p>Литеры 1–3 уже сданы и заселены. Литер 4 — на финальной стадии: самые выгодные цены и панорамные виды. Кликните по дому на плане.</p>
+    </div>
+
+    <div class="liters-grid">
+      <!-- генплан -->
+      <div class="reveal">
+        <div class="genplan">
+          <svg viewBox="0 0 400 330" id="genplan" role="group" aria-label="Генплан квартала">
+            <!-- двор -->
+            <rect class="gp-yard" x="150" y="118" width="100" height="96" rx="10"/>
+            <ellipse class="gp-green" cx="200" cy="166" rx="34" ry="30"/>
+            <path class="gp-path" d="M150 166 H110 M250 166 H290 M200 118 V86 M200 214 V250"/>
+            <!-- литеры -->
+            <g class="gp-liter" data-l="1" tabindex="0">
+              <rect class="gp-shape" x="34" y="34" width="150" height="74" rx="8"/>
+              <text class="gp-num" x="109" y="78" text-anchor="middle">1</text>
+              <circle class="gp-stat" cx="168" cy="48" r="5" fill="#2f8a57"/>
+            </g>
+            <g class="gp-liter" data-l="2" tabindex="0">
+              <rect class="gp-shape" x="216" y="34" width="150" height="74" rx="8"/>
+              <text class="gp-num" x="291" y="78" text-anchor="middle">2</text>
+              <circle class="gp-stat" cx="350" cy="48" r="5" fill="#2f8a57"/>
+            </g>
+            <g class="gp-liter" data-l="3" tabindex="0">
+              <rect class="gp-shape" x="216" y="224" width="150" height="74" rx="8"/>
+              <text class="gp-num" x="291" y="268" text-anchor="middle">3</text>
+              <circle class="gp-stat" cx="350" cy="238" r="5" fill="#2f8a57"/>
+            </g>
+            <g class="gp-liter" data-l="4" tabindex="0">
+              <rect class="gp-shape" x="34" y="224" width="150" height="74" rx="8"/>
+              <text class="gp-num" x="109" y="268" text-anchor="middle">4</text>
+              <circle class="gp-stat" cx="168" cy="238" r="5" fill="#9A7B4F"/>
+            </g>
+          </svg>
+          <div class="gp-legend">
+            <span class="l-ready"><i></i>Сдан и заселён</span>
+            <span class="l-build"><i></i>Строится · 4 кв. 2028</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- панель деталей -->
+      <div class="reveal d1">
+        <div class="liter-tabs" id="literTabs">
+          <button class="lt" data-l="1">Литер 1</button>
+          <button class="lt" data-l="2">Литер 2</button>
+          <button class="lt" data-l="3">Литер 3</button>
+          <button class="lt active" data-l="4">Литер 4</button>
+        </div>
+        <div id="literPanel"><!-- JS --></div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ============ PLANIROVKI ============ -->
 <section class="sec-pad" id="plan">
   <div class="wrap">
@@ -404,6 +524,7 @@
       <h4>Навигация</h4>
       <a href="#about">О комплексе</a>
       <a href="#adv">Преимущества</a>
+      <a href="#liters">Литеры</a>
       <a href="#plan">Планировки</a>
       <a href="#cta">Как купить</a>
     </div>
@@ -566,6 +687,51 @@
     document.querySelectorAll('.filt').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');render(b.dataset.f);
   });
+
+  /* ---- liters / генплан ---- */
+  const LITERS={
+    '1':{status:'ready',label:'Сдан',floors:'9 этажей',deadline:'Сдан в 2023',price:'8,5',avail:'4 квартиры',progress:100,
+      desc:'Дом сдан и заселён. Закрытый двор, подземный паркинг и благоустройство уже работают — заезжайте и живите.'},
+    '2':{status:'ready',label:'Сдан',floors:'9 этажей',deadline:'Сдан в 2024',price:'8,8',avail:'7 квартир',progress:100,
+      desc:'Заселённый дом в центре квартала. Видовые квартиры с окнами во двор без машин и развитой инфраструктурой рядом.'},
+    '3':{status:'ready',label:'Сдан',floors:'9 этажей',deadline:'Сдан в 2024',price:'9,1',avail:'5 квартир',progress:100,
+      desc:'Последние квартиры в сданном литере. Чистовая отделка мест общего пользования, ресепшн и колясочные на этаже.'},
+    '4':{status:'build',label:'Строится',floors:'16 этажей',deadline:'4 кв. 2028',price:'4,5',avail:'более 140',progress:45,
+      desc:'Новый дом квартала — самые выгодные цены, панорамные виды и выгода до 15%. Семейная ипотека от 6%.'}
+  };
+  const panel=document.getElementById('literPanel');
+  const dot=`<i></i>`;
+  function renderLiter(id){
+    const d=LITERS[id];
+    panel.innerHTML=`
+      <div class="liter-card">
+        <span class="status ${d.status}">${dot}${d.label}</span>
+        <h3 class="liter-name serif">Литер ${id}</h3>
+        <p class="liter-desc">${d.desc}</p>
+        <div class="liter-stats">
+          <div class="s"><span>Этажность</span><b>${d.floors}</b></div>
+          <div class="s"><span>Срок сдачи</span><b>${d.deadline}</b></div>
+          <div class="s"><span>Квартиры от</span><b>${d.price} млн <small>₽</small></b></div>
+          <div class="s"><span>В продаже</span><b>${d.avail}</b></div>
+        </div>
+        <div class="progress">
+          <div class="progress-top"><span>Готовность дома</span><b>${d.progress}%</b></div>
+          <div class="bar"><div class="fill" id="literFill"></div></div>
+        </div>
+        <div class="liter-cta">
+          <a href="#plan" class="btn btn-primary">Планировки литера</a>
+          <a href="#cta" class="btn btn-ghost">Узнать цену</a>
+        </div>
+      </div>`;
+    requestAnimationFrame(()=>{const f=document.getElementById('literFill');if(f)f.style.width=d.progress+'%'});
+    // синхронизация генплана и табов
+    document.querySelectorAll('.gp-liter').forEach(g=>g.classList.toggle('active',g.dataset.l===id));
+    document.querySelectorAll('.lt').forEach(t=>t.classList.toggle('active',t.dataset.l===id));
+  }
+  renderLiter('4');
+  document.getElementById('genplan').addEventListener('click',e=>{const g=e.target.closest('.gp-liter');if(g)renderLiter(g.dataset.l)});
+  document.getElementById('genplan').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('.gp-liter');if(g){e.preventDefault();renderLiter(g.dataset.l)}}});
+  document.getElementById('literTabs').addEventListener('click',e=>{const t=e.target.closest('.lt');if(t)renderLiter(t.dataset.l)});
 
   function demoSubmit(form){
     const btn=form.querySelector('button');
