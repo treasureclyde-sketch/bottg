@@ -40,17 +40,14 @@
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange-2);transform:translateY(-2px)}
 
   /* ===== STAGE (scroll-driven 3D pour) ===== */
-  #stage{position:relative;height:280vh;background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%)}
+  #stage{position:relative;height:240vh;background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%)}
   .stage-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
   #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
   .stage-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;
       background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
-  .stage-brand{position:relative;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
-  .ib-logo{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(64px,13vw,150px);line-height:.9;letter-spacing:.01em;
-      color:var(--cream);text-shadow:0 8px 50px rgba(0,0,0,.6)}
-  .ib-logo b{color:var(--orange-2);font-weight:600}
-  .ib-tag{margin-top:14px;font-size:clamp(11px,1.5vw,14px);font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:var(--cream-d)}
-  .ib-line{width:min(300px,62vw);height:1px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+  .stage-brand{position:absolute;left:0;right:0;bottom:11%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
+  .ib-tag{margin-top:14px;font-size:clamp(11px,1.4vw,13px);font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:var(--cream-d)}
+  .ib-line{width:min(220px,46vw);height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
   .scroll-hint{position:absolute;left:0;right:0;bottom:36px;z-index:3;text-align:center;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,234,219,.6);will-change:opacity}
   .scroll-hint .chev{display:block;margin:12px auto 0;width:16px;height:16px;border-right:2px solid var(--orange);border-bottom:2px solid var(--orange);transform:rotate(45deg);animation:bob 1.6s var(--ease) infinite}
   @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.5}50%{transform:rotate(45deg) translate(4px,4px);opacity:1}}
@@ -170,11 +167,10 @@
   <div class="stage-sticky">
     <canvas id="scene"></canvas>
     <div class="stage-brand" id="brand">
-      <div class="ib-logo">H<b>2</b>O</div>
-      <div class="ib-tag">Coffee · Tea · Accessories</div>
       <div class="ib-line"></div>
+      <div class="ib-tag">Coffee · Tea · Accessories</div>
     </div>
-    <div class="scroll-hint" id="hint">Листайте — налейте кофе<span class="chev"></span></div>
+    <div class="scroll-hint" id="hint">Листайте — заварите кофе<span class="chev"></span></div>
   </div>
 </section>
 
@@ -368,7 +364,7 @@ const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 const lerp   = (a,b,t)=>a+(b-a)*t;
 
-const N_CIN = 150;
+const N_CIN = 340;
 const cinData = [];
 const POUR_S = 0.07, POUR_E = 0.56;      // coffee fills over this scroll range
 const CIN_S  = 0.46, CIN_E  = 0.86;      // cinnamon sprinkles over this range
@@ -383,20 +379,20 @@ function init(){
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.12;
+  renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-  camera = new THREE.PerspectiveCamera(32, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 2.35, 5.5);
-  camera.lookAt(0, 0.62, 0);
+  camera = new THREE.PerspectiveCamera(34, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.set(0, 5.75, 1.35);   // top-down view, slight tilt
+  camera.lookAt(0, 0.15, 0);
 
   // lights
-  scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.45));
-  const key = new THREE.DirectionalLight(0xfff1de, 2.3);
+  scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.8));
+  const key = new THREE.DirectionalLight(0xfff1de, 1.5);
   key.position.set(3.5, 7, 5); key.castShadow = true;
   key.shadow.mapSize.set(2048,2048);
   key.shadow.camera.near=1; key.shadow.camera.far=24;
@@ -479,34 +475,54 @@ function buildLiquid(){
   const g=new THREE.CylinderGeometry(0.8,0.5,1,48,1,true);
   const m=new THREE.MeshPhysicalMaterial({color:0x2a1810, roughness:0.3, metalness:0, clearcoat:0.5, envMapIntensity:0.7});
   liquid=new THREE.Mesh(g,m); liquid.renderOrder=1; scene.add(liquid);
-  // foam dome
-  const fg=new THREE.SphereGeometry(0.8,48,24,0,Math.PI*2,0,Math.PI*0.5);
-  fg.scale(1,0.16,1);
-  foam=new THREE.Mesh(fg,new THREE.MeshPhysicalMaterial({map:foamTexture(), roughness:0.85, clearcoat:0.08, envMapIntensity:0.5}));
-  foam.castShadow=false; scene.add(foam);
+  // foam surface — nearly flat & matte so cinnamon reads from the top
+  const fg=new THREE.CircleGeometry(0.82,72); fg.rotateX(-Math.PI/2);
+  foam=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:foamTexture(), roughness:0.98, metalness:0, envMapIntensity:0.16}));
+  foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
 function buildStream(){
   const g=new THREE.CylinderGeometry(0.055,0.085,1,16,1,true);
   const m=new THREE.MeshPhysicalMaterial({color:0x5a3a22, roughness:0.35, transparent:true, opacity:0});
   stream=new THREE.Mesh(g,m); scene.add(stream);
 }
+function makeTextTargets(text, count){
+  const W=360, H=170, TW=1.45, TH=0.66;   // world width/height of the word on the foam
+  const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  x.fillStyle='#000'; x.fillRect(0,0,W,H);
+  x.fillStyle='#fff'; x.font='700 130px Georgia, "Times New Roman", serif';
+  x.textAlign='center'; x.textBaseline='middle';
+  x.fillText(text, W/2, H/2+8);
+  const data=x.getImageData(0,0,W,H).data; const pts=[];
+  for(let py=0;py<H;py+=2) for(let px=0;px<W;px+=2){ if(data[(py*W+px)*4]>128) pts.push([px,py]); }
+  for(let i=pts.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [pts[i],pts[j]]=[pts[j],pts[i]]; }
+  const out=[];
+  for(let i=0;i<count;i++){
+    const [px,py]=pts.length?pts[i%pts.length]:[W/2,H/2];
+    out.push(new THREE.Vector3(
+      (px/W-0.5)*TW + (Math.random()-.5)*0.012,
+      FOAM_TOP+0.018+Math.random()*0.01,
+      (py/H-0.5)*TH + (Math.random()-.5)*0.012
+    ));
+  }
+  return out;
+}
 function buildCinnamon(){
-  const g=new THREE.BoxGeometry(0.034,0.009,0.044);
-  const m=new THREE.MeshStandardMaterial({roughness:0.85, vertexColors:false, color:0x8a4a1e});
+  const g=new THREE.BoxGeometry(0.028,0.008,0.038);
+  const m=new THREE.MeshStandardMaterial({roughness:0.85, color:0x7a3b16});
   cinnamon=new THREE.InstancedMesh(g,m,N_CIN);
   cinnamon.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cinnamon.castShadow=false; scene.add(cinnamon);
-  const tones=[0x7a3b16,0x8a4a1e,0x6b3211,0x9a5526]; const col=new THREE.Color();
+  const targets=makeTextTargets('H2O', N_CIN);
+  const tones=[0x7a3b16,0x8a4a1e,0x6b3211,0x86461f]; const col=new THREE.Color();
   for(let i=0;i<N_CIN;i++){
     col.setHex(tones[i%tones.length]); cinnamon.setColorAt(i,col);
     const f=i/(N_CIN-1);
-    const ar=Math.random()*0.66, aa=Math.random()*6.28;
     cinData.push({
-      from:new THREE.Vector3((Math.random()-.5)*0.9, 2.05+Math.random()*0.3, (Math.random()-.5)*0.9),
-      to:new THREE.Vector3(Math.cos(aa)*ar, FOAM_TOP+0.02+Math.random()*0.015, Math.sin(aa)*ar),
-      start:CIN_S + f*(CIN_E-CIN_S)*0.7, span:(CIN_E-CIN_S)*0.34,
+      from:new THREE.Vector3((Math.random()-.5)*1.4, 2.1+Math.random()*0.6, (Math.random()-.5)*1.0),
+      to:targets[i],
+      start:CIN_S + f*(CIN_E-CIN_S)*0.55, span:(CIN_E-CIN_S)*0.45,
       rotAxis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
       spin:8+Math.random()*10,
-      restQ:new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI/2*Math.random(),Math.random()*6,Math.random()*6))
+      restQ:new THREE.Quaternion().setFromEuler(new THREE.Euler(0,Math.random()*6,0)) // lie flat on foam
     });
   }
   cinnamon.instanceColor.needsUpdate=true;
@@ -573,7 +589,7 @@ function renderScroll(p){
   const fy = LIQ_BOT + liqH;
   foam.position.y = fy;
   const fr = lerp(0.5,0.82,fillT);
-  foam.scale.set(fr/0.8, 1, fr/0.8);
+  foam.scale.set(fr/0.82, 1, fr/0.82);
   foam.visible = fillT>0.03;
 
   // pour stream while filling
@@ -609,13 +625,13 @@ function renderScroll(p){
   steamGroup.children.forEach((s,i)=>{
     const ph=((t*0.18)+s.userData.off+i*0.4)%1;
     s.position.set(Math.sin((t+s.userData.off)*0.8)*0.22 + s.userData.sx*ph, fy+0.15+ph*1.4, 0);
-    s.material.opacity = stO*0.16*Math.sin(ph*Math.PI);
+    s.material.opacity = stO*0.09*Math.sin(ph*Math.PI);
     s.scale.set(0.5+ph*0.6, 0.9+ph*1.1, 1);
   });
 
   // brand + hint
-  const bo=smooth(0.6,0.96,p);
-  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*16}px)`;
+  const bo=smooth(0.8,0.99,p);
+  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*12}px)`;
   hint.style.opacity=(1-smooth(0,0.12,p)).toFixed(3);
 
   renderer.render(scene,camera);
