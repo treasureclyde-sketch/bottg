@@ -66,10 +66,17 @@
   }
   header.scrolled{background:rgba(247,245,240,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line);box-shadow:var(--shadow-s)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:74px}
-  .logo{display:flex;align-items:baseline;gap:9px;font-family:'Fraunces',serif;font-size:23px;font-weight:600;letter-spacing:.02em;color:#fff;transition:color .4s var(--ease)}
+  .logo{display:flex;align-items:center;gap:9px;font-family:'Fraunces',serif;font-size:23px;font-weight:600;letter-spacing:.02em;color:#fff;transition:color .4s var(--ease)}
   .logo b{font-weight:600}
-  .logo .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);align-self:center}
   header.scrolled .logo{color:var(--ink)}
+  /* фирменный логотип-картинка со сменой версии */
+  .brand{height:36px}
+  .brand img{height:36px;width:auto;display:block}
+  .brand .brand-c{display:none}
+  header.scrolled .brand .brand-w{display:none}
+  header.scrolled .brand .brand-c{display:block}
+  .brand-foot{height:auto}
+  .brand-foot img{height:44px}
   .nav-links{display:flex;gap:34px}
   .nav-links a{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.86);transition:color .4s var(--ease);position:relative}
   .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1.5px;background:var(--accent);transition:width .3s var(--ease)}
@@ -317,7 +324,10 @@
 
 <header id="hdr">
   <div class="wrap nav">
-    <a href="#" class="logo"><b>УРБАНИКА</b><span class="dot"></span></a>
+    <a href="#" class="logo brand" aria-label="ЖК Урбаника">
+      <img class="brand-w" src="https://static.tildacdn.com/tild3735-3839-4635-b933-373330643331/Urb_Logo_1_1.svg" alt="ЖК Урбаника">
+      <img class="brand-c" src="https://static.tildacdn.com/tild3039-3930-4165-b762-653433323939/Urb_Logo_1.svg" alt="ЖК Урбаника">
+    </a>
     <nav class="nav-links">
       <a href="#about">О комплексе</a>
       <a href="#adv">Преимущества</a>
@@ -521,7 +531,9 @@
 <footer>
   <div class="wrap foot">
     <div>
-      <a href="#" class="logo"><b>УРБАНИКА</b><span class="dot"></span></a>
+      <a href="#" class="logo brand brand-foot" aria-label="ЖК Урбаника">
+        <img src="https://static.tildacdn.com/tild3735-3839-4635-b933-373330643331/Urb_Logo_1_1.svg" alt="ЖК Урбаника">
+      </a>
       <p>Жилой квартал комфорт-плюс в Уфе. Застройщик «Первый трест».</p>
     </div>
     <div class="foot-col">
