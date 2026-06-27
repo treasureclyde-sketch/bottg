@@ -39,27 +39,21 @@
   .btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--line)}
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange-2);transform:translateY(-2px)}
 
-  /* ===== INTRO / 3D ===== */
-  #intro{position:fixed;inset:0;z-index:200;background:
-      radial-gradient(120% 90% at 50% 28%,#241710 0%,#0E0A07 62%);
-      display:flex;align-items:center;justify-content:center;overflow:hidden;will-change:transform}
-  #intro.lift{transform:translateY(-101%);transition:transform 1.1s cubic-bezier(.76,0,.24,1)}
+  /* ===== STAGE (scroll-driven 3D pour) ===== */
+  #stage{position:relative;height:280vh;background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%)}
+  .stage-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
   #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
-  #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
-      background:radial-gradient(120% 80% at 50% 60%,transparent 55%,rgba(0,0,0,.55) 100%)}
-  .intro-brand{position:relative;z-index:3;text-align:center;opacity:0;transform:translateY(14px);
-      transition:opacity 1s var(--ease),transform 1s var(--ease);pointer-events:none}
-  .intro-brand.show{opacity:1;transform:none;pointer-events:auto}
+  .stage-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
+  .stage-brand{position:relative;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
   .ib-logo{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(64px,13vw,150px);line-height:.9;letter-spacing:.01em;
       color:var(--cream);text-shadow:0 8px 50px rgba(0,0,0,.6)}
   .ib-logo b{color:var(--orange-2);font-weight:600}
   .ib-tag{margin-top:14px;font-size:clamp(11px,1.5vw,14px);font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:var(--cream-d)}
-  .ib-line{width:0;height:1px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
-  .intro-brand.show .ib-line{width:min(300px,62vw);transition:width 1.1s .25s var(--ease)}
-  .ib-enter{margin-top:30px}
-  .intro-sub{position:absolute;left:0;right:0;bottom:34px;z-index:3;text-align:center;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,234,219,.4)}
-  .skip{position:absolute;top:26px;right:30px;z-index:4;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,234,219,.5);cursor:pointer;background:none;border:none;font-family:inherit;transition:color .3s}
-  .skip:hover{color:var(--orange-2)}
+  .ib-line{width:min(300px,62vw);height:1px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+  .scroll-hint{position:absolute;left:0;right:0;bottom:36px;z-index:3;text-align:center;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,234,219,.6);will-change:opacity}
+  .scroll-hint .chev{display:block;margin:12px auto 0;width:16px;height:16px;border-right:2px solid var(--orange);border-bottom:2px solid var(--orange);transform:rotate(45deg);animation:bob 1.6s var(--ease) infinite}
+  @keyframes bob{0%,100%{transform:rotate(45deg) translate(0,0);opacity:.5}50%{transform:rotate(45deg) translate(4px,4px);opacity:1}}
 
   /* ===== HEADER ===== */
   header{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .4s var(--ease),border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
@@ -127,8 +121,8 @@
   .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
   .prod{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .35s var(--ease),border-color .35s}
   .prod:hover{transform:translateY(-6px);border-color:rgba(232,101,30,.4)}
-  .prod .ph{aspect-ratio:1/1;background:#0c0805;overflow:hidden;display:grid;place-items:center}
-  .prod .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+  .prod .ph{aspect-ratio:1/1;background:linear-gradient(180deg,#ffffff,#f1e7d8);overflow:hidden;display:grid;place-items:center;padding:14px}
+  .prod .ph img{width:100%;height:100%;object-fit:contain;transition:transform .6s var(--ease)}
   .prod:hover .ph img{transform:scale(1.06)}
   .prod .body{padding:18px}
   .prod .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2)}
@@ -169,22 +163,20 @@
   }
 </style>
 </head>
-<body class="loading">
+<body>
 
-<!-- ================= INTRO (3D bean pour) ================= -->
-<div id="intro">
-  <canvas id="scene"></canvas>
-  <button class="skip" id="skip">Пропустить</button>
-  <div class="intro-brand" id="introBrand">
-    <div class="ib-logo">H<b>2</b>O</div>
-    <div class="ib-tag">Coffee · Tea · Accessories</div>
-    <div class="ib-line"></div>
-    <button class="btn btn-orange ib-enter" id="enter">Войти в магазин
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+<!-- ================= STAGE (scroll-driven 3D bean pour) ================= -->
+<section id="stage">
+  <div class="stage-sticky">
+    <canvas id="scene"></canvas>
+    <div class="stage-brand" id="brand">
+      <div class="ib-logo">H<b>2</b>O</div>
+      <div class="ib-tag">Coffee · Tea · Accessories</div>
+      <div class="ib-line"></div>
+    </div>
+    <div class="scroll-hint" id="hint">Листайте — насыпьте зёрна<span class="chev"></span></div>
   </div>
-  <div class="intro-sub">Свежая обжарка · доставка по России</div>
-</div>
+</section>
 
 <!-- ================= HEADER ================= -->
 <header id="hdr">
@@ -225,7 +217,7 @@
       </div>
     </div>
     <div class="hero-art">
-      <img class="pack" src="assets/h2o/bag.jpg" alt="Пачка кофе H2O" onerror="this.style.display='none'">
+      <img class="pack" src="assets/h2o/feniks.jpg" alt="Пачка кофе H2O" onerror="this.style.display='none'">
       <div class="hero-badge">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
         <div><b>100% арабика</b><span>single origin</span></div>
@@ -256,9 +248,9 @@
         <p>Обжариваем небольшими партиями и отправляем в течение 48 часов — зерно раскрывается именно у вас в чашке.</p>
       </div>
       <div class="card">
-        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke-linejoin="round"/><path d="M3 7v6l9 4 9-4V7" stroke-linejoin="round"/></svg></div>
-        <h3>Specialty отбор</h3>
-        <p>Single origin, прозрачное происхождение и описание вкуса: от ягодной Эфиопии до плотной Колумбии.</p>
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="12" rx="6.5" ry="9" transform="rotate(35 12 12)" stroke-linejoin="round"/><path d="M8.4 6.6C11 10 13 14 15.6 17.4" stroke-linecap="round"/></svg></div>
+        <h3>Specialty-зерно</h3>
+        <p>Прозрачное происхождение и дегустационный профиль каждого лота — от ягодной Эфиопии до плотной Колумбии.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 13l2-6h11l2 6M3 13h16M3 13v5h16v-5" stroke-linejoin="round"/><circle cx="7" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg></div>
@@ -278,22 +270,22 @@
     </div>
     <div class="prod-grid">
       <div class="prod">
-        <div class="ph"><img src="assets/h2o/pack.jpg" alt="Эфиопия Guji" onerror="this.style.opacity=.2"></div>
+        <div class="ph"><img src="assets/h2o/guji.jpg" alt="Эфиопия Guji" onerror="this.style.opacity=.2"></div>
         <div class="body"><div class="tag">Фильтр · Эфиопия</div><h4>Guji</h4>
           <div class="price"><b>от 690 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
       </div>
       <div class="prod">
-        <div class="ph"><img src="assets/h2o/bag.jpg" alt="Бразилия эспрессо" onerror="this.style.opacity=.2"></div>
-        <div class="body"><div class="tag">Эспрессо · Бленд</div><h4>Phoenix</h4>
+        <div class="ph"><img src="assets/h2o/feniks.jpg" alt="Бразилия Феникс" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Эспрессо · Бразилия</div><h4>Феникс</h4>
           <div class="price"><b>от 640 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
       </div>
       <div class="prod">
-        <div class="ph"><img src="assets/h2o/prod1.jpg" alt="Fancy эспрессо" onerror="this.style.opacity=.2"></div>
-        <div class="body"><div class="tag">Эспрессо · Купаж</div><h4>Fancy</h4>
-          <div class="price"><b>от 590 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
+        <div class="ph"><img src="assets/h2o/assam.jpg" alt="Чай Ассам" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Чай · Чёрный</div><h4>Ассам</h4>
+          <div class="price"><b>от 480 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
       </div>
       <div class="prod">
-        <div class="ph"><img src="assets/h2o/prod2.jpg" alt="Да Хун Пао" onerror="this.style.opacity=.2"></div>
+        <div class="ph"><img src="assets/h2o/dahunpao.jpg" alt="Да Хун Пао" onerror="this.style.opacity=.2"></div>
         <div class="body"><div class="tag">Чай · Улун</div><h4>Да Хун Пао</h4>
           <div class="price"><b>от 520 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
       </div>
@@ -363,20 +355,20 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 const BEAN_MODEL_URL = "";
 /* ======================================== */
 
-const intro = document.getElementById('intro');
 const canvas = document.getElementById('scene');
-const introBrand = document.getElementById('introBrand');
-const enterBtn = document.getElementById('enter');
-const skipBtn = document.getElementById('skip');
+const stage  = document.getElementById('stage');
+const brand  = document.getElementById('brand');
+const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
 let renderer, scene, camera, beans, dummy = new THREE.Object3D();
 const N = 150;
 const beanData = [];
-let startTime = 0, brandShown = false, running = true;
 
 const MOUTH = new THREE.Vector3(-2.05, 2.25, 0.15); // bag spout
-const GRAVITY_FRAME = 0; // not used (kinematic pour)
+const POUR_S = 0.05, POUR_E = 0.74;                 // scroll range over which beans pour
+const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 
 function init(){
   try{
@@ -447,12 +439,12 @@ function init(){
   for(let i=0;i<N;i++){
     col.setHex(tones[i%tones.length]);
     beans.setColorAt(i, col);
-    const delay = reduce ? 0 : 0.55 + i*0.016;
-    const dur = 0.85 + Math.random()*0.25;
+    const f = i/(N-1);
     beanData.push({
       slot: slots[i],
       from: MOUTH.clone().add(new THREE.Vector3((Math.random()-.5)*0.25,(Math.random()-.5)*0.15,(Math.random()-.5)*0.25)),
-      delay, dur,
+      start: POUR_S + f*(POUR_E-POUR_S)*0.62,   // scroll point this bean starts falling
+      span: (POUR_E-POUR_S)*0.42,               // scroll length of its fall
       rotAxis: new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
       spin: 6+Math.random()*8,
       restQ: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6)),
@@ -464,12 +456,14 @@ function init(){
   if(BEAN_MODEL_URL){ swapModel(BEAN_MODEL_URL, mat); }
 
   window.addEventListener('resize', onResize);
-  startTime = performance.now()/1000;
-  if(reduce){ // static pile + brand immediately
-    renderFrame(999); showBrand();
-  }else{
-    requestAnimationFrame(loop);
-  }
+  requestAnimationFrame(loop);
+}
+
+function scrollProgress(){
+  if(reduce) return 1;
+  const total = stage.offsetHeight - window.innerHeight;
+  const scrolled = -stage.getBoundingClientRect().top;
+  return clamp(scrolled/Math.max(1,total), 0, 1);
 }
 
 function makeSlots(n){
@@ -551,26 +545,23 @@ function swapModel(url, fallbackMat){
 
 function easeOut(t){ return 1-Math.pow(1-t,3); }
 
-function renderFrame(now){
-  const t = now - startTime;
+function renderScroll(p){
   for(let i=0;i<N;i++){
     const b = beanData[i];
-    let e = (t - b.delay)/b.dur;
+    const e = clamp((p - b.start)/b.span, 0, 1);
     let scale = b.scale;
-    let q = new THREE.Quaternion();
-    let p = new THREE.Vector3();
-    if(e<=0){ scale = 0.0001; p.copy(b.from); }
-    else if(e>=1){
-      p.copy(b.slot); q.copy(b.restQ);
-    }else{
+    const q = new THREE.Quaternion();
+    const pos = new THREE.Vector3();
+    if(e<=0){ scale = 0.0001; pos.copy(b.from); }
+    else if(e>=1){ pos.copy(b.slot); q.copy(b.restQ); }
+    else{
       const ex = easeOut(e);
-      p.x = b.from.x + (b.slot.x-b.from.x)*ex;
-      p.z = b.from.z + (b.slot.z-b.from.z)*ex;
-      // accelerating fall for y
-      p.y = b.from.y + (b.slot.y-b.from.y)*(e*e);
-      q.setFromAxisAngle(b.rotAxis, b.spin*(1-e)* (0.3+e) );
+      pos.x = b.from.x + (b.slot.x-b.from.x)*ex;
+      pos.z = b.from.z + (b.slot.z-b.from.z)*ex;
+      pos.y = b.from.y + (b.slot.y-b.from.y)*(e*e);   // accelerating fall
+      q.setFromAxisAngle(b.rotAxis, b.spin*(1-e)*(0.3+e));
     }
-    dummy.position.copy(p);
+    dummy.position.copy(pos);
     dummy.quaternion.copy(q);
     dummy.scale.setScalar(scale);
     dummy.updateMatrix();
@@ -578,52 +569,45 @@ function renderFrame(now){
   }
   beans.instanceMatrix.needsUpdate = true;
 
-  // settle bag back upright slightly after pour
-  if(bag){
-    const settle = Math.min(1, Math.max(0,(t-0.2)/0.6));
-    bag.rotation.z = 2.35 - 0.0*settle;
-  }
-  renderer.render(scene, camera);
+  // bag tips as the pour begins (cause -> effect)
+  if(bag) bag.rotation.z = 1.30 + (2.35-1.30)*smooth(0.0, 0.09, p);
 
-  // brand reveal after last bean lands
-  const done = (N*0.016 + 0.55 + 1.1);
-  if(!brandShown && t>done){ showBrand(); }
+  // brand + hint react to scroll
+  const bo = smooth(0.58, 0.96, p);
+  brand.style.opacity = bo;
+  brand.style.transform = `translateY(${(1-bo)*16}px)`;
+  hint.style.opacity = (1 - smooth(0.0, 0.12, p)).toFixed(3);
+
+  renderer.render(scene, camera);
 }
 
+let lastP = -1;
 function loop(){
-  if(!running) return;
-  renderFrame(performance.now()/1000);
+  const r = stage.getBoundingClientRect();
+  const visible = r.bottom > 0 && r.top < window.innerHeight;
+  const p = scrollProgress();
+  if(visible || p !== lastP){ renderScroll(p); lastP = p; }
   requestAnimationFrame(loop);
 }
-
-function showBrand(){ brandShown=true; introBrand.classList.add('show'); }
 
 function onResize(){
   if(!renderer) return;
   camera.aspect = window.innerWidth/window.innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
-}
-
-function enterSite(){
-  running=false;
-  intro.classList.add('lift');
-  document.body.classList.remove('loading');
-  setTimeout(()=>{ intro.style.display='none'; }, 1200);
+  lastP = -1;
 }
 
 function fallback(){
-  // no WebGL: just show brand over gradient
+  // no WebGL: static brand over gradient
   canvas.style.display='none';
-  showBrand();
+  brand.style.opacity = 1;
+  if(hint) hint.style.display='none';
 }
 
-enterBtn.addEventListener('click', enterSite);
-skipBtn.addEventListener('click', enterSite);
-
-// header scroll state
+// header solid on scroll
 const hdr = document.getElementById('hdr');
-addEventListener('scroll', ()=>{ hdr.classList.toggle('scrolled', scrollY>40); });
+addEventListener('scroll', ()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
 
 init();
 </script>
