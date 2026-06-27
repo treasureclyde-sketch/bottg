@@ -85,7 +85,7 @@
 
   /* ---------- hero ---------- */
   .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
-  .hero-bg{position:absolute;inset:0;z-index:-2}
+  .hero-bg{position:absolute;inset:0;z-index:-2;background:linear-gradient(145deg,#3a332a 0%,#5a4f41 45%,#2a251f 100%)}
   .hero-bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);animation:slowzoom 18s var(--ease) forwards}
   @keyframes slowzoom{to{transform:scale(1)}}
   .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,18,15,.42) 0%,rgba(20,18,15,.12) 38%,rgba(20,18,15,.62) 100%);}
@@ -126,7 +126,7 @@
   .adv h3{font-family:'Fraunces',serif;font-weight:500;font-size:22px;margin-bottom:10px}
   .adv p{font-size:14.5px;color:var(--muted);line-height:1.6}
   .adv.span-6{grid-column:span 6}.adv.span-3{grid-column:span 3}
-  .adv.feature{grid-column:span 6;grid-row:span 2;color:#fff;border:none;padding:0;min-height:340px}
+  .adv.feature{grid-column:span 6;grid-row:span 2;color:#fff;border:none;padding:0;min-height:340px;background:linear-gradient(150deg,#4a4136,#6b5d4a 60%,#352f27)}
   .adv.feature .fwrap{position:absolute;inset:0;z-index:1;padding:34px 30px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(20,18,15,0) 30%,rgba(20,18,15,.78) 100%)}
   .adv.feature img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
   .adv.feature:hover img{transform:scale(1.05)}
@@ -167,7 +167,7 @@
 
   /* ---------- cta ---------- */
   .cta{position:relative;overflow:hidden;color:#fff}
-  .cta-bg{position:absolute;inset:0;z-index:-2}
+  .cta-bg{position:absolute;inset:0;z-index:-2;background:linear-gradient(120deg,#2b2620,#4a4036)}
   .cta-bg img{width:100%;height:100%;object-fit:cover}
   .cta-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,rgba(20,18,15,.88),rgba(20,18,15,.5))}
   .cta-inner{padding:clamp(80px,11vw,140px) 0}
@@ -242,7 +242,7 @@
 <!-- ============ HERO ============ -->
 <section class="hero" id="about">
   <div class="hero-bg">
-    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80" alt="Архитектура ЖК Урбаника">
+    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2000&q=80" alt="Архитектура ЖК Урбаника" onerror="this.style.display='none'">
   </div>
   <div class="wrap hero-inner">
     <span class="hero-tag"><span class="ic"></span> Уфа · ул. Минигали Губайдуллина · класс комфорт-плюс</span>
@@ -275,7 +275,7 @@
 
     <div class="adv-grid">
       <div class="adv feature reveal">
-        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Двор без машин">
+        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80" alt="Двор без машин" onerror="this.style.display='none'">
         <div class="fwrap">
           <div class="ico">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21V9l9-6 9 6v12M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 21h18" stroke-linecap="round"/></svg>
@@ -342,7 +342,7 @@
 <!-- ============ CTA ============ -->
 <section class="cta" id="cta">
   <div class="cta-bg">
-    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=2000&q=80" alt="Интерьер квартиры">
+    <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=2000&q=80" alt="Интерьер квартиры" onerror="this.style.display='none'">
   </div>
   <div class="wrap cta-inner reveal">
     <span class="eyebrow" style="color:#EAD9BC">Первый шаг</span>
