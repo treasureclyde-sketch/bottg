@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Лесное Ожерелье — концепт премиум-сайта · Уфа</title>
+<meta name="description" content="ЖК бизнес-класса «Лесное Ожерелье» в Уфе. Квартиры с террасами, эко-маршрут, гранд-лобби. Концепт-редизайн.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --forest:#13201A;
+    --forest-2:#1B2B22;
+    --forest-3:#0E1813;
+    --cream:#F4F1E9;
+    --cream-2:#FBFAF6;
+    --ink:#16201A;
+    --muted:#5F6B61;
+    --muted-d:rgba(244,241,233,.62);
+    --line:#E2DDD0;
+    --line-d:rgba(244,241,233,.16);
+    --gold:#C29D53;
+    --gold-deep:#A07F38;
+    --gold-wash:rgba(194,157,83,.1);
+    --shadow-m:0 18px 48px -24px rgba(8,14,10,.5);
+    --shadow-l:0 40px 90px -40px rgba(8,14,10,.7);
+    --r:18px;
+    --maxw:1180px;
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--cream);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;letter-spacing:0}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:var(--gold-deep)}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:none;font-family:inherit;font-size:15px;font-weight:600;border-radius:999px;padding:14px 28px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s var(--ease),color .25s var(--ease)}
+  .btn svg{width:17px;height:17px}
+  .btn-gold{background:var(--gold);color:#1a1408}
+  .btn-gold:hover{transform:translateY(-2px);box-shadow:0 16px 36px -16px rgba(194,157,83,.6)}
+  .btn-glass{background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.34);backdrop-filter:blur(6px)}
+  .btn-glass:hover{background:rgba(255,255,255,.2);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--ink);transform:translateY(-2px)}
+
+  /* header */
+  header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(244,241,233,.85);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:78px}
+  .brand{display:flex;align-items:center;gap:13px;color:#fff;transition:color .4s var(--ease)}
+  .brand img{height:40px;width:auto;display:block}
+  .brand .b-c{display:none}
+  .brand .b-txt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;letter-spacing:.16em;line-height:1;text-transform:uppercase}
+  header.scrolled .brand{color:var(--ink)}
+  header.scrolled .brand .b-w{display:none}
+  header.scrolled .brand .b-c{display:block}
+  .nav-links{display:flex;gap:32px}
+  .nav-links a{font-size:14.5px;font-weight:500;color:rgba(255,255,255,.85);transition:color .4s var(--ease);position:relative}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:1.5px;background:var(--gold);transition:width .3s var(--ease)}
+  .nav-links a:hover::after{width:100%}
+  header.scrolled .nav-links a{color:var(--muted)}
+  header.scrolled .nav-links a:hover{color:var(--ink)}
+  .nav-right{display:flex;align-items:center;gap:18px}
+  .nav-phone{font-size:15px;font-weight:600;color:#fff;transition:color .4s var(--ease);white-space:nowrap}
+  header.scrolled .nav-phone{color:var(--ink)}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+  .burger span{width:24px;height:2px;background:#fff;transition:.3s}
+  header.scrolled .burger span{background:var(--ink)}
+
+  /* intro */
+  #intro{position:fixed;inset:0;z-index:200;background:radial-gradient(120% 90% at 50% 35%,#1d2e24,#0c150f 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;overflow:hidden;will-change:transform}
+  #intro.lift{transform:translateY(-101%);transition:transform 1.05s cubic-bezier(.76,0,.24,1)}
+  .intro-c{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center}
+  .intro-pre{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(18px,2.6vw,28px);letter-spacing:.5em;text-transform:uppercase;color:var(--gold);opacity:0;transform:translateY(6px);animation:subIn .7s .9s forwards;padding-left:.5em}
+  .intro-emblem{width:84px;height:84px;margin-bottom:6px;opacity:0;transform:scale(.7) translateY(8px);animation:embIn 1s .2s var(--ease) forwards}
+  .intro-emblem img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 22px rgba(194,157,83,.4))}
+  .intro-word{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:clamp(30px,6vw,58px);letter-spacing:.2em;text-transform:uppercase;display:flex;overflow:hidden;padding-left:.2em}
+  .intro-word span{display:inline-block;transform:translateY(115%);animation:wordIn .8s var(--ease) forwards}
+  .intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);animation:lineIn .9s 1s var(--ease) forwards}
+  .intro-sub{opacity:0;font-size:clamp(11px,1.4vw,13px);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.55);animation:subIn .7s 1.2s forwards}
+  @keyframes embIn{to{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes wordIn{to{transform:translateY(0)}}
+  @keyframes lineIn{to{width:min(320px,60vw)}}
+  @keyframes subIn{to{opacity:1}}
+  .leaf{position:absolute;top:-8%;opacity:0;will-change:transform,opacity;animation:fall linear infinite}
+  .leaf svg{width:100%;height:100%;display:block}
+  @keyframes fall{0%{opacity:0;transform:translateY(-10vh) rotate(0deg)}10%{opacity:.85}90%{opacity:.85}100%{opacity:0;transform:translateY(112vh) rotate(420deg)}}
+  body.loading{overflow:hidden;height:100vh}
+
+  /* hero */
+  .hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:#fff;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:-2;background:linear-gradient(150deg,#26352a,#3c4a36 55%,#161f17);transition:transform .5s var(--ease)}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;transform:scale(1.08);animation:slowzoom 18s var(--ease) forwards}
+  @keyframes slowzoom{to{transform:scale(1)}}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(12,18,13,.45) 0%,rgba(12,18,13,.1) 40%,rgba(12,18,13,.72) 100%)}
+  .hero-inner{padding-bottom:54px;padding-top:120px;width:100%}
+  .hero-tag{display:inline-flex;align-items:center;gap:10px;font-size:13px;font-weight:500;letter-spacing:.04em;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.26);backdrop-filter:blur(6px);padding:8px 16px;border-radius:999px;margin-bottom:26px;transition:transform .5s var(--ease)}
+  .hero-tag .ic{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(194,157,83,.3)}
+  .hero h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(48px,8.5vw,112px);line-height:.96;letter-spacing:-.01em;max-width:15ch;transition:transform .5s var(--ease)}
+  .hero h1 em{font-style:italic;color:var(--gold)}
+  .hero-sub{margin-top:22px;font-size:clamp(16px,1.6vw,19px);max-width:48ch;color:rgba(255,255,255,.9);transition:transform .5s var(--ease)}
+  .hero-cta{margin-top:36px;display:flex;gap:14px;flex-wrap:wrap}
+  .hero-stats{display:flex;gap:44px;margin-top:52px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.2);padding-top:30px}
+  .hero-stats .st b{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:600;display:block;line-height:1.05}
+  .hero-stats .st span{font-size:13px;color:rgba(255,255,255,.72)}
+  .scrollcue{position:absolute;right:28px;bottom:46px;display:flex;flex-direction:column;align-items:center;gap:10px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.7);writing-mode:vertical-rl}
+  .scrollcue .ln{width:1px;height:46px;background:rgba(255,255,255,.5);position:relative;overflow:hidden}
+  .scrollcue .ln::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:var(--gold);animation:cue 2s var(--ease) infinite}
+  @keyframes cue{to{top:100%}}
+
+  /* reveal */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+  .reveal.d1{transition-delay:.08s}.reveal.d2{transition-delay:.16s}.reveal.d3{transition-delay:.24s}
+
+  section{position:relative}
+  .sec-pad{padding:clamp(80px,11vw,150px) 0}
+  .sec-head{max-width:700px;margin-bottom:60px}
+  .sec-head h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,5.5vw,68px);line-height:1.02;letter-spacing:-.01em;margin-top:16px}
+  .sec-head h2 em{font-style:italic;color:var(--gold-deep)}
+  .sec-head p{margin-top:20px;font-size:17px;color:var(--muted);max-width:56ch}
+
+  /* advantages bento */
+  .adv-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:22px}
+  .adv{background:var(--cream-2);border:1px solid var(--line);border-radius:var(--r);padding:34px 30px;transition:transform .4s var(--ease),box-shadow .4s var(--ease);position:relative;overflow:hidden}
+  .adv:hover{transform:translateY(-5px);box-shadow:var(--shadow-m)}
+  .adv .ico{width:50px;height:50px;border-radius:14px;background:var(--gold-wash);display:flex;align-items:center;justify-content:center;color:var(--gold-deep);margin-bottom:22px}
+  .adv .ico svg{width:25px;height:25px;stroke-width:1.5}
+  .adv h3{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:25px;margin-bottom:9px;line-height:1.1}
+  .adv p{font-size:14.5px;color:var(--muted);line-height:1.6}
+  .adv.span-6{grid-column:span 6}.adv.span-4{grid-column:span 4}.adv.span-3{grid-column:span 3}
+  .adv.photo{color:#fff;border:none;padding:0;min-height:330px;background:linear-gradient(150deg,#2c3a2c,#46553e 60%,#1a241a)}
+  .adv.photo .pwrap{position:absolute;inset:0;z-index:1;padding:34px 30px;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(180deg,rgba(12,18,13,0) 28%,rgba(12,18,13,.8) 100%)}
+  .adv.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+  .adv.photo:hover img{transform:scale(1.05)}
+  .adv.photo h3{font-size:30px;color:#fff;position:relative;z-index:1}
+  .adv.photo p{color:rgba(255,255,255,.85);position:relative;z-index:1;font-size:15px;max-width:38ch}
+  .adv.photo .ico{background:rgba(255,255,255,.14);color:#fff}
+
+  /* architecture (dark) */
+  .arch{background:var(--forest);color:#fff}
+  .arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,64px);align-items:center}
+  .arch-img{border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow-l);background:linear-gradient(150deg,#26352a,#161f17);aspect-ratio:4/3}
+  .arch-img img{width:100%;height:100%;object-fit:cover}
+  .arch h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(34px,5vw,60px);line-height:1.03;letter-spacing:-.01em}
+  .arch h2 em{font-style:italic;color:var(--gold)}
+  .arch .eyebrow{color:var(--gold)}
+  .arch p{margin-top:20px;font-size:17px;color:var(--muted-d);max-width:48ch}
+  .arch-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:38px;border-top:1px solid var(--line-d);padding-top:28px}
+  .arch-stats b{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:600;display:block;line-height:1;color:#fff}
+  .arch-stats span{font-size:13px;color:var(--muted-d)}
+
+  /* cta */
+  .cta{position:relative;overflow:hidden;color:#fff}
+  .cta-bg{position:absolute;inset:0;z-index:-2;background:linear-gradient(120deg,#141d16,#2a3a2b)}
+  .cta-bg img{width:100%;height:100%;object-fit:cover}
+  .cta-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,rgba(10,16,11,.9),rgba(10,16,11,.55))}
+  .cta-inner{padding:clamp(80px,11vw,140px) 0}
+  .cta h2{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(36px,5.2vw,66px);line-height:1.03;letter-spacing:-.01em;max-width:17ch}
+  .cta h2 em{font-style:italic;color:var(--gold)}
+  .cta p{margin-top:20px;font-size:18px;color:rgba(255,255,255,.85);max-width:48ch}
+  .cta-form{margin-top:36px;display:flex;gap:12px;flex-wrap:wrap;max-width:560px}
+  .cta-form input{flex:1;min-width:200px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.3);color:#fff;font-family:inherit;font-size:15px;padding:15px 20px;border-radius:999px;backdrop-filter:blur(6px)}
+  .cta-form input::placeholder{color:rgba(255,255,255,.6)}
+  .cta-form input:focus{outline:none;border-color:var(--gold)}
+  .cta-tiny{margin-top:15px;font-size:12.5px;color:rgba(255,255,255,.5);max-width:46ch}
+  .cta-perks{margin-top:44px;display:flex;gap:38px;flex-wrap:wrap}
+  .cta-perks .pk{display:flex;align-items:center;gap:11px;font-size:14.5px;color:rgba(255,255,255,.9)}
+  .cta-perks .pk svg{width:21px;height:21px;color:var(--gold);flex-shrink:0}
+
+  footer{background:var(--forest-3);color:rgba(244,241,233,.6);padding:60px 0 36px}
+  .foot{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;align-items:flex-start}
+  .foot .brand{margin-bottom:14px;color:#fff}
+  .foot p{font-size:14px;max-width:34ch;line-height:1.6}
+  .foot-col h4{color:#fff;font-size:13px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;font-weight:600}
+  .foot-col a{display:block;font-size:14.5px;margin-bottom:10px;color:rgba(244,241,233,.6);transition:.2s}
+  .foot-col a:hover{color:#fff}
+  .foot-bottom{margin-top:46px;padding-top:24px;border-top:1px solid var(--line-d);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:rgba(244,241,233,.4)}
+
+  .ribbon{position:fixed;z-index:60;bottom:18px;left:50%;transform:translateX(-50%);background:var(--forest-3);color:#fff;font-size:12.5px;font-weight:500;padding:9px 18px;border-radius:999px;box-shadow:var(--shadow-l);display:flex;align-items:center;gap:9px;border:1px solid var(--line-d)}
+  .ribbon .dot{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px rgba(194,157,83,.25)}
+
+  @media(max-width:980px){
+    .nav-links,.nav-phone{display:none}
+    .burger{display:flex}
+    .adv.span-6,.adv.photo{grid-column:span 12}
+    .adv.span-4,.adv.span-3{grid-column:span 6}
+    .arch-grid{grid-template-columns:1fr;gap:34px}
+  }
+  @media(max-width:560px){
+    .wrap{padding:0 20px}
+    .hero-stats{gap:28px}.hero-stats .st b{font-size:26px}
+    .adv.span-4,.adv.span-3{grid-column:span 12}
+    .arch-stats{grid-template-columns:1fr 1fr}
+    .scrollcue{display:none}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}.leaf{display:none}
+  }
+</style>
+</head>
+<body class="loading">
+
+<!--
+  ════════════════════════════════════════════════════════════════
+  ФОТО / РЕНДЕРЫ — с официального сайта лесное-ожерелье.рф (tildacdn).
+  Все <img> имеют onerror → остаётся премиум-градиент; object-fit:cover.
+  Слоты: HERO (река/осень) · ЭКО (аллея) · ТЕРРАСЫ · АРХИТЕКТУРА (рендер в лесу) · CTA (гранд-лобби)
+  Логотип «Лесное Ожерелье» — символ-эмблема (белый / золотой).
+  ════════════════════════════════════════════════════════════════
+-->
+
+<!-- INTRO -->
+<div id="intro" aria-hidden="true">
+  <div class="intro-c">
+    <div class="intro-emblem"><img src="https://static.tildacdn.com/tild6630-6239-4363-a163-623730313336/logo.svg" alt=""></div>
+    <div class="intro-pre">Лесное</div>
+    <div class="intro-word" id="introWord"></div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">Жилой квартал бизнес-класса · Уфа</div>
+  </div>
+</div>
+
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#" class="brand" aria-label="ЖК Лесное Ожерелье">
+      <img class="b-w" src="https://static.tildacdn.com/tild6630-6239-4363-a163-623730313336/logo.svg" alt="">
+      <img class="b-c" src="https://static.tildacdn.com/tild3238-3637-4532-a132-646230313636/logo2.svg" alt="">
+      <span class="b-txt">Лесное<br>Ожерелье</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#about">О проекте</a>
+      <a href="#nature">Природа</a>
+      <a href="#arch">Архитектура</a>
+      <a href="#cta">Квартиры</a>
+    </nav>
+    <div class="nav-right">
+      <a href="tel:+73472220111" class="nav-phone">+7 (347) 222-01-11</a>
+      <a href="#cta" class="btn btn-glass" style="padding:11px 22px;font-size:14px">Выбрать квартиру</a>
+      <button class="burger" aria-label="Меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="about">
+  <div class="hero-bg">
+    <img src="https://static.tildacdn.com/tild3738-3631-4834-b531-616430646236/12_it1_101.jpg" alt="Лесное Ожерелье — природа у дома" onerror="this.style.display='none'">
+  </div>
+  <div class="wrap hero-inner">
+    <span class="hero-tag"><span class="ic"></span> Уфа · бизнес-класс · эко-маршрут «Уфимское ожерелье»</span>
+    <h1 class="serif">Жизнь, вплетённая<br>в <em>лес</em></h1>
+    <p class="hero-sub">Жилой квартал бизнес-класса в географическом центре Уфы. Квартиры с террасами, гранд-лобби и парковая тишина за окном.</p>
+    <div class="hero-cta">
+      <a href="#cta" class="btn btn-gold">Выбрать квартиру
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="#cta" class="btn btn-glass">Скачать презентацию</a>
+    </div>
+    <div class="hero-stats">
+      <div class="st"><b>бизнес</b><span>класс жилья</span></div>
+      <div class="st"><b>с террасами</b><span>видовые квартиры</span></div>
+      <div class="st"><b>центр</b><span>Уфы</span></div>
+      <div class="st"><b>эко-маршрут</b><span>прямо у дома</span></div>
+    </div>
+  </div>
+  <div class="scrollcue">Листайте вниз<span class="ln"></span></div>
+</section>
+
+<!-- ADVANTAGES -->
+<section class="sec-pad" id="nature">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Среда для жизни</span>
+      <h2 class="serif">Природа, до которой<br>не нужно <em>ехать</em></h2>
+      <p>«Лесное Ожерелье» — новая жемчужина, вплетённая в зелёную нить «Уфимского ожерелья». Лес, вода и тишина — часть вашей повседневности.</p>
+    </div>
+
+    <div class="adv-grid">
+      <div class="adv photo span-6 reveal">
+        <img src="https://static.tildacdn.com/tild3139-6464-4735-b664-353933636462/12_it1_100.jpg" alt="Эко-маршрут у дома" onerror="this.style.display='none'">
+        <div class="pwrap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 22V8M12 8c0-3 2-5 5-5 0 3-2 5-5 5Zm0 4c0-3-2-5-5-5 0 3 2 5 5 5Z" stroke-linejoin="round"/></svg></div>
+          <h3 class="serif">Эко-маршрут «Уфимское ожерелье»</h3>
+          <p>Прогулочные и велодорожки вдоль леса начинаются прямо от вашего двора.</p>
+        </div>
+      </div>
+
+      <div class="adv photo span-6 reveal d1">
+        <img src="https://static.tildacdn.com/tild3062-6230-4337-a631-303665396431/19_it1.jpg" alt="Квартиры с террасами" onerror="this.style.display='none'">
+        <div class="pwrap">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-6h6v6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <h3 class="serif">Квартиры с террасами</h3>
+          <p>Видовые планировки с собственными террасами — лес и река у вас дома.</p>
+        </div>
+      </div>
+
+      <div class="adv span-4 reveal">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 21V8l8-5 8 5v13M4 21h16M9 13h6M9 17h6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3 class="serif">Гранд-лобби</h3>
+        <p>Входные группы в формате гранд-лобби — как продолжение вашего дома: ресепшн, лаунж, озеленение.</p>
+      </div>
+
+      <div class="adv span-4 reveal d1">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 18V5l10-2v13" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3"/><circle cx="16" cy="16" r="3"/></svg></div>
+        <h3 class="serif">Музыкальная школа</h3>
+        <p>Собственная музыкальная школа на территории квартала — развитие детей в шаговой доступности.</p>
+      </div>
+
+      <div class="adv span-4 reveal d2">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 2 4 6v6c0 5 3.5 8 8 10 4.5-2 8-5 8-10V6l-8-4Z" stroke-linejoin="round"/></svg></div>
+        <h3 class="serif">Технологии тишины</h3>
+        <p>Закрытая территория, видеонаблюдение и инженерия бизнес-класса, которая работает незаметно.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="sec-pad arch" id="arch">
+  <div class="wrap arch-grid">
+    <div class="arch-img reveal">
+      <img src="https://static.tildacdn.com/tild3232-3030-4531-a635-643132643030/12_it1_67.jpg" alt="Архитектура в лесу" onerror="this.style.display='none'">
+    </div>
+    <div class="reveal d1">
+      <span class="eyebrow">Архитектура</span>
+      <h2 class="serif">Дом, растворённый<br>в <em>лесу</em></h2>
+      <p>Урбан-виллы и башни коллекционного формата, бережно вписанные в рельеф и зелень. Каждое решение продумано по инсоляции, эргономике и сценариям жизни — без лишних метров и неудобных зон.</p>
+      <div class="arch-stats">
+        <div><b>5</b><span>секций квартала</span></div>
+        <div><b>урбан-<br>виллы</b><span>коллекционный формат</span></div>
+        <div><b>1 ₽</b><span>первый шаг к квартире</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+  <div class="cta-bg">
+    <img src="https://static.tildacdn.com/tild3264-6135-4237-b734-653963656133/12_it1_42.webp" alt="Гранд-лобби Лесное Ожерелье" onerror="this.style.display='none'">
+  </div>
+  <div class="wrap cta-inner reveal">
+    <span class="eyebrow" style="color:var(--gold)">Первый шаг</span>
+    <h2 class="serif" style="margin-top:16px">Забронируйте квартиру <em>за 1 рубль</em></h2>
+    <p>Оставьте номер — подберём планировку с террасой под ваш сценарий жизни и рассчитаем ипотеку. Без спама и навязчивых звонков.</p>
+    <form class="cta-form" onsubmit="return demoSubmit(this)">
+      <input type="text" placeholder="Как вас зовут" required>
+      <input type="tel" placeholder="+7 (___) ___-__-__" required>
+      <button class="btn btn-gold" type="submit">Получить подбор</button>
+    </form>
+    <p class="cta-tiny">Нажимая кнопку, вы соглашаетесь с политикой обработки персональных данных.</p>
+    <div class="cta-perks">
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Квартиры с террасами</div>
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Выгода 5% на старте</div>
+      <div class="pk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg> Эко-маршрут у дома</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap foot">
+    <div>
+      <a href="#" class="brand" aria-label="ЖК Лесное Ожерелье">
+        <img class="b-w" src="https://static.tildacdn.com/tild6630-6239-4363-a163-623730313336/logo.svg" alt="" style="height:42px">
+        <span class="b-txt">Лесное<br>Ожерелье</span>
+      </a>
+      <p>Жилой квартал бизнес-класса в Уфе. Застройщик «Первый трест».</p>
+    </div>
+    <div class="foot-col">
+      <h4>Навигация</h4>
+      <a href="#about">О проекте</a><a href="#nature">Природа</a><a href="#arch">Архитектура</a><a href="#cta">Квартиры</a>
+    </div>
+    <div class="foot-col">
+      <h4>Контакты</h4>
+      <a href="tel:+73472220111">+7 (347) 222-01-11</a><a href="#">г. Уфа</a><a href="#">Ежедневно 9:00–20:00</a>
+    </div>
+  </div>
+  <div class="wrap foot-bottom">
+    <span>© 2026 ЖК «Лесное Ожерелье». Концепт-редизайн.</span>
+    <span>Дизайн-концепт · не является публичной офертой</span>
+  </div>
+</footer>
+
+<div class="ribbon"><span class="dot"></span> Концепт-редизайн · демо для презентации</div>
+
+<script>
+  const hdr=document.getElementById('hdr');
+  const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
+  onScroll();window.addEventListener('scroll',onScroll,{passive:true});
+
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.16});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  /* intro: слово + падающие листья */
+  (function(){
+    const intro=document.getElementById('intro');
+    const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    function finish(){intro.remove();document.body.classList.remove('loading')}
+    if(reduce){finish();return}
+    const word=document.getElementById('introWord');
+    [...'ОЖЕРЕЛЬЕ'].forEach((ch,i)=>{const s=document.createElement('span');s.textContent=ch;s.style.animationDelay=(0.5+i*0.06)+'s';word.appendChild(s)});
+    // листья
+    const leafSVG='<svg viewBox="0 0 24 24"><path d="M12 2c5 3 8 7 8 12 0 4-3 8-8 8-1-6-1-12 0-18-3 3-5 7-5 11" fill="%C"/></svg>';
+    const tones=['#C29D53','#8a9a6a','#b8862f','#6f8a5a','#d4b76a'];
+    for(let i=0;i<10;i++){
+      const d=document.createElement('div');d.className='leaf';
+      const size=10+Math.random()*16;
+      d.style.left=(Math.random()*100)+'%';
+      d.style.width=size+'px';d.style.height=size+'px';
+      const dur=5+Math.random()*5, delay=Math.random()*4;
+      d.style.animationDuration=dur+'s';d.style.animationDelay=(-delay)+'s';
+      d.innerHTML=leafSVG.replace('%C',tones[i%tones.length]);
+      intro.appendChild(d);
+    }
+    setTimeout(()=>{intro.classList.add('lift');intro.addEventListener('transitionend',finish,{once:true});setTimeout(finish,1300)},2900);
+  })();
+
+  /* hero parallax */
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    if(window.matchMedia('(hover:none)').matches)return;
+    const hero=document.getElementById('about');
+    const bg=hero.querySelector('.hero-bg'),h1=hero.querySelector('h1'),tag=hero.querySelector('.hero-tag'),sub=hero.querySelector('.hero-sub');
+    let raf=null,tx=0,ty=0;
+    hero.addEventListener('mousemove',e=>{const r=hero.getBoundingClientRect();tx=(e.clientX/r.width-.5);ty=(e.clientY/r.height-.5);if(!raf)raf=requestAnimationFrame(apply)});
+    hero.addEventListener('mouseleave',()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)});
+    function apply(){raf=null;bg.style.transform=`translate(${tx*16}px,${ty*16}px)`;if(tag)tag.style.transform=`translate(${tx*-9}px,${ty*-9}px)`;h1.style.transform=`translate(${tx*-15}px,${ty*-13}px)`;if(sub)sub.style.transform=`translate(${tx*-7}px,${ty*-7}px)`}
+  })();
+
+  function demoSubmit(form){
+    const btn=form.querySelector('button');btn.textContent='Заявка отправлена ✓';btn.style.background='#6f8a5a';btn.style.color='#fff';
+    setTimeout(()=>{btn.textContent='Получить подбор';btn.style.background='';btn.style.color='';form.reset()},2600);return false;
+  }
+</script>
+</body>
+</html>
