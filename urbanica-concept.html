@@ -104,6 +104,27 @@
   .scrollcue .ln::after{content:"";position:absolute;top:-50%;left:0;width:100%;height:50%;background:#fff;animation:cue 2s var(--ease) infinite}
   @keyframes cue{to{top:100%}}
 
+  /* ---------- intro / занавес ---------- */
+  #intro{position:fixed;inset:0;z-index:200;background:#1A1916;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;overflow:hidden;will-change:transform}
+  #intro::before{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 40%,rgba(154,123,79,.20),transparent 60%)}
+  #intro.lift{transform:translateY(-101%);transition:transform 1.05s cubic-bezier(.76,0,.24,1)}
+  .intro-c{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center;gap:20px}
+  .intro-brand{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(38px,8vw,84px);letter-spacing:.1em;display:flex;overflow:hidden;padding-right:.1em}
+  .intro-brand span{display:inline-block;transform:translateY(115%);animation:introUp .8s cubic-bezier(.22,.61,.36,1) forwards}
+  .intro-dot{display:inline-block;width:.13em;height:.13em;border-radius:50%;background:var(--accent);align-self:flex-end;margin-bottom:.28em;margin-left:.12em;opacity:0;transform:scale(0);animation:introDot .5s 1s cubic-bezier(.34,1.56,.64,1) forwards}
+  .intro-line{width:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent);animation:introLine .9s .55s var(--ease) forwards}
+  .intro-sub{opacity:0;font-size:clamp(11px,1.4vw,13px);letter-spacing:.32em;text-transform:uppercase;color:rgba(255,255,255,.55);animation:introFade .7s 1.15s forwards}
+  .intro-count{position:absolute;right:clamp(22px,4vw,52px);bottom:clamp(22px,4vw,46px);font-family:'Fraunces',serif;font-size:clamp(28px,5vw,52px);color:rgba(255,255,255,.32);font-weight:500}
+  @keyframes introUp{to{transform:translateY(0)}}
+  @keyframes introDot{to{opacity:1;transform:scale(1)}}
+  @keyframes introLine{to{width:min(280px,52vw)}}
+  @keyframes introFade{to{opacity:1}}
+  body.loading{overflow:hidden;height:100vh}
+
+  /* parallax depth */
+  .hero-bg{transition:transform .5s var(--ease)}
+  .hero-inner .hero-tag,.hero h1,.hero-sub{transition:transform .5s var(--ease)}
+
   /* ---------- reveal ---------- */
   .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
   .reveal.in{opacity:1;transform:none}
@@ -220,7 +241,17 @@
   }
 </style>
 </head>
-<body>
+<body class="loading">
+
+<!-- ============ INTRO / занавес ============ -->
+<div id="intro" aria-hidden="true">
+  <div class="intro-c">
+    <div class="intro-brand" id="introBrand"></div>
+    <div class="intro-line"></div>
+    <div class="intro-sub">Уфа · квартал комфорт-плюс</div>
+  </div>
+  <div class="intro-count" id="introCount">0</div>
+</div>
 
 <header id="hdr">
   <div class="wrap nav">
@@ -392,6 +423,58 @@
 <div class="ribbon"><span class="dot"></span> Концепт-редизайн · демо для презентации</div>
 
 <script>
+  /* ---- intro / занавес ---- */
+  (function(){
+    const intro=document.getElementById('intro');
+    const reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+    function finish(){intro.remove();document.body.classList.remove('loading')}
+    if(reduce){finish();return}
+
+    // буквы бренда со стаггером
+    const brand=document.getElementById('introBrand');
+    const word='УРБАНИКА';
+    [...word].forEach((ch,i)=>{
+      const s=document.createElement('span');s.textContent=ch;
+      s.style.animationDelay=(0.15+i*0.06)+'s';brand.appendChild(s);
+    });
+    const dot=document.createElement('span');dot.className='intro-dot';brand.appendChild(dot);
+
+    // счётчик 0 → 100
+    const cEl=document.getElementById('introCount');let n=0;
+    const ci=setInterval(()=>{n+=Math.floor(Math.random()*4)+2;if(n>=100){n=100;clearInterval(ci)}cEl.textContent=n},75);
+
+    // подъём занавеса
+    setTimeout(()=>{cEl.textContent='100';intro.classList.add('lift');
+      intro.addEventListener('transitionend',finish,{once:true});
+      setTimeout(finish,1300); // подстраховка
+    },2500);
+  })();
+
+  /* ---- курсор-параллакс в hero (микро-вовлечение) ---- */
+  (function(){
+    if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+    if(window.matchMedia('(hover:none)').matches)return; // не на тач
+    const hero=document.getElementById('about');
+    const bg=hero.querySelector('.hero-bg');
+    const h1=hero.querySelector('h1');
+    const tag=hero.querySelector('.hero-tag');
+    const sub=hero.querySelector('.hero-sub');
+    let raf=null,tx=0,ty=0;
+    hero.addEventListener('mousemove',e=>{
+      const r=hero.getBoundingClientRect();
+      tx=(e.clientX/r.width-.5);ty=(e.clientY/r.height-.5);
+      if(!raf)raf=requestAnimationFrame(apply);
+    });
+    hero.addEventListener('mouseleave',()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(apply)});
+    function apply(){
+      raf=null;
+      bg.style.transform=`translate(${tx*18}px,${ty*18}px)`;
+      if(tag)tag.style.transform=`translate(${tx*-10}px,${ty*-10}px)`;
+      h1.style.transform=`translate(${tx*-16}px,${ty*-14}px)`;
+      if(sub)sub.style.transform=`translate(${tx*-8}px,${ty*-8}px)`;
+    }
+  })();
+
   /* header scroll state */
   const hdr=document.getElementById('hdr');
   const onScroll=()=>hdr.classList.toggle('scrolled',window.scrollY>40);
