@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>H2O — Specialty Coffee · Tea · Accessories</title>
+<meta name="description" content="H2O — specialty-обжарка кофе, отборный чай и аксессуары. Свежая обжарка, доставка по всей России.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --bg:#0E0A07;
+    --bg-2:#15100B;
+    --panel:#1C1510;
+    --panel-2:#241A12;
+    --cream:#F4EADB;
+    --cream-d:rgba(244,234,219,.62);
+    --line:rgba(244,234,219,.12);
+    --orange:#E8651E;
+    --orange-2:#F59A4B;
+    --ember:#B8430D;
+    --ease:cubic-bezier(.22,.61,.36,1);
+    --maxw:1200px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  body.loading{overflow:hidden;height:100vh}
+  .serif{font-family:'Fraunces',Georgia,serif;font-weight:500}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 30px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.26em;text-transform:uppercase;color:var(--orange-2)}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;cursor:pointer;border:none;font-family:inherit;font-size:15px;font-weight:600;border-radius:999px;padding:15px 30px;transition:transform .25s var(--ease),box-shadow .25s var(--ease),background .25s,color .25s}
+  .btn svg{width:17px;height:17px}
+  .btn-orange{background:linear-gradient(135deg,var(--orange),var(--ember));color:#1a0e06}
+  .btn-orange:hover{transform:translateY(-2px);box-shadow:0 18px 40px -16px rgba(232,101,30,.65)}
+  .btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--orange);color:var(--orange-2);transform:translateY(-2px)}
+
+  /* ===== INTRO / 3D ===== */
+  #intro{position:fixed;inset:0;z-index:200;background:
+      radial-gradient(120% 90% at 50% 28%,#241710 0%,#0E0A07 62%);
+      display:flex;align-items:center;justify-content:center;overflow:hidden;will-change:transform}
+  #intro.lift{transform:translateY(-101%);transition:transform 1.1s cubic-bezier(.76,0,.24,1)}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(120% 80% at 50% 60%,transparent 55%,rgba(0,0,0,.55) 100%)}
+  .intro-brand{position:relative;z-index:3;text-align:center;opacity:0;transform:translateY(14px);
+      transition:opacity 1s var(--ease),transform 1s var(--ease);pointer-events:none}
+  .intro-brand.show{opacity:1;transform:none;pointer-events:auto}
+  .ib-logo{font-family:'Fraunces',serif;font-weight:600;font-size:clamp(64px,13vw,150px);line-height:.9;letter-spacing:.01em;
+      color:var(--cream);text-shadow:0 8px 50px rgba(0,0,0,.6)}
+  .ib-logo b{color:var(--orange-2);font-weight:600}
+  .ib-tag{margin-top:14px;font-size:clamp(11px,1.5vw,14px);font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:var(--cream-d)}
+  .ib-line{width:0;height:1px;margin:22px auto 0;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
+  .intro-brand.show .ib-line{width:min(300px,62vw);transition:width 1.1s .25s var(--ease)}
+  .ib-enter{margin-top:30px}
+  .intro-sub{position:absolute;left:0;right:0;bottom:34px;z-index:3;text-align:center;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,234,219,.4)}
+  .skip{position:absolute;top:26px;right:30px;z-index:4;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(244,234,219,.5);cursor:pointer;background:none;border:none;font-family:inherit;transition:color .3s}
+  .skip:hover{color:var(--orange-2)}
+
+  /* ===== HEADER ===== */
+  header{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .4s var(--ease),border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
+  header.scrolled{background:rgba(14,10,7,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
+  .brand{display:flex;align-items:center;gap:12px;font-family:'Fraunces',serif;font-weight:600;font-size:30px;letter-spacing:.01em}
+  .brand b{color:var(--orange-2)}
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px var(--orange)}
+  .nav-links{display:flex;gap:30px}
+  .nav-links a{font-size:14.5px;font-weight:500;color:var(--cream-d);position:relative;transition:color .3s}
+  .nav-links a::after{content:"";position:absolute;left:0;bottom:-6px;width:0;height:1.5px;background:var(--orange);transition:width .3s var(--ease)}
+  .nav-links a:hover{color:var(--cream)}
+  .nav-links a:hover::after{width:100%}
+  .nav-right{display:flex;align-items:center;gap:20px}
+  .nav-phone{font-size:15px;font-weight:600;white-space:nowrap}
+  .burger{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
+  .burger span{width:24px;height:2px;background:var(--cream);transition:.3s}
+
+  /* ===== HERO ===== */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:120px 0 70px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0;
+      background:radial-gradient(90% 70% at 78% 30%,rgba(232,101,30,.16),transparent 60%),
+                 radial-gradient(70% 60% at 10% 90%,rgba(184,67,13,.12),transparent 60%)}
+  .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:50px;align-items:center;width:100%}
+  .hero h1{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(40px,6vw,76px);line-height:1.02;letter-spacing:-.01em;margin:20px 0 0}
+  .hero h1 em{font-style:italic;color:var(--orange-2)}
+  .hero p.lead{margin-top:22px;font-size:clamp(15px,1.5vw,18px);color:var(--cream-d);max-width:30em}
+  .hero-cta{display:flex;gap:14px;margin-top:34px;flex-wrap:wrap}
+  .hero-meta{display:flex;gap:34px;margin-top:44px;flex-wrap:wrap}
+  .hero-meta .m b{font-family:'Fraunces',serif;font-size:30px;font-weight:600;color:var(--cream);display:block;line-height:1}
+  .hero-meta .m span{font-size:12.5px;letter-spacing:.04em;color:var(--cream-d)}
+  .hero-art{position:relative;display:flex;justify-content:center}
+  .hero-art .pack{width:min(86%,380px);border-radius:20px;transform:rotate(3deg);
+      box-shadow:0 50px 90px -30px rgba(0,0,0,.8),0 0 0 1px rgba(244,234,219,.06);
+      filter:drop-shadow(0 0 60px rgba(232,101,30,.25))}
+  .hero-art::before{content:"";position:absolute;width:330px;height:330px;border-radius:50%;
+      background:radial-gradient(circle,rgba(232,101,30,.35),transparent 70%);filter:blur(20px);z-index:-1}
+  .hero-badge{position:absolute;bottom:8%;left:2%;background:rgba(28,21,16,.86);backdrop-filter:blur(8px);
+      border:1px solid var(--line);border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;
+      box-shadow:var(--shadow,0 20px 50px -20px rgba(0,0,0,.7))}
+  .hero-badge .ic{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--orange),var(--ember));display:grid;place-items:center;color:#1a0e06}
+  .hero-badge .ic svg{width:18px;height:18px}
+  .hero-badge b{display:block;font-size:14px;line-height:1.2}.hero-badge span{font-size:12px;color:var(--cream-d)}
+
+  .marquee{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;overflow:hidden;white-space:nowrap;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+  .marquee .track{display:inline-flex;gap:46px;animation:scroll 26s linear infinite}
+  .marquee span{font-family:'Fraunces',serif;font-size:20px;color:var(--cream-d);display:inline-flex;align-items:center;gap:46px}
+  .marquee i{color:var(--orange);font-style:normal}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ===== FEATURES ===== */
+  .section{padding:90px 0}
+  section[id],footer[id]{scroll-margin-top:90px}
+  .sec-head{max-width:620px;margin-bottom:46px}
+  .sec-head h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,46px);line-height:1.05;margin-top:14px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:30px;transition:transform .35s var(--ease),border-color .35s}
+  .card:hover{transform:translateY(-6px);border-color:rgba(232,101,30,.4)}
+  .card .ic{width:48px;height:48px;border-radius:13px;background:rgba(232,101,30,.12);border:1px solid rgba(232,101,30,.3);display:grid;place-items:center;color:var(--orange-2);margin-bottom:20px}
+  .card .ic svg{width:24px;height:24px;stroke-width:1.6}
+  .card h3{font-family:'Fraunces',serif;font-weight:600;font-size:22px;margin-bottom:8px}
+  .card p{font-size:14.5px;color:var(--cream-d)}
+
+  /* ===== PRODUCTS ===== */
+  .prod-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+  .prod{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;overflow:hidden;transition:transform .35s var(--ease),border-color .35s}
+  .prod:hover{transform:translateY(-6px);border-color:rgba(232,101,30,.4)}
+  .prod .ph{aspect-ratio:1/1;background:#0c0805;overflow:hidden;display:grid;place-items:center}
+  .prod .ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease)}
+  .prod:hover .ph img{transform:scale(1.06)}
+  .prod .body{padding:18px}
+  .prod .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2)}
+  .prod h4{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:6px 0 10px}
+  .prod .price{display:flex;align-items:center;justify-content:space-between}
+  .prod .price b{font-size:17px}
+  .prod .price .buy{width:38px;height:38px;border-radius:50%;background:rgba(232,101,30,.12);border:1px solid rgba(232,101,30,.3);display:grid;place-items:center;color:var(--orange-2);cursor:pointer;transition:.25s}
+  .prod .price .buy:hover{background:var(--orange);color:#1a0e06}
+
+  /* ===== CTA STRIP ===== */
+  .cta{position:relative;border-radius:26px;overflow:hidden;padding:70px 50px;text-align:center;
+      background:radial-gradient(100% 140% at 50% 0%,rgba(232,101,30,.22),transparent 60%),linear-gradient(180deg,var(--panel-2),var(--bg-2));
+      border:1px solid var(--line)}
+  .cta h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,48px);line-height:1.05}
+  .cta p{color:var(--cream-d);margin:16px auto 30px;max-width:34em}
+
+  /* ===== FOOTER ===== */
+  footer{border-top:1px solid var(--line);padding:54px 0 40px;margin-top:90px}
+  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+  .foot .brand{font-size:26px}
+  .foot p{font-size:13.5px;color:var(--cream-d);max-width:24em;margin-top:14px}
+  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-d);margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.8;margin-bottom:9px;transition:.25s}
+  .foot-col a:hover{opacity:1;color:var(--orange-2)}
+  .foot-bottom{margin-top:46px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream-d)}
+
+  @media(max-width:900px){
+    .nav-links,.nav-phone{display:none}
+    .burger{display:flex}
+    .hero-grid{grid-template-columns:1fr;gap:36px}
+    .hero-art{order:-1}
+    .cards{grid-template-columns:1fr}
+    .prod-grid{grid-template-columns:repeat(2,1fr)}
+    .foot{flex-direction:column}
+  }
+  @media(prefers-reduced-motion:reduce){
+    .marquee .track{animation:none}
+  }
+</style>
+</head>
+<body class="loading">
+
+<!-- ================= INTRO (3D bean pour) ================= -->
+<div id="intro">
+  <canvas id="scene"></canvas>
+  <button class="skip" id="skip">Пропустить</button>
+  <div class="intro-brand" id="introBrand">
+    <div class="ib-logo">H<b>2</b>O</div>
+    <div class="ib-tag">Coffee · Tea · Accessories</div>
+    <div class="ib-line"></div>
+    <button class="btn btn-orange ib-enter" id="enter">Войти в магазин
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="intro-sub">Свежая обжарка · доставка по России</div>
+</div>
+
+<!-- ================= HEADER ================= -->
+<header id="hdr">
+  <div class="wrap nav">
+    <a href="#" class="brand"><span class="dot"></span>H<b>2</b>O</a>
+    <nav class="nav-links">
+      <a href="#why">Обжарка</a>
+      <a href="#catalog">Каталог</a>
+      <a href="#delivery">Доставка</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <div class="nav-right">
+      <a href="tel:+79177700108" class="nav-phone">+7 (917) 770-01-08</a>
+      <a href="#catalog" class="btn btn-orange" style="padding:11px 22px;font-size:14px">Каталог</a>
+      <button class="burger"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">Specialty roasters · доставка по РФ</span>
+      <h1>Кофе, который<br><em>везде с тобой</em></h1>
+      <p class="lead">Свежая обжарка specialty-зерна под каждый метод, отборный чай и аксессуары. Насыщенный вкус, стильная упаковка и аромат, который сводит с ума.</p>
+      <div class="hero-cta">
+        <a href="#catalog" class="btn btn-orange">Смотреть каталог
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M13 6l6 6-6 6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="#why" class="btn btn-ghost">Наша обжарка</a>
+      </div>
+      <div class="hero-meta">
+        <div class="m"><b>48ч</b><span>от обжарки до отправки</span></div>
+        <div class="m"><b>120+</b><span>сортов кофе и чая</span></div>
+        <div class="m"><b>РФ</b><span>доставка по всей стране</span></div>
+      </div>
+    </div>
+    <div class="hero-art">
+      <img class="pack" src="assets/h2o/bag.jpg" alt="Пачка кофе H2O" onerror="this.style.display='none'">
+      <div class="hero-badge">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6 9 17l-5-5" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div><b>100% арабика</b><span>single origin</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MARQUEE ================= -->
+<div class="marquee">
+  <div class="track">
+    <span>Эфиопия Guji <i>◦</i> Колумбия <i>◦</i> Кения <i>◦</i> Дрип-пакеты <i>◦</i> Фильтр <i>◦</i> Эспрессо <i>◦</i> Улун <i>◦</i> Пуэр <i>◦</i> Какао <i>◦</i> Сиропы <i>◦</i> Аксессуары <i>◦</i></span>
+    <span>Эфиопия Guji <i>◦</i> Колумбия <i>◦</i> Кения <i>◦</i> Дрип-пакеты <i>◦</i> Фильтр <i>◦</i> Эспрессо <i>◦</i> Улун <i>◦</i> Пуэр <i>◦</i> Какао <i>◦</i> Сиропы <i>◦</i> Аксессуары <i>◦</i></span>
+  </div>
+</div>
+
+<!-- ================= WHY / FEATURES ================= -->
+<section class="section" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Почему H2O</span>
+      <h2 class="serif">Ремесленная обжарка под каждую чашку</h2>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 14h12a4 4 0 0 1 0 8H8a4 4 0 0 1-4-4v-4Z" stroke-linejoin="round"/><path d="M8 6V3M12 6V3M16 6V3" stroke-linecap="round"/></svg></div>
+        <h3>Свежая обжарка</h3>
+        <p>Обжариваем небольшими партиями и отправляем в течение 48 часов — зерно раскрывается именно у вас в чашке.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 7l9-4 9 4-9 4-9-4Z" stroke-linejoin="round"/><path d="M3 7v6l9 4 9-4V7" stroke-linejoin="round"/></svg></div>
+        <h3>Specialty отбор</h3>
+        <p>Single origin, прозрачное происхождение и описание вкуса: от ягодной Эфиопии до плотной Колумбии.</p>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 13l2-6h11l2 6M3 13h16M3 13v5h16v-5" stroke-linejoin="round"/><circle cx="7" cy="20" r="1.5"/><circle cx="15" cy="20" r="1.5"/></svg></div>
+        <h3>Доставка по РФ</h3>
+        <p>Бесплатные консультации и доставка по всей России. Стильная упаковка, готовая стать подарком.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CATALOG ================= -->
+<section class="section" id="catalog" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Каталог</span>
+      <h2 class="serif">Выбор недели</h2>
+    </div>
+    <div class="prod-grid">
+      <div class="prod">
+        <div class="ph"><img src="assets/h2o/pack.jpg" alt="Эфиопия Guji" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Фильтр · Эфиопия</div><h4>Guji</h4>
+          <div class="price"><b>от 690 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
+      </div>
+      <div class="prod">
+        <div class="ph"><img src="assets/h2o/bag.jpg" alt="Бразилия эспрессо" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Эспрессо · Бленд</div><h4>Phoenix</h4>
+          <div class="price"><b>от 640 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
+      </div>
+      <div class="prod">
+        <div class="ph"><img src="assets/h2o/prod1.jpg" alt="Fancy эспрессо" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Эспрессо · Купаж</div><h4>Fancy</h4>
+          <div class="price"><b>от 590 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
+      </div>
+      <div class="prod">
+        <div class="ph"><img src="assets/h2o/prod2.jpg" alt="Да Хун Пао" onerror="this.style.opacity=.2"></div>
+        <div class="body"><div class="tag">Чай · Улун</div><h4>Да Хун Пао</h4>
+          <div class="price"><b>от 520 ₽</b><div class="buy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M5 12h14M12 5v14" stroke-width="2" stroke-linecap="round"/></svg></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= CTA ================= -->
+<section class="section" id="delivery" style="padding-top:0">
+  <div class="wrap">
+    <div class="cta">
+      <span class="eyebrow">Доставка по всей России</span>
+      <h2 class="serif">Свежий кофе — к вашей двери</h2>
+      <p>Соберём заказ из свежей обжарки и отправим транспортной или курьером. Бесплатная консультация по подбору зерна и метода.</p>
+      <a href="tel:+79177700108" class="btn btn-orange">+7 (917) 770-01-08</a>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="contacts">
+  <div class="wrap">
+    <div class="foot">
+      <div>
+        <a href="#" class="brand"><span class="dot"></span>H<b>2</b>O</a>
+        <p>Specialty-обжарка кофе, отборный чай и аксессуары с доставкой по России.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Каталог</h5>
+        <a href="#catalog">Кофе</a><a href="#catalog">Чай</a><a href="#catalog">Какао</a><a href="#catalog">Аксессуары</a>
+      </div>
+      <div class="foot-col">
+        <h5>Магазин</h5>
+        <a href="#why">Об обжарке</a><a href="#delivery">Доставка</a><a href="#catalog">Подарочные наборы</a><a href="#why">Блог</a>
+      </div>
+      <div class="foot-col">
+        <h5>Контакты</h5>
+        <a href="tel:+79177700108">+7 (917) 770-01-08</a>
+        <a href="#">Пн–Пт 7:00–19:00</a>
+        <a href="#">Сб–Вс 8:00–17:00</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 H2O. Specialty coffee · tea · accessories.</span>
+      <span>Концепт-редизайн</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= 3D INTRO SCRIPT ================= -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "./assets/vendor/three/three.module.js",
+    "three/addons/": "./assets/vendor/three/jsm/"
+  }
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+/* ====== PLUG YOUR MESHY MODEL HERE ====== */
+/* Paste a direct link to your exported .glb of a coffee bean.
+   Leave empty ("") to use the built-in procedural bean. */
+const BEAN_MODEL_URL = "";
+/* ======================================== */
+
+const intro = document.getElementById('intro');
+const canvas = document.getElementById('scene');
+const introBrand = document.getElementById('introBrand');
+const enterBtn = document.getElementById('enter');
+const skipBtn = document.getElementById('skip');
+const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+let renderer, scene, camera, beans, dummy = new THREE.Object3D();
+const N = 150;
+const beanData = [];
+let startTime = 0, brandShown = false, running = true;
+
+const MOUTH = new THREE.Vector3(-2.05, 2.25, 0.15); // bag spout
+const GRAVITY_FRAME = 0; // not used (kinematic pour)
+
+function init(){
+  try{
+    renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
+  }catch(e){ fallback(); return; }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.15;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+  camera = new THREE.PerspectiveCamera(34, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.set(0.2, 3.05, 6.6);
+  camera.lookAt(0, 0.35, 0);
+
+  // lights
+  const hemi = new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.5);
+  scene.add(hemi);
+  const key = new THREE.DirectionalLight(0xfff0dc, 2.4);
+  key.position.set(4, 7, 5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048,2048);
+  key.shadow.camera.near = 1; key.shadow.camera.far = 25;
+  key.shadow.camera.left=-6; key.shadow.camera.right=6; key.shadow.camera.top=6; key.shadow.camera.bottom=-6;
+  key.shadow.bias = -0.0004; key.shadow.radius = 5;
+  scene.add(key);
+  const rim = new THREE.PointLight(0xff7a1e, 60, 30, 2);
+  rim.position.set(-4.5, 2.2, -1.5);
+  scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffb070, 0.5);
+  fill.position.set(-3, 2, 4); scene.add(fill);
+
+  // contact-shadow ground
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(40,40),
+    new THREE.ShadowMaterial({opacity:0.45})
+  );
+  ground.rotation.x = -Math.PI/2;
+  ground.position.y = 0;
+  ground.receiveShadow = true;
+  scene.add(ground);
+
+  // bag
+  buildBag();
+
+  // pile target slots
+  const slots = makeSlots(N);
+
+  // beans (procedural first; swap GLB if provided)
+  const geo = makeBeanGeometry();
+  const mat = new THREE.MeshPhysicalMaterial({
+    color:0x3a2114, roughness:0.5, metalness:0.0,
+    clearcoat:0.4, clearcoatRoughness:0.55, envMapIntensity:0.85
+  });
+  beans = new THREE.InstancedMesh(geo, mat, N);
+  beans.castShadow = true; beans.receiveShadow = true;
+  beans.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+  scene.add(beans);
+
+  const tones = [0x3a2114,0x4a2c18,0x2c1a0f,0x5a3620,0x35200f];
+  const col = new THREE.Color();
+  for(let i=0;i<N;i++){
+    col.setHex(tones[i%tones.length]);
+    beans.setColorAt(i, col);
+    const delay = reduce ? 0 : 0.55 + i*0.016;
+    const dur = 0.85 + Math.random()*0.25;
+    beanData.push({
+      slot: slots[i],
+      from: MOUTH.clone().add(new THREE.Vector3((Math.random()-.5)*0.25,(Math.random()-.5)*0.15,(Math.random()-.5)*0.25)),
+      delay, dur,
+      rotAxis: new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
+      spin: 6+Math.random()*8,
+      restQ: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6)),
+      scale: 0.30 + Math.random()*0.06
+    });
+  }
+  beans.instanceColor.needsUpdate = true;
+
+  if(BEAN_MODEL_URL){ swapModel(BEAN_MODEL_URL, mat); }
+
+  window.addEventListener('resize', onResize);
+  startTime = performance.now()/1000;
+  if(reduce){ // static pile + brand immediately
+    renderFrame(999); showBrand();
+  }else{
+    requestAnimationFrame(loop);
+  }
+}
+
+function makeSlots(n){
+  const out=[]; const R=1.25, H=0.62;
+  for(let i=0;i<n;i++){
+    const r = Math.sqrt(Math.random())*R;
+    const a = Math.random()*Math.PI*2;
+    const h = (1 - r/R)*H + 0.14 + Math.random()*0.05;
+    out.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r));
+  }
+  out.sort((p,q)=>p.y-q.y); // settle bottom-first
+  return out;
+}
+
+function makeBeanGeometry(){
+  const g = new THREE.SphereGeometry(0.5, 30, 22);
+  g.scale(1.0, 0.62, 0.78);
+  const pos = g.attributes.position; const v = new THREE.Vector3();
+  for(let i=0;i<pos.count;i++){
+    v.fromBufferAttribute(pos,i);
+    // crease channel along long axis (x) on +z face, narrow in y
+    if(v.z>0){
+      const groove = Math.exp(-(v.y*v.y)/0.018);
+      v.z -= groove*0.20*Math.min(1, v.z/0.18);
+    }
+    pos.setXYZ(i, v.x, v.y, v.z);
+  }
+  g.computeVertexNormals();
+  return g;
+}
+
+let bag;
+function buildBag(){
+  bag = new THREE.Group();
+  const tex = new THREE.TextureLoader().load('assets/h2o/bag.jpg');
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(1.25, 1.9, 0.55),
+    [
+      new THREE.MeshStandardMaterial({color:0x161310, roughness:.85}),
+      new THREE.MeshStandardMaterial({color:0x161310, roughness:.85}),
+      new THREE.MeshStandardMaterial({color:0x161310, roughness:.7}),
+      new THREE.MeshStandardMaterial({color:0x0c0a08, roughness:.85}),
+      new THREE.MeshStandardMaterial({map:tex, roughness:.6}),
+      new THREE.MeshStandardMaterial({map:tex, roughness:.6})
+    ]
+  );
+  body.castShadow = true;
+  bag.add(body);
+  // pinched top
+  const top = new THREE.Mesh(
+    new THREE.BoxGeometry(1.28, 0.16, 0.12),
+    new THREE.MeshStandardMaterial({color:0x0c0a08, roughness:.9})
+  );
+  top.position.y = 1.0; top.castShadow=true; bag.add(top);
+
+  bag.position.set(-2.35, 2.55, 0.15);
+  bag.rotation.z = 2.35;  // tipped, mouth pointing down-right
+  bag.rotation.y = -0.25;
+  scene.add(bag);
+}
+
+function swapModel(url, fallbackMat){
+  new GLTFLoader().load(url, (gltf)=>{
+    let geo=null, mat=null;
+    gltf.scene.traverse(o=>{ if(o.isMesh && !geo){ geo=o.geometry; if(o.material) mat=o.material; }});
+    if(!geo) return;
+    geo.computeBoundingBox();
+    const s = new THREE.Vector3(); geo.boundingBox.getSize(s);
+    const k = 0.7/Math.max(s.x,s.y,s.z); geo.scale(k,k,k); geo.center();
+    const old = beans;
+    beans = new THREE.InstancedMesh(geo, mat||fallbackMat, N);
+    beans.castShadow=beans.receiveShadow=true;
+    beans.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    if(old.instanceColor){ beans.instanceColor = old.instanceColor; }
+    scene.remove(old); old.dispose?.(); scene.add(beans);
+  }, undefined, ()=>{ /* keep procedural on error */ });
+}
+
+function easeOut(t){ return 1-Math.pow(1-t,3); }
+
+function renderFrame(now){
+  const t = now - startTime;
+  for(let i=0;i<N;i++){
+    const b = beanData[i];
+    let e = (t - b.delay)/b.dur;
+    let scale = b.scale;
+    let q = new THREE.Quaternion();
+    let p = new THREE.Vector3();
+    if(e<=0){ scale = 0.0001; p.copy(b.from); }
+    else if(e>=1){
+      p.copy(b.slot); q.copy(b.restQ);
+    }else{
+      const ex = easeOut(e);
+      p.x = b.from.x + (b.slot.x-b.from.x)*ex;
+      p.z = b.from.z + (b.slot.z-b.from.z)*ex;
+      // accelerating fall for y
+      p.y = b.from.y + (b.slot.y-b.from.y)*(e*e);
+      q.setFromAxisAngle(b.rotAxis, b.spin*(1-e)* (0.3+e) );
+    }
+    dummy.position.copy(p);
+    dummy.quaternion.copy(q);
+    dummy.scale.setScalar(scale);
+    dummy.updateMatrix();
+    beans.setMatrixAt(i, dummy.matrix);
+  }
+  beans.instanceMatrix.needsUpdate = true;
+
+  // settle bag back upright slightly after pour
+  if(bag){
+    const settle = Math.min(1, Math.max(0,(t-0.2)/0.6));
+    bag.rotation.z = 2.35 - 0.0*settle;
+  }
+  renderer.render(scene, camera);
+
+  // brand reveal after last bean lands
+  const done = (N*0.016 + 0.55 + 1.1);
+  if(!brandShown && t>done){ showBrand(); }
+}
+
+function loop(){
+  if(!running) return;
+  renderFrame(performance.now()/1000);
+  requestAnimationFrame(loop);
+}
+
+function showBrand(){ brandShown=true; introBrand.classList.add('show'); }
+
+function onResize(){
+  if(!renderer) return;
+  camera.aspect = window.innerWidth/window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function enterSite(){
+  running=false;
+  intro.classList.add('lift');
+  document.body.classList.remove('loading');
+  setTimeout(()=>{ intro.style.display='none'; }, 1200);
+}
+
+function fallback(){
+  // no WebGL: just show brand over gradient
+  canvas.style.display='none';
+  showBrand();
+}
+
+enterBtn.addEventListener('click', enterSite);
+skipBtn.addEventListener('click', enterSite);
+
+// header scroll state
+const hdr = document.getElementById('hdr');
+addEventListener('scroll', ()=>{ hdr.classList.toggle('scrolled', scrollY>40); });
+
+init();
+</script>
+</body>
+</html>
