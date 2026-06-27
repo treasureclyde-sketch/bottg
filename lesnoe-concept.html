@@ -50,11 +50,13 @@
   header{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .4s var(--ease),box-shadow .4s var(--ease),border-color .4s var(--ease);border-bottom:1px solid transparent}
   header.scrolled{background:rgba(244,241,233,.85);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:78px}
-  .brand{display:flex;align-items:center;gap:13px;color:#fff;transition:color .4s var(--ease)}
-  .brand img{height:40px;width:auto;display:block}
+  .brand{display:flex;align-items:center;gap:14px;color:#fff;transition:color .4s var(--ease)}
+  .brand img{height:48px;width:auto;display:block}
+  .brand .b-w{filter:drop-shadow(0 2px 9px rgba(0,0,0,.5))}
   .brand .b-c{display:none}
-  .brand .b-txt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:21px;letter-spacing:.16em;line-height:1;text-transform:uppercase}
+  .brand .b-txt{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:22px;letter-spacing:.16em;line-height:1;text-transform:uppercase;text-shadow:0 1px 12px rgba(0,0,0,.45)}
   header.scrolled .brand{color:var(--ink)}
+  header.scrolled .brand .b-txt{text-shadow:none}
   header.scrolled .brand .b-w{display:none}
   header.scrolled .brand .b-c{display:block}
   .nav-links{display:flex;gap:32px}
@@ -249,7 +251,7 @@
 <!-- HERO -->
 <section class="hero" id="about">
   <div class="hero-bg">
-    <img src="https://static.tildacdn.com/tild3738-3631-4834-b531-616430646236/12_it1_101.jpg" alt="Лесное Ожерелье — природа у дома" onerror="this.style.display='none'">
+    <img src="https://static.tildacdn.com/tild3534-3539-4533-b930-636363326133/__2_1.png" alt="Лесное Ожерелье — архитектура в лесу" onerror="this.style.display='none'">
   </div>
   <div class="wrap hero-inner">
     <span class="hero-tag"><span class="ic"></span> Уфа · бизнес-класс · эко-маршрут «Уфимское ожерелье»</span>
