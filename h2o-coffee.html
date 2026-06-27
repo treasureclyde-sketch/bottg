@@ -174,7 +174,7 @@
       <div class="ib-tag">Coffee · Tea · Accessories</div>
       <div class="ib-line"></div>
     </div>
-    <div class="scroll-hint" id="hint">Листайте — насыпьте зёрна<span class="chev"></span></div>
+    <div class="scroll-hint" id="hint">Листайте — налейте кофе<span class="chev"></span></div>
   </div>
 </section>
 
@@ -349,11 +349,12 @@ import * as THREE from 'three';
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-/* ====== PLUG YOUR MESHY MODEL HERE ====== */
-/* Paste a direct link to your exported .glb of a coffee bean.
-   Leave empty ("") to use the built-in procedural bean. */
-const BEAN_MODEL_URL = "";
-/* ======================================== */
+/* ====== PLUG YOUR MESHY MODELS HERE ====== */
+/* Paste direct links to your exported .glb files.
+   Leave "" to use the built-in procedural version. */
+const CUP_MODEL_URL      = "";   // white cappuccino cup (empty)
+const CINNAMON_STICK_URL = "";   // cinnamon stick
+/* ========================================= */
 
 const canvas = document.getElementById('scene');
 const stage  = document.getElementById('stage');
@@ -361,253 +362,282 @@ const brand  = document.getElementById('brand');
 const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
-let renderer, scene, camera, beans, dummy = new THREE.Object3D();
-const N = 150;
-const beanData = [];
-
-const MOUTH = new THREE.Vector3(-2.05, 2.25, 0.15); // bag spout
-const POUR_S = 0.05, POUR_E = 0.74;                 // scroll range over which beans pour
-const clamp = (v,a,b)=>Math.max(a,Math.min(b,v));
+let renderer, scene, camera, dummy = new THREE.Object3D();
+let liquid, foam, stream, cinnamon, steamGroup, cupGroup;
+const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
+const lerp   = (a,b,t)=>a+(b-a)*t;
+
+const N_CIN = 150;
+const cinData = [];
+const POUR_S = 0.07, POUR_E = 0.56;      // coffee fills over this scroll range
+const CIN_S  = 0.46, CIN_E  = 0.86;      // cinnamon sprinkles over this range
+const FOAM_TOP = 1.00;                    // y of foam surface when full
+const LIQ_BOT  = 0.16;
 
 function init(){
-  try{
-    renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true});
-  }catch(e){ fallback(); return; }
+  try{ renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true}); }
+  catch(e){ fallback(); return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.15;
+  renderer.toneMappingExposure = 1.12;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
 
   scene = new THREE.Scene();
   const pmrem = new THREE.PMREMGenerator(renderer);
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
-  camera = new THREE.PerspectiveCamera(34, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0.2, 3.05, 6.6);
-  camera.lookAt(0, 0.35, 0);
+  camera = new THREE.PerspectiveCamera(32, window.innerWidth/window.innerHeight, 0.1, 100);
+  camera.position.set(0, 2.35, 5.5);
+  camera.lookAt(0, 0.62, 0);
 
   // lights
-  const hemi = new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.5);
-  scene.add(hemi);
-  const key = new THREE.DirectionalLight(0xfff0dc, 2.4);
-  key.position.set(4, 7, 5);
-  key.castShadow = true;
+  scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.45));
+  const key = new THREE.DirectionalLight(0xfff1de, 2.3);
+  key.position.set(3.5, 7, 5); key.castShadow = true;
   key.shadow.mapSize.set(2048,2048);
-  key.shadow.camera.near = 1; key.shadow.camera.far = 25;
-  key.shadow.camera.left=-6; key.shadow.camera.right=6; key.shadow.camera.top=6; key.shadow.camera.bottom=-6;
-  key.shadow.bias = -0.0004; key.shadow.radius = 5;
+  key.shadow.camera.near=1; key.shadow.camera.far=24;
+  key.shadow.camera.left=-5; key.shadow.camera.right=5; key.shadow.camera.top=5; key.shadow.camera.bottom=-5;
+  key.shadow.bias=-0.0004; key.shadow.radius=6;
   scene.add(key);
-  const rim = new THREE.PointLight(0xff7a1e, 60, 30, 2);
-  rim.position.set(-4.5, 2.2, -1.5);
-  scene.add(rim);
-  const fill = new THREE.DirectionalLight(0xffb070, 0.5);
+  const rim = new THREE.PointLight(0xff7a1e, 45, 26, 2);
+  rim.position.set(-4.5, 2.4, -1.5); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0xffd0a0, 0.45);
   fill.position.set(-3, 2, 4); scene.add(fill);
 
-  // contact-shadow ground
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(40,40),
-    new THREE.ShadowMaterial({opacity:0.45})
-  );
-  ground.rotation.x = -Math.PI/2;
-  ground.position.y = 0;
-  ground.receiveShadow = true;
-  scene.add(ground);
+  // contact shadow
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:0.4}));
+  ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
 
-  // bag
-  buildBag();
+  buildSaucer();
+  buildCup();
+  buildLiquid();
+  buildStream();
+  buildCinnamon();
+  buildStick();
+  buildSteam();
 
-  // pile target slots
-  const slots = makeSlots(N);
-
-  // beans (procedural first; swap GLB if provided)
-  const geo = makeBeanGeometry();
-  const mat = new THREE.MeshPhysicalMaterial({
-    color:0x3a2114, roughness:0.5, metalness:0.0,
-    clearcoat:0.4, clearcoatRoughness:0.55, envMapIntensity:0.85
-  });
-  beans = new THREE.InstancedMesh(geo, mat, N);
-  beans.castShadow = true; beans.receiveShadow = true;
-  beans.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-  scene.add(beans);
-
-  const tones = [0x3a2114,0x4a2c18,0x2c1a0f,0x5a3620,0x35200f];
-  const col = new THREE.Color();
-  for(let i=0;i<N;i++){
-    col.setHex(tones[i%tones.length]);
-    beans.setColorAt(i, col);
-    const f = i/(N-1);
-    beanData.push({
-      slot: slots[i],
-      from: MOUTH.clone().add(new THREE.Vector3((Math.random()-.5)*0.25,(Math.random()-.5)*0.15,(Math.random()-.5)*0.25)),
-      start: POUR_S + f*(POUR_E-POUR_S)*0.62,   // scroll point this bean starts falling
-      span: (POUR_E-POUR_S)*0.42,               // scroll length of its fall
-      rotAxis: new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
-      spin: 6+Math.random()*8,
-      restQ: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6)),
-      scale: 0.30 + Math.random()*0.06
-    });
-  }
-  beans.instanceColor.needsUpdate = true;
-
-  if(BEAN_MODEL_URL){ swapModel(BEAN_MODEL_URL, mat); }
+  if(CUP_MODEL_URL)      swapModel(CUP_MODEL_URL, cupGroup, 1.12);
+  if(CINNAMON_STICK_URL) swapModel(CINNAMON_STICK_URL, window.__stick, 1.0);
 
   window.addEventListener('resize', onResize);
   requestAnimationFrame(loop);
 }
 
-function scrollProgress(){
-  if(reduce) return 1;
-  const total = stage.offsetHeight - window.innerHeight;
-  const scrolled = -stage.getBoundingClientRect().top;
-  return clamp(scrolled/Math.max(1,total), 0, 1);
+/* ---------- procedural textures ---------- */
+function foamTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d');
+  const g=x.createRadialGradient(128,128,20,128,128,128);
+  g.addColorStop(0,'#efe2cb'); g.addColorStop(.75,'#e6d4b6'); g.addColorStop(1,'#caa775');
+  x.fillStyle=g; x.fillRect(0,0,256,256);
+  for(let i=0;i<900;i++){ const a=Math.random()*6.28,r=Math.random()*120;
+    x.fillStyle=`rgba(${180+Math.random()*40|0},${150+Math.random()*40|0},${110+Math.random()*30|0},.25)`;
+    x.beginPath(); x.arc(128+Math.cos(a)*r,128+Math.sin(a)*r,Math.random()*2.2,0,6.28); x.fill(); }
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+}
+function barkTexture(){
+  const c=document.createElement('canvas'); c.width=128;c.height=256; const x=c.getContext('2d');
+  x.fillStyle='#6f4326'; x.fillRect(0,0,128,256);
+  for(let i=0;i<60;i++){ x.strokeStyle=`rgba(${60+Math.random()*60|0},${35+Math.random()*30|0},15,.5)`;
+    x.lineWidth=Math.random()*2+0.5; x.beginPath(); const xx=Math.random()*128;
+    x.moveTo(xx,0); x.bezierCurveTo(xx+10,80,xx-10,160,xx+5,256); x.stroke(); }
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.wrapS=t.wrapT=THREE.RepeatWrapping; return t;
+}
+function steamTexture(){
+  const c=document.createElement('canvas'); c.width=c.height=128; const x=c.getContext('2d');
+  const g=x.createRadialGradient(64,64,0,64,64,64);
+  g.addColorStop(0,'rgba(255,255,255,.9)'); g.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=g; x.fillRect(0,0,128,128); return new THREE.CanvasTexture(c);
 }
 
-function makeSlots(n){
-  const out=[]; const R=1.25, H=0.62;
-  for(let i=0;i<n;i++){
-    const r = Math.sqrt(Math.random())*R;
-    const a = Math.random()*Math.PI*2;
-    const h = (1 - r/R)*H + 0.14 + Math.random()*0.05;
-    out.push(new THREE.Vector3(Math.cos(a)*r, h, Math.sin(a)*r));
+/* ---------- geometry builders ---------- */
+function buildSaucer(){
+  const pts=[ new THREE.Vector2(0,0), new THREE.Vector2(1.45,0), new THREE.Vector2(1.5,0.05),
+    new THREE.Vector2(1.4,0.08), new THREE.Vector2(0.7,0.05), new THREE.Vector2(0.66,0.02), new THREE.Vector2(0,0.02) ];
+  const g=new THREE.LatheGeometry(pts,72);
+  const m=new THREE.MeshPhysicalMaterial({color:0xf6f4ef, roughness:0.28, clearcoat:0.5, clearcoatRoughness:0.25, envMapIntensity:1});
+  const s=new THREE.Mesh(g,m); s.castShadow=s.receiveShadow=true; scene.add(s);
+}
+function buildCup(){
+  cupGroup=new THREE.Group();
+  const pts=[ new THREE.Vector2(0,0.05), new THREE.Vector2(0.55,0.05), new THREE.Vector2(0.6,0.09),
+    new THREE.Vector2(0.92,1.04), new THREE.Vector2(1.0,1.13), new THREE.Vector2(0.92,1.13),
+    new THREE.Vector2(0.84,1.05), new THREE.Vector2(0.5,0.18), new THREE.Vector2(0,0.18) ];
+  const g=new THREE.LatheGeometry(pts,72);
+  const m=new THREE.MeshPhysicalMaterial({color:0xf6f4ef, roughness:0.22, clearcoat:0.6, clearcoatRoughness:0.18, envMapIntensity:1.1});
+  const body=new THREE.Mesh(g,m); body.castShadow=body.receiveShadow=true; cupGroup.add(body);
+  // handle
+  const h=new THREE.Mesh(new THREE.TorusGeometry(0.34,0.075,20,40,Math.PI*1.25),
+        new THREE.MeshPhysicalMaterial({color:0xf6f4ef, roughness:0.22, clearcoat:0.6, clearcoatRoughness:0.18}));
+  h.position.set(0.98,0.66,0); h.rotation.z=-0.35; h.castShadow=true; cupGroup.add(h);
+  scene.add(cupGroup);
+}
+function buildLiquid(){
+  const g=new THREE.CylinderGeometry(0.8,0.5,1,48,1,true);
+  const m=new THREE.MeshPhysicalMaterial({color:0x2a1810, roughness:0.3, metalness:0, clearcoat:0.5, envMapIntensity:0.7});
+  liquid=new THREE.Mesh(g,m); liquid.renderOrder=1; scene.add(liquid);
+  // foam dome
+  const fg=new THREE.SphereGeometry(0.8,48,24,0,Math.PI*2,0,Math.PI*0.5);
+  fg.scale(1,0.16,1);
+  foam=new THREE.Mesh(fg,new THREE.MeshPhysicalMaterial({map:foamTexture(), roughness:0.85, clearcoat:0.08, envMapIntensity:0.5}));
+  foam.castShadow=false; scene.add(foam);
+}
+function buildStream(){
+  const g=new THREE.CylinderGeometry(0.055,0.085,1,16,1,true);
+  const m=new THREE.MeshPhysicalMaterial({color:0x5a3a22, roughness:0.35, transparent:true, opacity:0});
+  stream=new THREE.Mesh(g,m); scene.add(stream);
+}
+function buildCinnamon(){
+  const g=new THREE.BoxGeometry(0.034,0.009,0.044);
+  const m=new THREE.MeshStandardMaterial({roughness:0.85, vertexColors:false, color:0x8a4a1e});
+  cinnamon=new THREE.InstancedMesh(g,m,N_CIN);
+  cinnamon.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cinnamon.castShadow=false; scene.add(cinnamon);
+  const tones=[0x7a3b16,0x8a4a1e,0x6b3211,0x9a5526]; const col=new THREE.Color();
+  for(let i=0;i<N_CIN;i++){
+    col.setHex(tones[i%tones.length]); cinnamon.setColorAt(i,col);
+    const f=i/(N_CIN-1);
+    const ar=Math.random()*0.66, aa=Math.random()*6.28;
+    cinData.push({
+      from:new THREE.Vector3((Math.random()-.5)*0.9, 2.05+Math.random()*0.3, (Math.random()-.5)*0.9),
+      to:new THREE.Vector3(Math.cos(aa)*ar, FOAM_TOP+0.02+Math.random()*0.015, Math.sin(aa)*ar),
+      start:CIN_S + f*(CIN_E-CIN_S)*0.7, span:(CIN_E-CIN_S)*0.34,
+      rotAxis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
+      spin:8+Math.random()*10,
+      restQ:new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.PI/2*Math.random(),Math.random()*6,Math.random()*6))
+    });
   }
-  out.sort((p,q)=>p.y-q.y); // settle bottom-first
-  return out;
+  cinnamon.instanceColor.needsUpdate=true;
+}
+function buildStick(){
+  const grp=new THREE.Group();
+  const tex=barkTexture(); tex.repeat.set(2,1);
+  const mat=new THREE.MeshStandardMaterial({map:tex, roughness:0.85, color:0x8a5a30});
+  const stick=new THREE.Mesh(new THREE.CylinderGeometry(0.07,0.075,1.15,24),mat);
+  stick.castShadow=true; grp.add(stick);
+  // a thin overlapped roll edge
+  const roll=new THREE.Mesh(new THREE.CylinderGeometry(0.055,0.06,1.16,20),
+        new THREE.MeshStandardMaterial({color:0x6f4326, roughness:0.9}));
+  roll.position.set(0.03,0,0.03); grp.add(roll);
+  grp.rotation.set(0,0.6,Math.PI/2);     // lying down
+  grp.position.set(1.15,0.12,0.78);
+  scene.add(grp); window.__stick=grp;
+}
+function buildSteam(){
+  steamGroup=new THREE.Group(); const tex=steamTexture();
+  for(let i=0;i<6;i++){
+    const s=new THREE.Sprite(new THREE.SpriteMaterial({map:tex, transparent:true, opacity:0, depthWrite:false, blending:THREE.AdditiveBlending}));
+    s.scale.set(0.7,1.2,1); s.userData={off:Math.random()*10,sx:(Math.random()-.5)*0.5};
+    steamGroup.add(s);
+  }
+  scene.add(steamGroup);
 }
 
-function makeBeanGeometry(){
-  const g = new THREE.SphereGeometry(0.5, 30, 22);
-  g.scale(1.0, 0.62, 0.78);
-  const pos = g.attributes.position; const v = new THREE.Vector3();
-  for(let i=0;i<pos.count;i++){
-    v.fromBufferAttribute(pos,i);
-    // crease channel along long axis (x) on +z face, narrow in y
-    if(v.z>0){
-      const groove = Math.exp(-(v.y*v.y)/0.018);
-      v.z -= groove*0.20*Math.min(1, v.z/0.18);
+function swapModel(url, placeholder, targetH){
+  new GLTFLoader().load(url,(gltf)=>{
+    const obj=gltf.scene;
+    const box=new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); box.getSize(size);
+    const k=targetH/Math.max(0.0001,size.y); obj.scale.setScalar(k);
+    const box2=new THREE.Box3().setFromObject(obj); const c=new THREE.Vector3(); box2.getCenter(c);
+    obj.position.sub(new THREE.Vector3(c.x, box2.min.y, c.z)); // sit on ground, centered
+    obj.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
+    if(placeholder){
+      obj.position.add(placeholder.position.clone().setY(0));
+      obj.rotation.copy(placeholder.rotation);
+      scene.remove(placeholder);
     }
-    pos.setXYZ(i, v.x, v.y, v.z);
-  }
-  g.computeVertexNormals();
-  return g;
-}
-
-let bag;
-function buildBag(){
-  bag = new THREE.Group();
-  const tex = new THREE.TextureLoader().load('assets/h2o/bag.jpg');
-  tex.colorSpace = THREE.SRGBColorSpace;
-  const body = new THREE.Mesh(
-    new THREE.BoxGeometry(1.25, 1.9, 0.55),
-    [
-      new THREE.MeshStandardMaterial({color:0x161310, roughness:.85}),
-      new THREE.MeshStandardMaterial({color:0x161310, roughness:.85}),
-      new THREE.MeshStandardMaterial({color:0x161310, roughness:.7}),
-      new THREE.MeshStandardMaterial({color:0x0c0a08, roughness:.85}),
-      new THREE.MeshStandardMaterial({map:tex, roughness:.6}),
-      new THREE.MeshStandardMaterial({map:tex, roughness:.6})
-    ]
-  );
-  body.castShadow = true;
-  bag.add(body);
-  // pinched top
-  const top = new THREE.Mesh(
-    new THREE.BoxGeometry(1.28, 0.16, 0.12),
-    new THREE.MeshStandardMaterial({color:0x0c0a08, roughness:.9})
-  );
-  top.position.y = 1.0; top.castShadow=true; bag.add(top);
-
-  bag.position.set(-2.35, 2.55, 0.15);
-  bag.rotation.z = 2.35;  // tipped, mouth pointing down-right
-  bag.rotation.y = -0.25;
-  scene.add(bag);
-}
-
-function swapModel(url, fallbackMat){
-  new GLTFLoader().load(url, (gltf)=>{
-    let geo=null, mat=null;
-    gltf.scene.traverse(o=>{ if(o.isMesh && !geo){ geo=o.geometry; if(o.material) mat=o.material; }});
-    if(!geo) return;
-    geo.computeBoundingBox();
-    const s = new THREE.Vector3(); geo.boundingBox.getSize(s);
-    const k = 0.7/Math.max(s.x,s.y,s.z); geo.scale(k,k,k); geo.center();
-    const old = beans;
-    beans = new THREE.InstancedMesh(geo, mat||fallbackMat, N);
-    beans.castShadow=beans.receiveShadow=true;
-    beans.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-    if(old.instanceColor){ beans.instanceColor = old.instanceColor; }
-    scene.remove(old); old.dispose?.(); scene.add(beans);
+    scene.add(obj);
   }, undefined, ()=>{ /* keep procedural on error */ });
 }
 
-function easeOut(t){ return 1-Math.pow(1-t,3); }
+/* ---------- scroll & render ---------- */
+function scrollProgress(){
+  if(reduce) return 1;
+  const total=stage.offsetHeight-window.innerHeight;
+  const scrolled=-stage.getBoundingClientRect().top;
+  return clamp(scrolled/Math.max(1,total),0,1);
+}
 
 function renderScroll(p){
-  for(let i=0;i<N;i++){
-    const b = beanData[i];
-    const e = clamp((p - b.start)/b.span, 0, 1);
-    let scale = b.scale;
-    const q = new THREE.Quaternion();
-    const pos = new THREE.Vector3();
-    if(e<=0){ scale = 0.0001; pos.copy(b.from); }
-    else if(e>=1){ pos.copy(b.slot); q.copy(b.restQ); }
-    else{
-      const ex = easeOut(e);
-      pos.x = b.from.x + (b.slot.x-b.from.x)*ex;
-      pos.z = b.from.z + (b.slot.z-b.from.z)*ex;
-      pos.y = b.from.y + (b.slot.y-b.from.y)*(e*e);   // accelerating fall
-      q.setFromAxisAngle(b.rotAxis, b.spin*(1-e)*(0.3+e));
-    }
-    dummy.position.copy(pos);
-    dummy.quaternion.copy(q);
-    dummy.scale.setScalar(scale);
-    dummy.updateMatrix();
-    beans.setMatrixAt(i, dummy.matrix);
+  const fillT = smooth(POUR_S, POUR_E, p);
+
+  // liquid rises
+  const liqH = Math.max(0.001, fillT*(FOAM_TOP-LIQ_BOT));
+  liquid.scale.set(1, liqH, 1);
+  liquid.position.y = LIQ_BOT + liqH*0.5;
+  liquid.visible = fillT>0.01;
+
+  // foam surface follows
+  const fy = LIQ_BOT + liqH;
+  foam.position.y = fy;
+  const fr = lerp(0.5,0.82,fillT);
+  foam.scale.set(fr/0.8, 1, fr/0.8);
+  foam.visible = fillT>0.03;
+
+  // pour stream while filling
+  const sO = smooth(POUR_S,POUR_S+0.05,p)*(1-smooth(POUR_E-0.07,POUR_E,p));
+  stream.material.opacity = sO*0.9;
+  stream.visible = sO>0.01;
+  if(stream.visible){
+    const top=2.0, h=top-fy; stream.scale.set(1,Math.max(0.01,h),1);
+    stream.position.set(Math.sin(performance.now()/200)*0.02, fy+h*0.5, 0);
   }
-  beans.instanceMatrix.needsUpdate = true;
 
-  // bag tips as the pour begins (cause -> effect)
-  if(bag) bag.rotation.z = 1.30 + (2.35-1.30)*smooth(0.0, 0.09, p);
+  // cinnamon sprinkle
+  for(let i=0;i<N_CIN;i++){
+    const c=cinData[i];
+    const e=clamp((p-c.start)/c.span,0,1);
+    const q=new THREE.Quaternion(); const pos=new THREE.Vector3();
+    let sc=1;
+    if(e<=0){ sc=0.0001; pos.copy(c.from); }
+    else if(e>=1){ pos.copy(c.to); q.copy(c.restQ); }
+    else{
+      pos.x=lerp(c.from.x,c.to.x,e); pos.z=lerp(c.from.z,c.to.z,e);
+      pos.y=lerp(c.from.y,c.to.y,e*e);
+      q.setFromAxisAngle(c.rotAxis, c.spin*(1-e));
+    }
+    dummy.position.copy(pos); dummy.quaternion.copy(q); dummy.scale.setScalar(sc);
+    dummy.updateMatrix(); cinnamon.setMatrixAt(i,dummy.matrix);
+  }
+  cinnamon.instanceMatrix.needsUpdate=true;
 
-  // brand + hint react to scroll
-  const bo = smooth(0.58, 0.96, p);
-  brand.style.opacity = bo;
-  brand.style.transform = `translateY(${(1-bo)*16}px)`;
-  hint.style.opacity = (1 - smooth(0.0, 0.12, p)).toFixed(3);
+  // steam
+  const stO = smooth(0.34,0.6,p);
+  const t = performance.now()/1000;
+  steamGroup.children.forEach((s,i)=>{
+    const ph=((t*0.18)+s.userData.off+i*0.4)%1;
+    s.position.set(Math.sin((t+s.userData.off)*0.8)*0.22 + s.userData.sx*ph, fy+0.15+ph*1.4, 0);
+    s.material.opacity = stO*0.16*Math.sin(ph*Math.PI);
+    s.scale.set(0.5+ph*0.6, 0.9+ph*1.1, 1);
+  });
 
-  renderer.render(scene, camera);
+  // brand + hint
+  const bo=smooth(0.6,0.96,p);
+  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*16}px)`;
+  hint.style.opacity=(1-smooth(0,0.12,p)).toFixed(3);
+
+  renderer.render(scene,camera);
 }
 
-let lastP = -1;
+let lastP=-1;
 function loop(){
-  const r = stage.getBoundingClientRect();
-  const visible = r.bottom > 0 && r.top < window.innerHeight;
-  const p = scrollProgress();
-  if(visible || p !== lastP){ renderScroll(p); lastP = p; }
+  const r=stage.getBoundingClientRect();
+  const visible=r.bottom>0 && r.top<window.innerHeight;
+  const p=scrollProgress();
+  if(visible || p!==lastP){ renderScroll(p); lastP=p; }
   requestAnimationFrame(loop);
 }
-
 function onResize(){
   if(!renderer) return;
-  camera.aspect = window.innerWidth/window.innerHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-  lastP = -1;
+  camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight); lastP=-1;
 }
+function fallback(){ canvas.style.display='none'; brand.style.opacity=1; if(hint) hint.style.display='none'; }
 
-function fallback(){
-  // no WebGL: static brand over gradient
-  canvas.style.display='none';
-  brand.style.opacity = 1;
-  if(hint) hint.style.display='none';
-}
-
-// header solid on scroll
-const hdr = document.getElementById('hdr');
-addEventListener('scroll', ()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
+const hdr=document.getElementById('hdr');
+addEventListener('scroll',()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
 
 init();
 </script>
