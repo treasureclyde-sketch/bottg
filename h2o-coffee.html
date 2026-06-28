@@ -154,6 +154,15 @@
   .cta h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,48px);line-height:1.05}
   .cta p{color:var(--cream-d);margin:16px auto 30px;max-width:34em}
 
+  /* ===== FINALE (bean mountain) ===== */
+  #finale{position:relative;height:92vh;min-height:560px;overflow:hidden}
+  #pilecanvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #finale::after{content:"";position:absolute;inset:0;pointer-events:none;
+      background:linear-gradient(180deg,var(--bg) 0%,transparent 22%,transparent 72%,var(--bg) 100%)}
+  .finale-copy{position:absolute;top:14%;left:0;right:0;z-index:2;text-align:center;padding:0 24px}
+  .finale-copy h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,5vw,56px);line-height:1.05;margin:16px 0 26px}
+  .finale-copy .btn{pointer-events:auto}
+
   /* ===== FOOTER ===== */
   footer{border-top:1px solid var(--line);padding:54px 0 40px;margin-top:90px}
   .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
@@ -350,6 +359,16 @@
   </div>
 </section>
 
+<!-- ================= FINALE: bean mountain ================= -->
+<section id="finale">
+  <canvas id="pilecanvas" aria-hidden="true"></canvas>
+  <div class="finale-copy">
+    <span class="eyebrow">H2O</span>
+    <h2 class="serif">Кофе, который везде с тобой</h2>
+    <a href="#catalog" class="btn btn-orange">Смотреть каталог</a>
+  </div>
+</section>
+
 <!-- ================= FOOTER ================= -->
 <footer id="contacts">
   <div class="wrap">
@@ -402,7 +421,8 @@ const CINNAMON_STICK_URL = "assets/h2o/models/stick.glb";  // cinnamon stick
 /* Decorative slowly-rotating beans in the sections (NOT the intro).
    Paste your bean .glb links here — they map to the .bean3d canvases in order.
    Leave "" to use a built-in procedural bean. */
-const DECOR_BEAN_URLS = ["", "", "", ""];
+const DECOR_BEAN_URLS = ["assets/h2o/models/bean1.glb","assets/h2o/models/bean2.glb","assets/h2o/models/bean3.glb","assets/h2o/models/bean4.glb"];
+const PILE_MODEL_URL  = "assets/h2o/models/pile.glb";   // big coffee-bean mound at the bottom
 /* ========================================= */
 
 const canvas = document.getElementById('scene');
@@ -763,6 +783,38 @@ function initDecorBeans(){
   });
 }
 
+function initPile(){
+  const el=document.getElementById('pilecanvas'); if(!el || !PILE_MODEL_URL) return;
+  let rn; try{ rn=new THREE.WebGLRenderer({canvas:el,alpha:true,antialias:true}); }catch(e){ return; }
+  const sz=()=>({w:el.clientWidth||window.innerWidth,h:el.clientHeight||600});
+  let {w,h}=sz();
+  rn.setPixelRatio(Math.min(devicePixelRatio,2)); rn.setSize(w,h,false);
+  rn.toneMapping=THREE.ACESFilmicToneMapping; rn.toneMappingExposure=1.05; rn.outputColorSpace=THREE.SRGBColorSpace;
+  const sc=new THREE.Scene();
+  sc.add(new THREE.HemisphereLight(0xffe9d2,0x140b06,0.7));
+  const k=new THREE.DirectionalLight(0xfff0dc,2.1); k.position.set(2.5,6,4); sc.add(k);
+  const rim=new THREE.PointLight(0xff7a1e,55,50,2); rim.position.set(-6,3,3); sc.add(rim);
+  if(scene && scene.environment) sc.environment=scene.environment;
+  const cam=new THREE.PerspectiveCamera(42,w/h,0.1,200); let pile=null,size=new THREE.Vector3();
+  function frame(){
+    if(!pile) return;
+    const aspect=cam.aspect, halfW=size.x/2;
+    const dist=(halfW/aspect)/Math.tan((cam.fov*Math.PI/360))*1.04;
+    cam.position.set(0, size.y*1.05, dist); cam.lookAt(0, size.y*0.32, 0);
+    rn.render(sc,cam);
+  }
+  new GLTFLoader().load(PILE_MODEL_URL,(g)=>{
+    const m=g.scene; m.traverse(o=>{ if(o.isMesh && o.material) o.material.envMapIntensity=0.75; });
+    let box=new THREE.Box3().setFromObject(m); const s=new THREE.Vector3(); box.getSize(s);
+    const f=7/Math.max(s.x,s.z); m.scale.setScalar(f);
+    box=new THREE.Box3().setFromObject(m); const c=new THREE.Vector3(); box.getCenter(c);
+    m.position.x-=c.x; m.position.z-=c.z; m.position.y-=box.min.y;
+    box=new THREE.Box3().setFromObject(m); box.getSize(size);
+    sc.add(m); pile=m; frame();
+  }, undefined, ()=>{});
+  addEventListener('resize',()=>{ const n=sz(); rn.setSize(n.w,n.h,false); cam.aspect=n.w/n.h; cam.updateProjectionMatrix(); frame(); }, {passive:true});
+}
+
 const hdr=document.getElementById('hdr');
 addEventListener('scroll',()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
 
@@ -773,6 +825,7 @@ addEventListener('load', ()=>scrollTo(0,0));
 
 init();
 initDecorBeans();
+initPile();
 </script>
 </body>
 </html>
