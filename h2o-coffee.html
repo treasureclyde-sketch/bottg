@@ -166,10 +166,19 @@
   .foot-head .brand{font-size:30px;justify-content:center}
   .foot-head p{font-size:13.5px;color:var(--cream-d);max-width:30em;margin:14px auto 0}
   /* the wedged columns row */
-  .foot-cols{display:flex;justify-content:center;align-items:flex-end;gap:0;flex-wrap:nowrap}
-  .bean-div{height:clamp(210px,24vw,310px);width:auto;display:block;flex:0 0 auto;
-      margin:0 -10px;pointer-events:none;user-select:none;align-self:flex-end;
-      filter:drop-shadow(0 14px 22px rgba(0,0,0,.5))}
+  .foot-cols{display:flex;justify-content:center;align-items:center;gap:0;flex-wrap:nowrap}
+  .bean-div{flex:0 0 auto;width:clamp(96px,11vw,150px);height:clamp(230px,26vw,320px);
+      margin:0 -6px;pointer-events:none;user-select:none;border-radius:6px;
+      background-image:url(assets/h2o/beans-uns.jpg);background-size:cover;background-position:center;
+      /* feather all four edges so the real photo wedges into the gap */
+      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%),linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%);
+      -webkit-mask-composite:source-in;
+      mask-image:linear-gradient(90deg,transparent 0,#000 20%,#000 80%,transparent 100%),linear-gradient(180deg,transparent 0,#000 15%,#000 85%,transparent 100%);
+      mask-composite:intersect}
+  .bean-div:nth-of-type(1){background-position:18% 28%}
+  .bean-div:nth-of-type(2){background-position:72% 64%}
+  .bean-div:nth-of-type(3){background-position:40% 88%}
+  .bean-div:nth-of-type(4){background-position:88% 12%}
   .foot-col{position:relative;z-index:2;padding:0 30px 26px;text-align:center}
   .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px}
   .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s}
@@ -385,24 +394,24 @@
       <p>Specialty-кофе, отборный чай и аксессуары с доставкой по всей России.</p>
     </div>
     <div class="foot-cols">
-      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
+      <span class="bean-div" aria-hidden="true"></span>
       <div class="foot-col">
         <h5>Каталог</h5>
         <a href="#catalog">Кофе</a><a href="#catalog">Чай</a><a href="#catalog">Какао</a><a href="#catalog">Аксессуары</a>
       </div>
-      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
+      <span class="bean-div" aria-hidden="true"></span>
       <div class="foot-col">
         <h5>Магазин</h5>
         <a href="#why">Об обжарке</a><a href="#delivery">Доставка</a><a href="#catalog">Подарочные наборы</a><a href="#why">Блог</a>
       </div>
-      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
+      <span class="bean-div" aria-hidden="true"></span>
       <div class="foot-col">
         <h5>Контакты</h5>
         <a href="tel:+79177700108">+7 (917) 770-01-08</a>
         <a href="#">Пн–Пт 7:00–19:00</a>
         <a href="#">Сб–Вс 8:00–17:00</a>
       </div>
-      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
+      <span class="bean-div" aria-hidden="true"></span>
     </div>
     <div class="foot-bottom">
       <span>© 2026 H2O. Specialty coffee · tea · accessories.</span>
