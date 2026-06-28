@@ -573,14 +573,14 @@ function loadStick(url){
     const obj=gltf.scene;
     obj.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
     let box=new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); box.getSize(size);
-    const k=0.5/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);    // short enough to stay on the flat ring
+    const k=0.95/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);   // stick length
     box.setFromObject(obj); const c=new THREE.Vector3(); box.getCenter(c);
     obj.position.sub(c);                                  // centre the model in a group
     const grp=new THREE.Group(); grp.add(obj);
     box.setFromObject(grp);
-    grp.position.y = -box.min.y + 0.665;                  // rest flat on the white ring (measured ~0.665 high)
-    grp.rotation.y = -0.78;                               // tangent to the ring (both ends at the same radius)
-    grp.position.x = 0.57; grp.position.z = 0.57;         // lower-right, on the outer white ring
+    grp.position.y = -box.min.y + 0.2;                    // rest on the saucer plate (measured ~0.2 high)
+    grp.rotation.y = 0.6;                                 // diagonal, lower-right
+    grp.position.x = 0.3; grp.position.z = 0.68;          // lower-right of the saucer ring (clear of cup & handle)
     if(window.__stick) scene.remove(window.__stick);
     scene.add(grp); window.__stick=grp;
   }, undefined, ()=>{ /* keep procedural stick on error */ });
