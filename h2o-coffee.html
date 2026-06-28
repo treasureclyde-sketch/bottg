@@ -160,26 +160,22 @@
   .finale-copy h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,5vw,56px);line-height:1.05;margin:16px 0 26px}
   .finale-copy .btn{pointer-events:auto}
 
-  /* ===== FOOTER (columns over a coffee mound) ===== */
-  footer{position:relative;overflow:hidden;border-top:1px solid var(--line);
-      padding:64px 0 clamp(150px,20vw,300px);margin-top:90px}
-  .foot-beans{position:absolute;left:0;right:0;bottom:0;width:100%;display:block;
-      pointer-events:none;z-index:0;user-select:none}
-  footer::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
-      background:linear-gradient(180deg,rgba(14,9,6,.74) 0%,rgba(14,9,6,.46) 22%,rgba(14,9,6,0) 46%)}
-  footer .wrap{position:relative;z-index:2}
-  .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
-  .foot .brand{font-size:26px}
-  .foot p{font-size:13.5px;color:var(--cream);opacity:.92;max-width:24em;margin-top:14px;
-      text-shadow:0 2px 14px rgba(8,4,2,.95),0 1px 5px rgba(8,4,2,.9)}
-  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px;
-      text-shadow:0 2px 12px rgba(8,4,2,.95)}
-  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s;
-      text-shadow:0 2px 12px rgba(8,4,2,.95),0 1px 4px rgba(8,4,2,.9)}
+  /* ===== FOOTER (link columns wedged between coffee mounds) ===== */
+  footer{position:relative;overflow:hidden;border-top:1px solid var(--line);padding:60px 0 40px;margin-top:90px}
+  .foot-head{text-align:center;margin-bottom:30px}
+  .foot-head .brand{font-size:30px;justify-content:center}
+  .foot-head p{font-size:13.5px;color:var(--cream-d);max-width:30em;margin:14px auto 0}
+  /* the wedged columns row */
+  .foot-cols{display:flex;justify-content:center;align-items:flex-end;gap:0;flex-wrap:nowrap}
+  .bean-div{height:clamp(210px,24vw,310px);width:auto;display:block;flex:0 0 auto;
+      margin:0 -10px;pointer-events:none;user-select:none;align-self:flex-end;
+      filter:drop-shadow(0 14px 22px rgba(0,0,0,.5))}
+  .foot-col{position:relative;z-index:2;padding:0 30px 26px;text-align:center}
+  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px}
+  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s}
   .foot-col a:hover{opacity:1;color:var(--orange-2)}
-  .foot-bottom{position:relative;z-index:2;margin-top:46px;padding-top:22px;border-top:1px solid var(--line);
-      display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream);
-      text-shadow:0 2px 12px rgba(8,4,2,.95)}
+  .foot-bottom{position:relative;z-index:2;margin-top:30px;padding-top:22px;border-top:1px solid var(--line);
+      display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream-d)}
 
   @media(max-width:900px){
     .nav-links,.nav-phone{display:none}
@@ -188,7 +184,9 @@
     .hero-art{order:-1}
     .cards{grid-template-columns:1fr}
     .prod-grid{grid-template-columns:repeat(2,1fr)}
-    .foot{flex-direction:column}
+    .foot-cols{flex-wrap:wrap;gap:20px}
+    .bean-div{display:none}
+    .foot-col{padding-bottom:6px}
   }
   @media(prefers-reduced-motion:reduce){
     .marquee .track{animation:none}
@@ -381,27 +379,30 @@
 
 <!-- ================= FOOTER ================= -->
 <footer id="contacts">
-  <img class="foot-beans" src="assets/h2o/beans-mound.png" alt="" aria-hidden="true">
   <div class="wrap">
-    <div class="foot">
-      <div>
-        <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
-        <p>Specialty-кофе, отборный чай и аксессуары с доставкой по всей России.</p>
-      </div>
+    <div class="foot-head">
+      <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
+      <p>Specialty-кофе, отборный чай и аксессуары с доставкой по всей России.</p>
+    </div>
+    <div class="foot-cols">
+      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
       <div class="foot-col">
         <h5>Каталог</h5>
         <a href="#catalog">Кофе</a><a href="#catalog">Чай</a><a href="#catalog">Какао</a><a href="#catalog">Аксессуары</a>
       </div>
+      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
       <div class="foot-col">
         <h5>Магазин</h5>
         <a href="#why">Об обжарке</a><a href="#delivery">Доставка</a><a href="#catalog">Подарочные наборы</a><a href="#why">Блог</a>
       </div>
+      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
       <div class="foot-col">
         <h5>Контакты</h5>
         <a href="tel:+79177700108">+7 (917) 770-01-08</a>
         <a href="#">Пн–Пт 7:00–19:00</a>
         <a href="#">Сб–Вс 8:00–17:00</a>
       </div>
+      <img class="bean-div" src="assets/h2o/bean-divider.png" alt="" aria-hidden="true">
     </div>
     <div class="foot-bottom">
       <span>© 2026 H2O. Specialty coffee · tea · accessories.</span>
