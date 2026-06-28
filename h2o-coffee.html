@@ -166,10 +166,7 @@
 <section id="stage">
   <div class="stage-sticky">
     <canvas id="scene"></canvas>
-    <div class="stage-brand" id="brand">
-      <div class="ib-line"></div>
-      <div class="ib-tag">Coffee · Tea · Accessories</div>
-    </div>
+    <div class="stage-brand" id="brand"></div>
     <div class="scroll-hint" id="hint">Листайте — заварите кофе<span class="chev"></span></div>
   </div>
 </section>
@@ -364,7 +361,7 @@ const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 const lerp   = (a,b,t)=>a+(b-a)*t;
 
-const N_CIN = 720;
+const N_CIN = 1600;
 const cinData = [];
 const POUR_S = 0.07, POUR_E = 0.56;      // coffee fills over this scroll range
 const CIN_S  = 0.46, CIN_E  = 0.86;      // cinnamon sprinkles over this range
@@ -412,7 +409,6 @@ function init(){
   buildSaucer();
   buildCup();
   buildLiquid();
-  buildStream();
   buildCinnamon();
   buildStick();
   buildSteam();
@@ -481,11 +477,6 @@ function buildLiquid(){
   foam=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:foamTexture(), roughness:0.98, metalness:0, envMapIntensity:0.16}));
   foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
-function buildStream(){
-  const g=new THREE.CylinderGeometry(0.055,0.085,1,16,1,true);
-  const m=new THREE.MeshPhysicalMaterial({color:0x5a3a22, roughness:0.35, transparent:true, opacity:0});
-  stream=new THREE.Mesh(g,m); scene.add(stream);
-}
 function makeTextTargets(text, count){
   const W=360, H=170, TW=1.45, TH=0.66;   // world width/height of the word on the foam
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
@@ -509,9 +500,9 @@ function makeTextTargets(text, count){
 }
 function grainGeo(){
   // tiny irregular cinnamon grain (deformed low-poly icosahedron)
-  const g=new THREE.IcosahedronGeometry(0.011,0);
+  const g=new THREE.IcosahedronGeometry(0.0065,0);
   const p=g.attributes.position, v=new THREE.Vector3();
-  for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); v.multiplyScalar(0.55+Math.random()*0.95); p.setXYZ(i,v.x,v.y*0.6,v.z); }
+  for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); v.multiplyScalar(0.5+Math.random()*1.0); p.setXYZ(i,v.x,v.y*0.55,v.z); }
   g.computeVertexNormals(); return g;
 }
 function buildCinnamon(){
@@ -529,7 +520,7 @@ function buildCinnamon(){
       start:CIN_S + f*(CIN_E-CIN_S)*0.55, span:(CIN_E-CIN_S)*0.45,
       rotAxis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
       spin:8+Math.random()*10,
-      scale:0.7+Math.random()*0.95,
+      scale:0.55+Math.random()*0.8,
       restQ:new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6))
     });
   }
@@ -615,15 +606,6 @@ function renderScroll(p){
   const fr = lerp(RIM_R*0.62, RIM_R, fillT);
   foam.scale.set(fr/0.82, 1, fr/0.82);
   foam.visible = fillT>0.03;
-
-  // pour stream while filling
-  const sO = smooth(POUR_S,POUR_S+0.05,p)*(1-smooth(POUR_E-0.07,POUR_E,p));
-  stream.material.opacity = sO*0.9;
-  stream.visible = sO>0.01;
-  if(stream.visible){
-    const top=2.0, h=top-fy; stream.scale.set(1,Math.max(0.01,h),1);
-    stream.position.set(Math.sin(performance.now()/200)*0.02, fy+h*0.5, 0);
-  }
 
   // cinnamon sprinkle
   const sx=RIM_R/0.82;
