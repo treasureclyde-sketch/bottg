@@ -803,8 +803,8 @@ function initPile(){
   function frame(){
     if(!pile) return;
     const aspect=cam.aspect, halfW=size.x/2;
-    const dist=(halfW/aspect)/Math.tan((cam.fov*Math.PI/360))*1.04;
-    cam.position.set(0, size.y*1.05, dist); cam.lookAt(0, size.y*0.32, 0);
+    const dist=(halfW/aspect)/Math.tan((cam.fov*Math.PI/360))*0.74;   // closer = bigger pile
+    cam.position.set(0, size.y*0.82, dist); cam.lookAt(0, size.y*0.4, 0);
     rn.render(sc,cam);
   }
   new GLTFLoader().load(PILE_MODEL_URL,(g)=>{
