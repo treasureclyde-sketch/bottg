@@ -259,7 +259,8 @@
 
 <!-- ================= WHY / FEATURES ================= -->
 <section class="section" id="why">
-  <canvas class="bean3d" aria-hidden="true" style="width:150px;height:150px;top:30px;right:26px" data-spin="0.004"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:108px;height:108px;top:24px;right:30px" data-spin="0.004"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:84px;height:84px;bottom:34px;left:22px" data-spin="0.006"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Почему H2O</span>
@@ -287,7 +288,7 @@
 
 <!-- ================= CATALOG ================= -->
 <section class="section" id="catalog" style="padding-top:0">
-  <canvas class="bean3d" aria-hidden="true" style="width:120px;height:120px;top:8px;right:30px" data-spin="0.006"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:96px;height:96px;top:4px;right:26px" data-spin="0.006"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Каталог</span>
@@ -320,7 +321,8 @@
 
 <!-- ================= REVIEWS ================= -->
 <section class="section" id="reviews" style="padding-top:0">
-  <canvas class="bean3d" aria-hidden="true" style="width:160px;height:160px;top:20px;left:24px" data-spin="0.0035"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:112px;height:112px;top:16px;left:24px" data-spin="0.0035"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:88px;height:88px;bottom:24px;right:26px" data-spin="0.005"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Отзывы</span>
@@ -348,7 +350,8 @@
 
 <!-- ================= CTA ================= -->
 <section class="section" id="delivery" style="padding-top:0">
-  <canvas class="bean3d" aria-hidden="true" style="width:130px;height:130px;bottom:30px;right:40px" data-spin="0.005"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:104px;height:104px;bottom:26px;right:42px" data-spin="0.005"></canvas>
+  <canvas class="bean3d" aria-hidden="true" style="width:84px;height:84px;top:26px;left:34px" data-spin="0.0045"></canvas>
   <div class="wrap">
     <div class="cta">
       <span class="eyebrow">Доставка по всей России</span>
@@ -761,24 +764,25 @@ function initDecorBeans(){
     rn.setPixelRatio(Math.min(devicePixelRatio,2)); rn.setSize(w,h,false);
     rn.toneMapping=THREE.ACESFilmicToneMapping; rn.outputColorSpace=THREE.SRGBColorSpace;
     const sc=new THREE.Scene();
-    const cam=new THREE.PerspectiveCamera(34,w/h,0.1,20); cam.position.set(0,0,2.6);
+    const cam=new THREE.PerspectiveCamera(34,w/h,0.1,20); cam.position.set(0,0,3.0);
     sc.add(new THREE.HemisphereLight(0xffe9d2,0x140b06,1.1));
     const k=new THREE.DirectionalLight(0xfff0dc,2.2); k.position.set(2,3,4); sc.add(k);
     const rim=new THREE.PointLight(0xff7a1e,10,12,2); rim.position.set(-3,1,-2); sc.add(rim);
     if(scene && scene.environment) sc.environment=scene.environment;
     const mat=new THREE.MeshPhysicalMaterial({color:0x3a2114,roughness:0.5,metalness:0,clearcoat:0.4,clearcoatRoughness:0.5,envMapIntensity:0.8});
-    let obj=new THREE.Mesh(decorBeanGeo(),mat); obj.scale.setScalar(1.05); sc.add(obj);
-    const url=DECOR_BEAN_URLS[idx]||el.dataset.model||"";
+    let obj=new THREE.Mesh(decorBeanGeo(),mat); obj.scale.setScalar(0.8); sc.add(obj);
+    const url=DECOR_BEAN_URLS[idx % DECOR_BEAN_URLS.length]||el.dataset.model||"";
     if(url){ new GLTFLoader().load(url,(gltf)=>{
       const m=gltf.scene; const box=new THREE.Box3().setFromObject(m); const s=new THREE.Vector3(); box.getSize(s);
-      const f=1.6/Math.max(s.x,s.y,s.z); m.scale.setScalar(f);
+      const f=1.05/Math.max(s.x,s.y,s.z); m.scale.setScalar(f);   // smaller bean
       const c=new THREE.Vector3(); box.getCenter(c); m.position.sub(c.multiplyScalar(f));
       sc.remove(obj); obj=m; sc.add(obj);
     }, undefined, ()=>{}); }
     let vis=true;
     new IntersectionObserver(es=>{ vis=es[0].isIntersecting; },{rootMargin:'120px'}).observe(el);
     const spin=parseFloat(el.dataset.spin||'0.005');
-    (function tick(){ if(vis){ obj.rotation.y+=spin; obj.rotation.x=0.32; rn.render(sc,cam); } requestAnimationFrame(tick); })();
+    const tiltX=0.7, tiltZ=0.25+(idx%3)*0.12;   // spin at an angle, varied per bean
+    (function tick(){ if(vis){ obj.rotation.y+=spin; obj.rotation.x=tiltX; obj.rotation.z=tiltZ; rn.render(sc,cam); } requestAnimationFrame(tick); })();
     addEventListener('resize',()=>{ const n=sz(); rn.setSize(n.w,n.h,false); cam.aspect=n.w/n.h; cam.updateProjectionMatrix(); }, {passive:true});
   });
 }
