@@ -480,13 +480,17 @@ function buildLiquid(){
   foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
 function makeTextTargets(text, count){
-  const W=360, H=170, TW=1.05, TH=0.6;    // world width/height of the word on the foam
+  const W=360, H=170, TW=1.12, TH=0.62;    // world width/height of the word on the foam
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   x.fillStyle='#000'; x.fillRect(0,0,W,H);
   x.fillStyle='#fff'; x.font='700 132px Georgia, "Times New Roman", serif';
-  try{ x.letterSpacing='-12px'; }catch(e){}   // pull the letters together
-  x.textAlign='center'; x.textBaseline='middle';
-  x.fillText(text, W/2, H/2+8);
+  x.textAlign='left'; x.textBaseline='middle';
+  // draw each glyph with a tight, controlled gap (reliable, unlike ctx.letterSpacing)
+  const chars=[...text]; const gap=-10;
+  const wts=chars.map(ch=>x.measureText(ch).width);
+  const total=wts.reduce((a,b)=>a+b,0)+gap*(chars.length-1);
+  let cx=W/2-total/2;
+  for(let i=0;i<chars.length;i++){ x.fillText(chars[i],cx,H/2+8); cx+=wts[i]+gap; }
   const data=x.getImageData(0,0,W,H).data; const pts=[];
   for(let py=0;py<H;py+=2) for(let px=0;px<W;px+=2){ if(data[(py*W+px)*4]>128) pts.push([px,py]); }
   for(let i=pts.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [pts[i],pts[j]]=[pts[j],pts[i]]; }
