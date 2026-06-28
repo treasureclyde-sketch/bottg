@@ -480,10 +480,11 @@ function buildLiquid(){
   foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
 function makeTextTargets(text, count){
-  const W=360, H=170, TW=1.45, TH=0.66;   // world width/height of the word on the foam
+  const W=360, H=170, TW=1.05, TH=0.6;    // world width/height of the word on the foam
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   x.fillStyle='#000'; x.fillRect(0,0,W,H);
-  x.fillStyle='#fff'; x.font='700 130px Georgia, "Times New Roman", serif';
+  x.fillStyle='#fff'; x.font='700 132px Georgia, "Times New Roman", serif';
+  try{ x.letterSpacing='-12px'; }catch(e){}   // pull the letters together
   x.textAlign='center'; x.textBaseline='middle';
   x.fillText(text, W/2, H/2+8);
   const data=x.getImageData(0,0,W,H).data; const pts=[];
@@ -572,14 +573,14 @@ function loadStick(url){
     const obj=gltf.scene;
     obj.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
     let box=new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); box.getSize(size);
-    const k=0.78/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);   // size by length
+    const k=0.5/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);    // short enough to stay on the flat ring
     box.setFromObject(obj); const c=new THREE.Vector3(); box.getCenter(c);
     obj.position.sub(c);                                  // centre the model in a group
     const grp=new THREE.Group(); grp.add(obj);
     box.setFromObject(grp);
-    grp.position.y = -box.min.y + 0.67;                   // rest on the cup's flat shoulder ring (~0.67 high)
-    grp.rotation.y = -0.7;                                // tangent to the ring, lower-right
-    grp.position.x = 0.52; grp.position.z = 0.52;         // lower-right shoulder (the visible white ring)
+    grp.position.y = -box.min.y + 0.665;                  // rest flat on the white ring (measured ~0.665 high)
+    grp.rotation.y = -0.78;                               // tangent to the ring (both ends at the same radius)
+    grp.position.x = 0.57; grp.position.z = 0.57;         // lower-right, on the outer white ring
     if(window.__stick) scene.remove(window.__stick);
     scene.add(grp); window.__stick=grp;
   }, undefined, ()=>{ /* keep procedural stick on error */ });
