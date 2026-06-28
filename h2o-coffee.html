@@ -5,6 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>H2O — Specialty Coffee · Tea · Accessories</title>
 <meta name="description" content="H2O — specialty-обжарка кофе, отборный чай и аксессуары. Свежая обжарка, доставка по всей России.">
+<script>
+  /* always open from the top: strip any #hash before the browser can jump to it */
+  if('scrollRestoration' in history) history.scrollRestoration='manual';
+  if(location.hash) history.replaceState(null,'',location.pathname+location.search);
+</script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&display=swap');
 
@@ -56,7 +61,8 @@
   header{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .4s var(--ease),border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
   header.scrolled{background:rgba(14,10,7,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
-  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:30px;letter-spacing:-.04em}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:30px;letter-spacing:.01em}
+  .brand .wm{letter-spacing:.02em}
   .brand b{color:var(--orange-2)}
   .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px var(--orange)}
   .nav-links{display:flex;gap:30px}
@@ -177,7 +183,7 @@
 <!-- ================= HEADER ================= -->
 <header id="hdr">
   <div class="wrap nav">
-    <a href="#" class="brand"><span class="dot"></span>H<b>2</b>O</a>
+    <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
     <nav class="nav-links">
       <a href="#why">Обжарка</a>
       <a href="#catalog">Каталог</a>
@@ -306,7 +312,7 @@
   <div class="wrap">
     <div class="foot">
       <div>
-        <a href="#" class="brand"><span class="dot"></span>H<b>2</b>O</a>
+        <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
         <p>Specialty-обжарка кофе, отборный чай и аксессуары с доставкой по России.</p>
       </div>
       <div class="foot-col">
