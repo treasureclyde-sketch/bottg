@@ -168,9 +168,9 @@
     <canvas id="scene"></canvas>
     <div class="stage-brand" id="brand">
       <div class="ib-line"></div>
-      <div class="ib-tag">Coffee · Tea · Accessories</div>
+      <div class="ib-tag">Кофе · Чай · Аксессуары</div>
     </div>
-    <div class="scroll-hint" id="hint">Листайте — заварите кофе<span class="chev"></span></div>
+    <div class="scroll-hint" id="hint"><span class="chev"></span></div>
   </div>
 </section>
 
@@ -578,8 +578,8 @@ function loadStick(url){
     const grp=new THREE.Group(); grp.add(obj);
     box.setFromObject(grp);
     grp.position.y = -box.min.y + 0.05;                   // rest on the saucer surface
-    grp.rotation.y = 0.18;                                // along the front rim (tangent)
-    grp.position.x = 0.0; grp.position.z = 0.86;          // front rim of the saucer, toward viewer
+    grp.rotation.y = -0.5;                                // diagonal along the lower-right ring
+    grp.position.x = 0.62; grp.position.z = 0.66;         // lower-right of the saucer, near the edge
     if(window.__stick) scene.remove(window.__stick);
     scene.add(grp); window.__stick=grp;
   }, undefined, ()=>{ /* keep procedural stick on error */ });
