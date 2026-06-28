@@ -135,6 +135,16 @@
   .prod .price .buy{width:38px;height:38px;border-radius:50%;background:rgba(232,101,30,.12);border:1px solid rgba(232,101,30,.3);display:grid;place-items:center;color:var(--orange-2);cursor:pointer;transition:.25s}
   .prod .price .buy:hover{background:var(--orange);color:#1a0e06}
 
+  /* ===== REVIEWS ===== */
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .rev{background:linear-gradient(180deg,var(--panel),var(--bg-2));border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px;transition:transform .35s var(--ease),border-color .35s}
+  .rev:hover{transform:translateY(-6px);border-color:rgba(232,101,30,.4)}
+  .rev-top{display:flex;align-items:center;justify-content:space-between}
+  .rev-top img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid rgba(232,101,30,.4)}
+  .rev .stars{color:var(--orange);font-size:15px;letter-spacing:2px}
+  .rev blockquote{font-family:'Fraunces',serif;font-size:17px;line-height:1.45;color:var(--cream)}
+  .rev figcaption{font-size:13px;letter-spacing:.04em;color:var(--cream-d)}
+
   /* ===== CTA STRIP ===== */
   .cta{position:relative;border-radius:26px;overflow:hidden;padding:70px 50px;text-align:center;
       background:radial-gradient(100% 140% at 50% 0%,rgba(232,101,30,.22),transparent 60%),linear-gradient(180deg,var(--panel-2),var(--bg-2));
@@ -241,13 +251,13 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Почему H2O</span>
-      <h2 class="serif">Ремесленная обжарка под каждую чашку</h2>
+      <h2 class="serif">Вкус, который запоминается</h2>
     </div>
     <div class="cards">
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 14h12a4 4 0 0 1 0 8H8a4 4 0 0 1-4-4v-4Z" stroke-linejoin="round"/><path d="M8 6V3M12 6V3M16 6V3" stroke-linecap="round"/></svg></div>
-        <h3>Свежая обжарка</h3>
-        <p>Обжариваем небольшими партиями и отправляем в течение 48 часов — зерно раскрывается именно у вас в чашке.</p>
+        <h3>Свежесть</h3>
+        <p>Небольшие партии и быстрая отправка — вкус и аромат раскрываются именно у вас в чашке.</p>
       </div>
       <div class="card">
         <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><ellipse cx="12" cy="12" rx="6.5" ry="9" transform="rotate(35 12 12)" stroke-linejoin="round"/><path d="M8.4 6.6C11 10 13 14 15.6 17.4" stroke-linecap="round"/></svg></div>
@@ -295,13 +305,40 @@
   </div>
 </section>
 
+<!-- ================= REVIEWS ================= -->
+<section class="section" id="reviews" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Отзывы</span>
+      <h2 class="serif">Что говорят наши гости</h2>
+    </div>
+    <div class="reviews">
+      <figure class="rev">
+        <div class="rev-top"><img src="assets/h2o/rev07f.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
+        <blockquote>Беру кофе уже полгода — вкус насыщенный, аромат сводит с ума, а упаковка такая, что не стыдно подарить.</blockquote>
+        <figcaption>Марина · Уфа</figcaption>
+      </figure>
+      <figure class="rev">
+        <div class="rev-top"><img src="assets/h2o/revd49.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
+        <blockquote>Заказывала набор в подарок — приехало быстро и бережно. Чай Да Хун Пао просто открытие, теперь только у них.</blockquote>
+        <figcaption>Алина · Казань</figcaption>
+      </figure>
+      <figure class="rev">
+        <div class="rev-top"><img src="assets/h2o/revddb.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
+        <blockquote>Помогли подобрать зерно под мою кофемашину, расписали вкус. Эфиопия Guji — теперь мой фаворит на утро.</blockquote>
+        <figcaption>Дмитрий · Москва</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
 <!-- ================= CTA ================= -->
 <section class="section" id="delivery" style="padding-top:0">
   <div class="wrap">
     <div class="cta">
       <span class="eyebrow">Доставка по всей России</span>
       <h2 class="serif">Свежий кофе — к вашей двери</h2>
-      <p>Соберём заказ из свежей обжарки и отправим транспортной или курьером. Бесплатная консультация по подбору зерна и метода.</p>
+      <p>Соберём заказ и отправим транспортной или курьером. Бесплатная консультация по подбору зерна и метода заваривания.</p>
       <a href="tel:+79177700108" class="btn btn-orange">+7 (917) 770-01-08</a>
     </div>
   </div>
@@ -313,7 +350,7 @@
     <div class="foot">
       <div>
         <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
-        <p>Specialty-обжарка кофе, отборный чай и аксессуары с доставкой по России.</p>
+        <p>Specialty-кофе, отборный чай и аксессуары с доставкой по всей России.</p>
       </div>
       <div class="foot-col">
         <h5>Каталог</h5>
