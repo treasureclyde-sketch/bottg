@@ -108,8 +108,10 @@
   @keyframes scroll{to{transform:translateX(-50%)}}
 
   /* ===== FEATURES ===== */
-  .section{padding:90px 0}
+  .section{padding:90px 0;position:relative}
   section[id],footer[id]{scroll-margin-top:90px}
+  .bean3d{position:absolute;pointer-events:none;z-index:1;opacity:.92;filter:drop-shadow(0 12px 22px rgba(0,0,0,.5))}
+  @media(max-width:1000px){.bean3d{display:none}}
   .sec-head{max-width:620px;margin-bottom:46px}
   .sec-head h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,46px);line-height:1.05;margin-top:14px}
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
@@ -248,6 +250,7 @@
 
 <!-- ================= WHY / FEATURES ================= -->
 <section class="section" id="why">
+  <canvas class="bean3d" aria-hidden="true" style="width:150px;height:150px;top:30px;right:26px" data-spin="0.004"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Почему H2O</span>
@@ -275,6 +278,7 @@
 
 <!-- ================= CATALOG ================= -->
 <section class="section" id="catalog" style="padding-top:0">
+  <canvas class="bean3d" aria-hidden="true" style="width:120px;height:120px;top:8px;right:30px" data-spin="0.006"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Каталог</span>
@@ -307,6 +311,7 @@
 
 <!-- ================= REVIEWS ================= -->
 <section class="section" id="reviews" style="padding-top:0">
+  <canvas class="bean3d" aria-hidden="true" style="width:160px;height:160px;top:20px;left:24px" data-spin="0.0035"></canvas>
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Отзывы</span>
@@ -334,6 +339,7 @@
 
 <!-- ================= CTA ================= -->
 <section class="section" id="delivery" style="padding-top:0">
+  <canvas class="bean3d" aria-hidden="true" style="width:130px;height:130px;bottom:30px;right:40px" data-spin="0.005"></canvas>
   <div class="wrap">
     <div class="cta">
       <span class="eyebrow">Доставка по всей России</span>
@@ -393,6 +399,10 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
    Leave "" to use the built-in procedural version. */
 const CUP_MODEL_URL      = "assets/h2o/models/cup.glb";    // white cappuccino cup (empty)
 const CINNAMON_STICK_URL = "assets/h2o/models/stick.glb";  // cinnamon stick
+/* Decorative slowly-rotating beans in the sections (NOT the intro).
+   Paste your bean .glb links here — they map to the .bean3d canvases in order.
+   Leave "" to use a built-in procedural bean. */
+const DECOR_BEAN_URLS = ["", "", "", ""];
 /* ========================================= */
 
 const canvas = document.getElementById('scene');
@@ -713,6 +723,46 @@ function onResize(){
 }
 function fallback(){ canvas.style.display='none'; brand.style.opacity=1; if(hint) hint.style.display='none'; }
 
+/* ---------- decorative slowly-rotating beans (scattered in the sections) ---------- */
+function decorBeanGeo(){
+  const g=new THREE.SphereGeometry(0.5,30,22); g.scale(1.0,0.62,0.78);
+  const pos=g.attributes.position, v=new THREE.Vector3();
+  for(let i=0;i<pos.count;i++){ v.fromBufferAttribute(pos,i);
+    if(v.z>0){ const gr=Math.exp(-(v.y*v.y)/0.018); v.z-=gr*0.2*Math.min(1,v.z/0.18); }
+    pos.setXYZ(i,v.x,v.y,v.z); }
+  g.computeVertexNormals(); return g;
+}
+function initDecorBeans(){
+  const nodes=[...document.querySelectorAll('canvas.bean3d')];
+  nodes.forEach((el,idx)=>{
+    let rn; try{ rn=new THREE.WebGLRenderer({canvas:el,alpha:true,antialias:true}); }catch(e){ return; }
+    const sz=()=>({w:el.clientWidth||160,h:el.clientHeight||160});
+    let {w,h}=sz();
+    rn.setPixelRatio(Math.min(devicePixelRatio,2)); rn.setSize(w,h,false);
+    rn.toneMapping=THREE.ACESFilmicToneMapping; rn.outputColorSpace=THREE.SRGBColorSpace;
+    const sc=new THREE.Scene();
+    const cam=new THREE.PerspectiveCamera(34,w/h,0.1,20); cam.position.set(0,0,2.6);
+    sc.add(new THREE.HemisphereLight(0xffe9d2,0x140b06,1.1));
+    const k=new THREE.DirectionalLight(0xfff0dc,2.2); k.position.set(2,3,4); sc.add(k);
+    const rim=new THREE.PointLight(0xff7a1e,10,12,2); rim.position.set(-3,1,-2); sc.add(rim);
+    if(scene && scene.environment) sc.environment=scene.environment;
+    const mat=new THREE.MeshPhysicalMaterial({color:0x3a2114,roughness:0.5,metalness:0,clearcoat:0.4,clearcoatRoughness:0.5,envMapIntensity:0.8});
+    let obj=new THREE.Mesh(decorBeanGeo(),mat); obj.scale.setScalar(1.05); sc.add(obj);
+    const url=DECOR_BEAN_URLS[idx]||el.dataset.model||"";
+    if(url){ new GLTFLoader().load(url,(gltf)=>{
+      const m=gltf.scene; const box=new THREE.Box3().setFromObject(m); const s=new THREE.Vector3(); box.getSize(s);
+      const f=1.6/Math.max(s.x,s.y,s.z); m.scale.setScalar(f);
+      const c=new THREE.Vector3(); box.getCenter(c); m.position.sub(c.multiplyScalar(f));
+      sc.remove(obj); obj=m; sc.add(obj);
+    }, undefined, ()=>{}); }
+    let vis=true;
+    new IntersectionObserver(es=>{ vis=es[0].isIntersecting; },{rootMargin:'120px'}).observe(el);
+    const spin=parseFloat(el.dataset.spin||'0.005');
+    (function tick(){ if(vis){ obj.rotation.y+=spin; obj.rotation.x=0.32; rn.render(sc,cam); } requestAnimationFrame(tick); })();
+    addEventListener('resize',()=>{ const n=sz(); rn.setSize(n.w,n.h,false); cam.aspect=n.w/n.h; cam.updateProjectionMatrix(); }, {passive:true});
+  });
+}
+
 const hdr=document.getElementById('hdr');
 addEventListener('scroll',()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
 
@@ -722,6 +772,7 @@ scrollTo(0,0);
 addEventListener('load', ()=>scrollTo(0,0));
 
 init();
+initDecorBeans();
 </script>
 </body>
 </html>
