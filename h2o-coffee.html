@@ -162,7 +162,16 @@
 
   /* ===== FOOTER (link columns wedged between coffee mounds) ===== */
   footer{position:relative;overflow:hidden;border-top:1px solid var(--line);padding:60px 0 40px;margin-top:90px}
-  .foot-head{text-align:center;margin-bottom:30px}
+  /* ambient scattered beans behind everything */
+  footer::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+      background:url(assets/h2o/beans-uns.jpg) center/130% auto;opacity:.20;
+      -webkit-mask-image:radial-gradient(120% 100% at 50% 50%,#000 30%,transparent 78%);
+      mask-image:radial-gradient(120% 100% at 50% 50%,#000 30%,transparent 78%)}
+  /* keep the centre (text) calm and readable */
+  footer::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:radial-gradient(58% 70% at 50% 56%,rgba(14,10,7,.78) 0%,rgba(14,10,7,.35) 55%,transparent 100%)}
+  footer .wrap{position:relative;z-index:2}
+  .foot-head{text-align:center;margin-bottom:30px;position:relative;z-index:2}
   .foot-head .brand{font-size:30px;justify-content:center}
   .foot-head p{font-size:13.5px;color:var(--cream-d);max-width:30em;margin:14px auto 0}
   /* the wedged columns row */
@@ -180,8 +189,8 @@
   .bean-div:nth-of-type(3){background-position:40% 88%}
   .bean-div:nth-of-type(4){background-position:88% 12%}
   .foot-col{position:relative;z-index:2;padding:0 30px 26px;text-align:center}
-  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px}
-  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s}
+  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px;text-shadow:0 2px 12px rgba(8,4,2,.9)}
+  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s;text-shadow:0 2px 12px rgba(8,4,2,.9)}
   .foot-col a:hover{opacity:1;color:var(--orange-2)}
   .foot-bottom{position:relative;z-index:2;margin-top:30px;padding-top:22px;border-top:1px solid var(--line);
       display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream-d)}
