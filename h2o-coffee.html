@@ -160,23 +160,21 @@
   .finale-copy h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,5vw,56px);line-height:1.05;margin:16px 0 26px}
   .finale-copy .btn{pointer-events:auto}
 
-  /* ===== FOOTER (frosted-glass panel over a coffee-bean backdrop) ===== */
-  footer{position:relative;overflow:hidden;border-top:1px solid var(--line);
-      padding:clamp(56px,7vw,96px) 0;margin-top:90px;
-      background:linear-gradient(rgba(14,10,7,.34),rgba(14,10,7,.5)),url(assets/h2o/beans-uns.jpg) center/cover}
-  footer .wrap{position:relative;z-index:2}
-  /* the glass card */
-  .foot-glass{position:relative;max-width:1060px;margin:0 auto;border-radius:24px;
-      padding:clamp(36px,4vw,54px) clamp(26px,4vw,58px) clamp(26px,3vw,38px);
-      background:linear-gradient(180deg,rgba(38,28,20,.46),rgba(18,13,9,.56));
-      -webkit-backdrop-filter:blur(22px) saturate(125%);backdrop-filter:blur(22px) saturate(125%);
-      border:1px solid rgba(244,234,219,.16);
-      box-shadow:0 44px 90px -34px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12)}
-  .foot-head{text-align:center;margin-bottom:34px}
+  /* ===== FOOTER (full-bleed frosted glass over a coffee-bean backdrop) ===== */
+  footer{position:relative;overflow:hidden;margin-top:90px;
+      background:linear-gradient(rgba(14,10,7,.30),rgba(14,10,7,.46)),url(assets/h2o/beans-uns.jpg) center/cover}
+  /* the frosted glass covers the WHOLE footer */
+  .foot-glass{position:relative;padding:clamp(52px,6vw,90px) 0 clamp(30px,3vw,40px);
+      background:linear-gradient(180deg,rgba(30,22,15,.42),rgba(14,10,7,.55));
+      -webkit-backdrop-filter:blur(24px) saturate(120%);backdrop-filter:blur(24px) saturate(120%);
+      border-top:1px solid rgba(244,234,219,.14);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.10)}
+  .foot-head{text-align:center;margin-bottom:42px}
   .foot-head .brand{font-size:30px;justify-content:center}
   .foot-head p{font-size:13.5px;color:var(--cream-d);max-width:30em;margin:14px auto 0}
-  .foot-cols{display:flex;justify-content:center;gap:clamp(28px,7vw,86px);flex-wrap:wrap}
-  .foot-col{text-align:center}
+  .foot-cols{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;
+      max-width:920px;margin:0 auto}
+  .foot-col{text-align:center;flex:1 1 0;min-width:160px}
   .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px}
   .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s}
   .foot-col a:hover{opacity:1;color:var(--orange-2)}
@@ -383,8 +381,8 @@
 
 <!-- ================= FOOTER ================= -->
 <footer id="contacts">
-  <div class="wrap">
-    <div class="foot-glass">
+  <div class="foot-glass">
+    <div class="wrap">
       <div class="foot-head">
         <a href="#" class="brand"><span class="dot"></span><span class="wm">H<b>2</b>O</span></a>
         <p>Specialty-кофе, отборный чай и аксессуары с доставкой по всей России.</p>
