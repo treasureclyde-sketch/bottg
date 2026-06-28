@@ -154,27 +154,32 @@
   .cta h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(28px,4vw,48px);line-height:1.05}
   .cta p{color:var(--cream-d);margin:16px auto 30px;max-width:34em}
 
-  /* ===== FINALE (bean mountain) ===== */
-  #finale{position:relative;height:90vh;min-height:580px;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end}
-  #pile-img{position:absolute;left:50%;bottom:-6%;transform:translateX(-50%);
-      width:min(1440px,122%);max-width:none;pointer-events:none;z-index:1;
-      filter:drop-shadow(0 30px 40px rgba(0,0,0,.55))}
-  #finale::after{content:"";position:absolute;left:0;right:0;bottom:0;height:16%;pointer-events:none;z-index:2;
-      background:linear-gradient(180deg,transparent 0%,var(--bg) 100%)}
-  .finale-copy{position:relative;z-index:3;text-align:center;padding:0 24px;margin-bottom:40vh;
-      text-shadow:0 2px 26px rgba(8,4,2,.85),0 1px 6px rgba(8,4,2,.7)}
+  /* ===== FINALE (headline) ===== */
+  #finale{position:relative;padding:110px 0 60px;text-align:center;overflow:hidden}
+  .finale-copy{position:relative;z-index:2;padding:0 24px}
   .finale-copy h2{font-family:'Fraunces',serif;font-weight:500;font-size:clamp(30px,5vw,56px);line-height:1.05;margin:16px 0 26px}
   .finale-copy .btn{pointer-events:auto}
 
-  /* ===== FOOTER ===== */
-  footer{border-top:1px solid var(--line);padding:54px 0 40px;margin-top:90px}
+  /* ===== FOOTER (columns over a coffee mound) ===== */
+  footer{position:relative;overflow:hidden;border-top:1px solid var(--line);
+      padding:64px 0 clamp(150px,20vw,300px);margin-top:90px}
+  .foot-beans{position:absolute;left:0;right:0;bottom:0;width:100%;display:block;
+      pointer-events:none;z-index:0;user-select:none}
+  footer::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+      background:linear-gradient(180deg,rgba(14,9,6,.74) 0%,rgba(14,9,6,.46) 22%,rgba(14,9,6,0) 46%)}
+  footer .wrap{position:relative;z-index:2}
   .foot{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
   .foot .brand{font-size:26px}
-  .foot p{font-size:13.5px;color:var(--cream-d);max-width:24em;margin-top:14px}
-  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--cream-d);margin-bottom:14px}
-  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.8;margin-bottom:9px;transition:.25s}
+  .foot p{font-size:13.5px;color:var(--cream);opacity:.92;max-width:24em;margin-top:14px;
+      text-shadow:0 2px 14px rgba(8,4,2,.95),0 1px 5px rgba(8,4,2,.9)}
+  .foot-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--orange-2);margin-bottom:14px;
+      text-shadow:0 2px 12px rgba(8,4,2,.95)}
+  .foot-col a{display:block;font-size:14px;color:var(--cream);opacity:.9;margin-bottom:9px;transition:.25s;
+      text-shadow:0 2px 12px rgba(8,4,2,.95),0 1px 4px rgba(8,4,2,.9)}
   .foot-col a:hover{opacity:1;color:var(--orange-2)}
-  .foot-bottom{margin-top:46px;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream-d)}
+  .foot-bottom{position:relative;z-index:2;margin-top:46px;padding-top:22px;border-top:1px solid var(--line);
+      display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--cream);
+      text-shadow:0 2px 12px rgba(8,4,2,.95)}
 
   @media(max-width:900px){
     .nav-links,.nav-phone{display:none}
@@ -367,7 +372,6 @@
 
 <!-- ================= FINALE: bean mountain ================= -->
 <section id="finale">
-  <img id="pile-img" src="assets/h2o/pile.png" alt="" aria-hidden="true">
   <div class="finale-copy">
     <span class="eyebrow">H2O</span>
     <h2 class="serif">Кофе, который везде с тобой</h2>
@@ -377,6 +381,7 @@
 
 <!-- ================= FOOTER ================= -->
 <footer id="contacts">
+  <img class="foot-beans" src="assets/h2o/beans-mound.png" alt="" aria-hidden="true">
   <div class="wrap">
     <div class="foot">
       <div>
