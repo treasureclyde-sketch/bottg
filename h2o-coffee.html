@@ -413,7 +413,6 @@ function init(){
   buildLiquid();
   buildCinnamon();
   buildStick();
-  buildSteam();
 
   if(CUP_MODEL_URL)      loadCup(CUP_MODEL_URL);
   if(CINNAMON_STICK_URL) loadStick(CINNAMON_STICK_URL);
@@ -630,16 +629,6 @@ function renderScroll(p){
   }
   cinnamon.instanceMatrix.needsUpdate=true;
 
-  // steam
-  const stO = smooth(0.34,0.6,p);
-  const t = performance.now()/1000;
-  steamGroup.children.forEach((s,i)=>{
-    const ph=((t*0.18)+s.userData.off+i*0.4)%1;
-    s.position.set(Math.sin((t+s.userData.off)*0.8)*0.22 + s.userData.sx*ph, fy+0.15+ph*1.4, 0);
-    s.material.opacity = stO*0.09*Math.sin(ph*Math.PI);
-    s.scale.set(0.5+ph*0.6, 0.9+ph*1.1, 1);
-  });
-
   // brand + hint
   const bo=smooth(0.8,0.99,p);
   brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*12}px)`;
@@ -654,7 +643,7 @@ function loop(){
   const visible=r.bottom>0 && r.top<window.innerHeight;
   maxP=Math.max(maxP, scrollProgress());   // one-way: coffee only fills, never recedes on scroll-up
   const p=maxP;
-  if(visible || p!==lastP){ renderScroll(p); lastP=p; }
+  if(p!==lastP){ renderScroll(p); lastP=p; }   // render only when scroll changes (nothing else moves)
   requestAnimationFrame(loop);
 }
 function onResize(){
