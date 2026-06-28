@@ -377,8 +377,7 @@ function init(){
   catch(e){ fallback(); return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
   renderer.setSize(window.innerWidth, window.innerHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.shadowMap.enabled = false;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -391,23 +390,17 @@ function init(){
   camera.position.set(0, 4.8, 1.15);   // top-down view, slight tilt
   camera.lookAt(0, 0.12, 0);
 
-  // lights
+  // lights (no cast shadows — avoids the dark smear behind the cup)
   scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.8));
   const key = new THREE.DirectionalLight(0xfff1de, 1.5);
-  key.position.set(1.5, 9, 1.8); key.castShadow = true;   // more overhead -> tight shadow under the cup
-  key.shadow.mapSize.set(2048,2048);
-  key.shadow.camera.near=1; key.shadow.camera.far=24;
-  key.shadow.camera.left=-5; key.shadow.camera.right=5; key.shadow.camera.top=5; key.shadow.camera.bottom=-5;
-  key.shadow.bias=-0.0004; key.shadow.radius=6;
-  scene.add(key);
+  key.position.set(0, 9, 0.5); scene.add(key);          // straight overhead
   const rim = new THREE.PointLight(0xff7a1e, 45, 26, 2);
   rim.position.set(-4.5, 2.4, -1.5); scene.add(rim);
   const fill = new THREE.DirectionalLight(0xffd0a0, 0.45);
   fill.position.set(-3, 2, 4); scene.add(fill);
 
-  // contact shadow
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:0.22}));
-  ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
+  // soft, static contact shadow directly under the cup (centred, no directional tail)
+  buildContactShadow();
 
   buildCup();
   buildLiquid();
@@ -505,6 +498,16 @@ function grainGeo(){
   const p=g.attributes.position, v=new THREE.Vector3();
   for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); v.multiplyScalar(0.5+Math.random()*1.0); p.setXYZ(i,v.x,v.y*0.55,v.z); }
   g.computeVertexNormals(); return g;
+}
+function buildContactShadow(){
+  const cnv=document.createElement('canvas'); cnv.width=cnv.height=256; const g=cnv.getContext('2d');
+  const rad=g.createRadialGradient(128,128,12,128,128,128);
+  rad.addColorStop(0,'rgba(0,0,0,0.5)'); rad.addColorStop(0.55,'rgba(0,0,0,0.22)'); rad.addColorStop(1,'rgba(0,0,0,0)');
+  g.fillStyle=rad; g.fillRect(0,0,256,256);
+  const tex=new THREE.CanvasTexture(cnv);
+  const m=new THREE.Mesh(new THREE.PlaneGeometry(2.7,2.7),
+    new THREE.MeshBasicMaterial({map:tex, transparent:true, depthWrite:false}));
+  m.rotation.x=-Math.PI/2; m.position.y=0.01; scene.add(m);
 }
 function buildCinnamon(){
   const m=new THREE.MeshStandardMaterial({roughness:1.0, metalness:0.0, envMapIntensity:0.0}); // matte powder, no specular
