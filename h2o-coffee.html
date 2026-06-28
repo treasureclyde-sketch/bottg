@@ -56,7 +56,7 @@
   header{position:fixed;top:0;left:0;right:0;z-index:60;transition:background .4s var(--ease),border-color .4s,backdrop-filter .4s;border-bottom:1px solid transparent}
   header.scrolled{background:rgba(14,10,7,.82);backdrop-filter:blur(14px);border-bottom-color:var(--line)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:76px}
-  .brand{display:flex;align-items:center;gap:12px;font-family:'Fraunces',serif;font-weight:600;font-size:30px;letter-spacing:.01em}
+  .brand{display:flex;align-items:center;gap:10px;font-family:'Fraunces',serif;font-weight:600;font-size:30px;letter-spacing:-.04em}
   .brand b{color:var(--orange-2)}
   .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px var(--orange)}
   .nav-links{display:flex;gap:30px}
@@ -394,7 +394,7 @@ function init(){
   // lights
   scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.8));
   const key = new THREE.DirectionalLight(0xfff1de, 1.5);
-  key.position.set(3.5, 7, 5); key.castShadow = true;
+  key.position.set(1.5, 9, 1.8); key.castShadow = true;   // more overhead -> tight shadow under the cup
   key.shadow.mapSize.set(2048,2048);
   key.shadow.camera.near=1; key.shadow.camera.far=24;
   key.shadow.camera.left=-5; key.shadow.camera.right=5; key.shadow.camera.top=5; key.shadow.camera.bottom=-5;
@@ -406,7 +406,7 @@ function init(){
   fill.position.set(-3, 2, 4); scene.add(fill);
 
   // contact shadow
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:0.4}));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:0.22}));
   ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
 
   buildCup();
@@ -480,17 +480,12 @@ function buildLiquid(){
   foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
 function makeTextTargets(text, count){
-  const W=360, H=170, TW=1.12, TH=0.62;    // world width/height of the word on the foam
+  const W=360, H=170, TW=1.4, TH=0.66;     // world width/height of the word on the foam
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   x.fillStyle='#000'; x.fillRect(0,0,W,H);
-  x.fillStyle='#fff'; x.font='700 132px Georgia, "Times New Roman", serif';
-  x.textAlign='left'; x.textBaseline='middle';
-  // draw each glyph with a tight, controlled gap (reliable, unlike ctx.letterSpacing)
-  const chars=[...text]; const gap=-10;
-  const wts=chars.map(ch=>x.measureText(ch).width);
-  const total=wts.reduce((a,b)=>a+b,0)+gap*(chars.length-1);
-  let cx=W/2-total/2;
-  for(let i=0;i<chars.length;i++){ x.fillText(chars[i],cx,H/2+8); cx+=wts[i]+gap; }
+  x.fillStyle='#fff'; x.font='700 130px Georgia, "Times New Roman", serif';
+  x.textAlign='center'; x.textBaseline='middle';
+  x.fillText(text, W/2, H/2+8);
   const data=x.getImageData(0,0,W,H).data; const pts=[];
   for(let py=0;py<H;py+=2) for(let px=0;px<W;px+=2){ if(data[(py*W+px)*4]>128) pts.push([px,py]); }
   for(let i=pts.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [pts[i],pts[j]]=[pts[j],pts[i]]; }
@@ -671,6 +666,11 @@ function fallback(){ canvas.style.display='none'; brand.style.opacity=1; if(hint
 
 const hdr=document.getElementById('hdr');
 addEventListener('scroll',()=>{ hdr.classList.toggle('scrolled', scrollY>40); }, {passive:true});
+
+// always start from the top (empty cup) on load / refresh
+if('scrollRestoration' in history) history.scrollRestoration='manual';
+scrollTo(0,0);
+addEventListener('load', ()=>scrollTo(0,0));
 
 init();
 </script>
