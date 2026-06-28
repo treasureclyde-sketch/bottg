@@ -562,8 +562,8 @@ function loadCup(url){
     obj.position.x-=c.x; obj.position.z-=c.z; obj.position.y-=box.min.y; // centre, sit on saucer
     scene.remove(cupGroup); scene.add(obj); cupGroup=obj;
     box.setFromObject(obj); box.getSize(size);
-    RIM_R   = Math.max(size.x,size.z)/2 * 0.40;   // cup interior (the model already includes a saucer)
-    FOAM_TOP= box.max.y * 0.80;                     // foam surface inside the cup
+    RIM_R   = Math.max(size.x,size.z)/2 * 0.60;   // cup interior (the model already includes a saucer)
+    FOAM_TOP= box.max.y * 0.92;                     // foam surface near the rim (filled to the brim)
     lastP=-1;
   }, undefined, ()=>{ /* keep procedural cup on error */ });
 }
@@ -577,9 +577,9 @@ function loadStick(url){
     obj.position.sub(c);                                  // centre the model in a group
     const grp=new THREE.Group(); grp.add(obj);
     box.setFromObject(grp);
-    grp.position.y = -box.min.y;                          // rest flat on the table beside the saucer
-    grp.rotation.y = 0.55;                                // natural diagonal
-    grp.position.x = -0.92; grp.position.z = 0.98;        // lower-left, off the saucer (on the table)
+    grp.position.y = -box.min.y;                          // rest flat on the table
+    grp.rotation.y = 1.5;                                 // lying along the viewer's vertical
+    grp.position.x = -1.12; grp.position.z = 0.05;        // beside the cup, on the table (left)
     if(window.__stick) scene.remove(window.__stick);
     scene.add(grp); window.__stick=grp;
   }, undefined, ()=>{ /* keep procedural stick on error */ });
@@ -648,11 +648,12 @@ function renderScroll(p){
   renderer.render(scene,camera);
 }
 
-let lastP=-1;
+let lastP=-1, maxP=0;
 function loop(){
   const r=stage.getBoundingClientRect();
   const visible=r.bottom>0 && r.top<window.innerHeight;
-  const p=scrollProgress();
+  maxP=Math.max(maxP, scrollProgress());   // one-way: coffee only fills, never recedes on scroll-up
+  const p=maxP;
   if(visible || p!==lastP){ renderScroll(p); lastP=p; }
   requestAnimationFrame(loop);
 }
