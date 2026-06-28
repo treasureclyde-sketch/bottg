@@ -45,8 +45,8 @@
   #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
   .stage-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;
       background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
-  .stage-brand{position:absolute;left:0;right:0;bottom:11%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
-  .ib-tag{margin-top:14px;font-size:clamp(11px,1.4vw,13px);font-weight:600;letter-spacing:.42em;text-transform:uppercase;color:var(--cream-d)}
+  .stage-brand{position:absolute;left:0;right:0;bottom:5%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
+  .ib-tag{margin-top:14px;font-size:clamp(11px,1.4vw,13px);font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:var(--orange);text-shadow:0 1px 10px rgba(0,0,0,.4)}
   .ib-line{width:min(220px,46vw);height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
   .scroll-hint{position:absolute;left:0;right:0;bottom:36px;z-index:3;text-align:center;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:rgba(244,234,219,.6);will-change:opacity}
   .scroll-hint .chev{display:block;margin:12px auto 0;width:16px;height:16px;border-right:2px solid var(--orange);border-bottom:2px solid var(--orange);transform:rotate(45deg);animation:bob 1.6s var(--ease) infinite}
@@ -166,7 +166,10 @@
 <section id="stage">
   <div class="stage-sticky">
     <canvas id="scene"></canvas>
-    <div class="stage-brand" id="brand"></div>
+    <div class="stage-brand" id="brand">
+      <div class="ib-line"></div>
+      <div class="ib-tag">Coffee · Tea · Accessories</div>
+    </div>
     <div class="scroll-hint" id="hint">Листайте — заварите кофе<span class="chev"></span></div>
   </div>
 </section>
@@ -385,8 +388,8 @@ function init(){
   scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
 
   camera = new THREE.PerspectiveCamera(34, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(0, 5.75, 1.35);   // top-down view, slight tilt
-  camera.lookAt(0, 0.15, 0);
+  camera.position.set(0, 4.8, 1.15);   // top-down view, slight tilt
+  camera.lookAt(0, 0.12, 0);
 
   // lights
   scene.add(new THREE.HemisphereLight(0xffe9d2, 0x140b06, 0.8));
@@ -406,7 +409,6 @@ function init(){
   const ground = new THREE.Mesh(new THREE.PlaneGeometry(40,40), new THREE.ShadowMaterial({opacity:0.4}));
   ground.rotation.x = -Math.PI/2; ground.receiveShadow = true; scene.add(ground);
 
-  buildSaucer();
   buildCup();
   buildLiquid();
   buildCinnamon();
@@ -560,8 +562,8 @@ function loadCup(url){
     obj.position.x-=c.x; obj.position.z-=c.z; obj.position.y-=box.min.y; // centre, sit on saucer
     scene.remove(cupGroup); scene.add(obj); cupGroup=obj;
     box.setFromObject(obj); box.getSize(size);
-    RIM_R   = Math.max(size.x,size.z)/2 * 0.72;   // interior radius
-    FOAM_TOP= box.max.y * 0.9;                     // foam a touch below the rim
+    RIM_R   = Math.max(size.x,size.z)/2 * 0.40;   // cup interior (the model already includes a saucer)
+    FOAM_TOP= box.max.y * 0.80;                     // foam surface inside the cup
     lastP=-1;
   }, undefined, ()=>{ /* keep procedural cup on error */ });
 }
@@ -570,14 +572,14 @@ function loadStick(url){
     const obj=gltf.scene;
     obj.traverse(o=>{ if(o.isMesh){ o.castShadow=true; o.receiveShadow=true; }});
     let box=new THREE.Box3().setFromObject(obj); const size=new THREE.Vector3(); box.getSize(size);
-    const k=1.2/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);   // size by length
+    const k=0.92/Math.max(size.x,size.y,size.z); obj.scale.setScalar(k);   // size by length
     box.setFromObject(obj); const c=new THREE.Vector3(); box.getCenter(c);
     obj.position.sub(c);                                  // centre the model in a group
     const grp=new THREE.Group(); grp.add(obj);
     box.setFromObject(grp);
-    grp.position.y = -box.min.y + 0.05;                   // rest flat on the saucer surface
-    grp.rotation.y = 0.6;                                 // natural diagonal
-    grp.position.x = 0.12; grp.position.z = 1.02;         // in front of the cup, on the saucer
+    grp.position.y = -box.min.y;                          // rest flat on the table beside the saucer
+    grp.rotation.y = 0.55;                                // natural diagonal
+    grp.position.x = -0.92; grp.position.z = 0.98;        // lower-left, off the saucer (on the table)
     if(window.__stick) scene.remove(window.__stick);
     scene.add(grp); window.__stick=grp;
   }, undefined, ()=>{ /* keep procedural stick on error */ });
