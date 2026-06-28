@@ -370,7 +370,7 @@ const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 const lerp   = (a,b,t)=>a+(b-a)*t;
 
-const N_CIN = 1600;
+const N_CIN = 2600;
 const cinData = [];
 const POUR_S = 0.07, POUR_E = 0.56;      // coffee fills over this scroll range
 const CIN_S  = 0.46, CIN_E  = 0.86;      // cinnamon sprinkles over this range
@@ -415,6 +415,8 @@ function init(){
 
   if(CUP_MODEL_URL){ loadCup(CUP_MODEL_URL); } else { buildCup(); canvas.style.opacity='1'; }
   if(CINNAMON_STICK_URL) loadStick(CINNAMON_STICK_URL);
+  // safety: never leave a blank screen — reveal (with a fallback cup) if the model is slow
+  setTimeout(()=>{ if(canvas.style.opacity!=='1'){ if(!cupGroup) buildCup(); canvas.style.opacity='1'; lastP=-1; } }, 2500);
 
   window.addEventListener('resize', onResize);
   requestAnimationFrame(loop);
@@ -422,14 +424,26 @@ function init(){
 
 /* ---------- procedural textures ---------- */
 function foamTexture(){
-  const c=document.createElement('canvas'); c.width=c.height=256; const x=c.getContext('2d');
-  const g=x.createRadialGradient(128,128,20,128,128,128);
-  g.addColorStop(0,'#efe2cb'); g.addColorStop(.75,'#e6d4b6'); g.addColorStop(1,'#caa775');
-  x.fillStyle=g; x.fillRect(0,0,256,256);
-  for(let i=0;i<900;i++){ const a=Math.random()*6.28,r=Math.random()*120;
-    x.fillStyle=`rgba(${180+Math.random()*40|0},${150+Math.random()*40|0},${110+Math.random()*30|0},.25)`;
-    x.beginPath(); x.arc(128+Math.cos(a)*r,128+Math.sin(a)*r,Math.random()*2.2,0,6.28); x.fill(); }
-  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; return t;
+  const S=512, R=S/2;
+  const c=document.createElement('canvas'); c.width=c.height=S; const x=c.getContext('2d');
+  // cappuccino microfoam: even cream centre -> warm crema ring -> darker espresso rim
+  const g=x.createRadialGradient(R,R,R*0.05,R,R,R);
+  g.addColorStop(0.00,'#efe3cb');
+  g.addColorStop(0.62,'#e7d6b6');
+  g.addColorStop(0.86,'#d8bd8d');
+  g.addColorStop(0.95,'#b98a51');
+  g.addColorStop(1.00,'#7c5430');
+  x.fillStyle=g; x.fillRect(0,0,S,S);
+  // fine micro-bubbles (two scales, subtle)
+  for(let i=0;i<5200;i++){
+    const a=Math.random()*6.28, rr=Math.sqrt(Math.random())*R*0.97;
+    const px=R+Math.cos(a)*rr, py=R+Math.sin(a)*rr;
+    const light=Math.random()>0.5;
+    x.fillStyle = light ? `rgba(255,248,232,${0.05+Math.random()*0.12})`
+                        : `rgba(120,86,52,${0.04+Math.random()*0.10})`;
+    x.beginPath(); x.arc(px,py,Math.random()*1.6+0.3,0,6.28); x.fill();
+  }
+  const t=new THREE.CanvasTexture(c); t.colorSpace=THREE.SRGBColorSpace; t.anisotropy=4; return t;
 }
 function barkTexture(){
   const c=document.createElement('canvas'); c.width=128;c.height=256; const x=c.getContext('2d');
@@ -473,19 +487,19 @@ function buildLiquid(){
   const m=new THREE.MeshPhysicalMaterial({color:0x2a1810, roughness:0.3, metalness:0, clearcoat:0.5, envMapIntensity:0.7});
   liquid=new THREE.Mesh(g,m); liquid.renderOrder=1; scene.add(liquid);
   // foam surface — nearly flat & matte so cinnamon reads from the top
-  const fg=new THREE.CircleGeometry(0.82,72); fg.rotateX(-Math.PI/2);
-  foam=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:foamTexture(), roughness:0.98, metalness:0, envMapIntensity:0.16}));
+  const fg=new THREE.CircleGeometry(0.82,96); fg.rotateX(-Math.PI/2);
+  foam=new THREE.Mesh(fg,new THREE.MeshStandardMaterial({map:foamTexture(), roughness:0.95, metalness:0, envMapIntensity:0.10}));
   foam.castShadow=false; foam.receiveShadow=true; scene.add(foam);
 }
 function makeTextTargets(text, count){
-  const W=360, H=170, TW=1.4, TH=0.66;     // world width/height of the word on the foam
+  const W=520, H=250, TW=1.4, TH=0.66;     // world width/height of the word on the foam (hi-res mask)
   const c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
   x.fillStyle='#000'; x.fillRect(0,0,W,H);
-  x.fillStyle='#fff'; x.font='700 130px Georgia, "Times New Roman", serif';
+  x.fillStyle='#fff'; x.font='700 190px Georgia, "Times New Roman", serif';
   x.textAlign='center'; x.textBaseline='middle';
-  x.fillText(text, W/2, H/2+8);
+  x.fillText(text, W/2, H/2+10);
   const data=x.getImageData(0,0,W,H).data; const pts=[];
-  for(let py=0;py<H;py+=2) for(let px=0;px<W;px+=2){ if(data[(py*W+px)*4]>128) pts.push([px,py]); }
+  for(let py=0;py<H;py++) for(let px=0;px<W;px++){ if(data[(py*W+px)*4]>128) pts.push([px,py]); }
   for(let i=pts.length-1;i>0;i--){ const j=Math.random()*(i+1)|0; [pts[i],pts[j]]=[pts[j],pts[i]]; }
   const out=[];
   for(let i=0;i<count;i++){
@@ -500,9 +514,9 @@ function makeTextTargets(text, count){
 }
 function grainGeo(){
   // tiny irregular cinnamon grain (deformed low-poly icosahedron)
-  const g=new THREE.IcosahedronGeometry(0.0065,0);
+  const g=new THREE.IcosahedronGeometry(0.0042,0);
   const p=g.attributes.position, v=new THREE.Vector3();
-  for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); v.multiplyScalar(0.5+Math.random()*1.0); p.setXYZ(i,v.x,v.y*0.55,v.z); }
+  for(let i=0;i<p.count;i++){ v.fromBufferAttribute(p,i); v.multiplyScalar(0.45+Math.random()*1.0); p.setXYZ(i,v.x,v.y*0.5,v.z); }
   g.computeVertexNormals(); return g;
 }
 function buildContactShadow(){
@@ -520,7 +534,7 @@ function buildCinnamon(){
   cinnamon=new THREE.InstancedMesh(grainGeo(),m,N_CIN);
   cinnamon.instanceMatrix.setUsage(THREE.DynamicDrawUsage); cinnamon.castShadow=false; scene.add(cinnamon);
   const targets=makeTextTargets('H2O', N_CIN);
-  const tones=[0x5a2d12,0x6b3a18,0x7a4420,0x4a2410,0x814a24]; const col=new THREE.Color();
+  const tones=[0x6e3a1c,0x7e4a24,0x5a2e14,0x8a5a2e,0x4a2410,0x693517]; const col=new THREE.Color();
   for(let i=0;i<N_CIN;i++){
     col.setHex(tones[i%tones.length]); cinnamon.setColorAt(i,col);
     const f=i/(N_CIN-1);
