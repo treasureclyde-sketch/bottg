@@ -47,7 +47,7 @@
   /* ===== STAGE (scroll-driven 3D pour) ===== */
   #stage{position:relative;height:240vh;background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%)}
   .stage-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
-  #scene{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #scene{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s ease}
   .stage-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;
       background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
   .stage-brand{position:absolute;left:0;right:0;bottom:5%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
@@ -408,12 +408,12 @@ function init(){
   // soft, static contact shadow directly under the cup (centred, no directional tail)
   buildContactShadow();
 
-  buildCup();
   buildLiquid();
   buildCinnamon();
-  buildStick();
+  // No placeholders: the scene stays hidden until the real GLB cup loads, then fades in
+  // (avoids the procedural cup/stick morphing into the real models).
 
-  if(CUP_MODEL_URL)      loadCup(CUP_MODEL_URL);
+  if(CUP_MODEL_URL){ loadCup(CUP_MODEL_URL); } else { buildCup(); canvas.style.opacity='1'; }
   if(CINNAMON_STICK_URL) loadStick(CINNAMON_STICK_URL);
 
   window.addEventListener('resize', onResize);
@@ -572,8 +572,8 @@ function loadCup(url){
     box.setFromObject(obj); box.getSize(size);
     RIM_R   = Math.max(size.x,size.z)/2 * 0.60;   // cup interior (the model already includes a saucer)
     FOAM_TOP= box.max.y * 0.92;                     // foam surface near the rim (filled to the brim)
-    lastP=-1;
-  }, undefined, ()=>{ /* keep procedural cup on error */ });
+    canvas.style.opacity='1'; lastP=-1;             // reveal the scene now that the cup is ready
+  }, undefined, ()=>{ buildCup(); canvas.style.opacity='1'; lastP=-1; });  // fallback: procedural cup
 }
 function loadStick(url){
   new GLTFLoader().load(url,(gltf)=>{
@@ -589,8 +589,8 @@ function loadStick(url){
     grp.rotation.y = 0.6;                                 // diagonal, lower-right
     grp.position.x = 0.3; grp.position.z = 0.68;          // lower-right of the saucer ring (clear of cup & handle)
     if(window.__stick) scene.remove(window.__stick);
-    scene.add(grp); window.__stick=grp;
-  }, undefined, ()=>{ /* keep procedural stick on error */ });
+    scene.add(grp); window.__stick=grp; lastP=-1;
+  }, undefined, ()=>{ /* no stick on error */ });
 }
 
 /* ---------- scroll & render ---------- */
