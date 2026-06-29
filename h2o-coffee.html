@@ -598,7 +598,7 @@ function updateBeans(p){
       const ee=1-(1-e)*(1-e);                     // ease-out: fast blast, then drift to a stop
       pos.lerpVectors(d.from, d.to, ee);
       sc=d.scale*clamp(e/0.05,0,1);               // pop into existence as it leaves the bag
-      q.setFromAxisAngle(d.axis, d.spin*(1-ee));  // fast tumble, eases to rest
+      q.setFromAxisAngle(d.axis, d.spin*(1-ee)).premultiply(d.restQ);  // tumble in flight, settle to its OWN random angle (never all flat)
     }
     dummy.position.copy(pos); dummy.quaternion.copy(q); dummy.scale.setScalar(sc);
     dummy.updateMatrix(); beanMeshes[d.mesh].setMatrixAt(d.local,dummy.matrix);
