@@ -438,14 +438,15 @@ const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
 let renderer, scene, camera, dummy = new THREE.Object3D();
-let pack, beans;
+let pack, beanMeshes = [], beansReady = false;
+const beanProtos = [];                     // {geo,mat} extracted from the real bean .glb models
 const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 const lerp   = (a,b,t)=>a+(b-a)*t;
 
-const N_BEANS = 140;
+const N_BEANS = 130;
 const beanData = [];
-const BEAN_BASE = 0.13;
+const BEAN_SIZE = 0.19;                     // longest dimension of a settled bean (world units)
 const POUR_S = 0.08, POUR_E = 0.72;       // beans pour & settle over this scroll range
 let t0 = performance.now();
 
@@ -492,6 +493,7 @@ function init(){
 
   buildContactShadow();
   buildBeans();
+  loadBeanModels();
   loadPack(PACK_MODEL_URL);
 
   // safety: never leave a blank screen — reveal even if the model is slow/failed
@@ -502,14 +504,6 @@ function init(){
 }
 
 /* ---------- geometry ---------- */
-function beanGeo(){
-  const g=new THREE.SphereGeometry(0.5,28,20); g.scale(1.0,0.62,0.78);
-  const pos=g.attributes.position, v=new THREE.Vector3();
-  for(let i=0;i<pos.count;i++){ v.fromBufferAttribute(pos,i);
-    if(v.z>0){ const gr=Math.exp(-(v.y*v.y)/0.018); v.z-=gr*0.2*Math.min(1,v.z/0.18); }   // centre crease
-    pos.setXYZ(i,v.x,v.y,v.z); }
-  g.computeVertexNormals(); return g;
-}
 function buildContactShadow(){
   const cv=document.createElement('canvas'); cv.width=cv.height=256; const x=cv.getContext('2d');
   const r=x.createRadialGradient(128,128,8,128,128,128);
@@ -520,16 +514,10 @@ function buildContactShadow(){
     new THREE.MeshBasicMaterial({map:t, transparent:true, depthWrite:false}));
   m.rotation.x=-Math.PI/2; m.position.y=-1.3; m.scale.set(0.82,0.55,1); scene.add(m);
 }
+// motion params for every bean (the visible meshes are built once the .glb models load)
 function buildBeans(){
-  const mat=new THREE.MeshPhysicalMaterial({color:0xffffff, roughness:0.42, metalness:0,
-    clearcoat:0.5, clearcoatRoughness:0.45, envMapIntensity:1.0});
-  beans=new THREE.InstancedMesh(beanGeo(), mat, N_BEANS);
-  beans.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(beans);
-  const tones=[0x3a2114,0x2c180e,0x4a2a16,0x24130b,0x553218,0x301a0e]; const col=new THREE.Color();
   const TWO=Math.PI*2;
   for(let i=0;i<N_BEANS;i++){
-    col.setHex(tones[i%tones.length]).multiplyScalar(0.78+Math.random()*0.5);
-    beans.setColorAt(i,col);
     const a=Math.random()*TWO, r=0.75+Math.pow(Math.random(),0.6)*1.30;
     const tx=Math.cos(a)*r, tz=Math.sin(a)*r*0.72;
     const pileY=-1.24 + Math.max(0,(1.5-r))*0.16 + Math.random()*0.06;   // heap higher near centre
@@ -541,11 +529,44 @@ function buildBeans(){
       span: (POUR_E-POUR_S)*0.40 + Math.random()*0.10,
       axis: new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
       spin: 6+Math.random()*9,
-      scale: BEAN_BASE*(0.72+Math.random()*0.7),
-      restQ: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6))
+      scale: BEAN_SIZE*(0.78+Math.random()*0.5),
+      restQ: new THREE.Quaternion().setFromEuler(new THREE.Euler(Math.random()*6,Math.random()*6,Math.random()*6)),
+      mesh:0, local:0
     });
   }
-  beans.instanceColor.needsUpdate=true;
+}
+// load the real bean .glb models, normalise them, then build one InstancedMesh per model
+function loadBeanModels(){
+  const loader=new GLTFLoader(); let done=0;
+  DECOR_BEAN_URLS.forEach((url,k)=>{
+    loader.load(url,(gltf)=>{
+      let mesh=null; gltf.scene.updateMatrixWorld(true);
+      gltf.scene.traverse(o=>{ if(o.isMesh && !mesh) mesh=o; });
+      if(mesh){
+        const geo=mesh.geometry.clone(); geo.applyMatrix4(mesh.matrixWorld);   // bake node transform
+        geo.computeBoundingBox(); const bb=geo.boundingBox;
+        const c=new THREE.Vector3(); bb.getCenter(c);
+        const s=new THREE.Vector3(); bb.getSize(s);
+        geo.translate(-c.x,-c.y,-c.z);                                          // centre at origin
+        const f=1/Math.max(s.x,s.y,s.z); geo.scale(f,f,f);                      // normalise to unit size
+        const mat=mesh.material; if(mat) mat.envMapIntensity=1.0;
+        beanProtos[k]={geo, mat};
+      }
+      if(++done===DECOR_BEAN_URLS.length) buildBeanInstances();
+    }, undefined, ()=>{ if(++done===DECOR_BEAN_URLS.length) buildBeanInstances(); });
+  });
+}
+function buildBeanInstances(){
+  const protos=beanProtos.filter(Boolean);
+  if(!protos.length) return;                       // models failed — leave the pour empty rather than fake beans
+  const counts=new Array(protos.length).fill(0);
+  for(let i=0;i<N_BEANS;i++){ const m=i%protos.length; beanData[i].mesh=m; beanData[i].local=counts[m]++; }
+  beanMeshes=protos.map((p,m)=>{
+    const inst=new THREE.InstancedMesh(p.geo, p.mat, counts[m]);
+    inst.instanceMatrix.setUsage(THREE.DynamicDrawUsage); inst.frustumCulled=false;
+    inst.castShadow=true; scene.add(inst); return inst;
+  });
+  beansReady=true; beansP=-1;
 }
 
 function loadPack(url){
@@ -570,6 +591,7 @@ function scrollProgress(){
 }
 
 function updateBeans(p){
+  if(!beansReady) return;
   for(let i=0;i<N_BEANS;i++){
     const d=beanData[i];
     const e=clamp((p-d.start)/d.span,0,1);
@@ -583,15 +605,15 @@ function updateBeans(p){
       q.setFromAxisAngle(d.axis, d.spin*(1-e)); // tumbling, eases to rest
     }
     dummy.position.copy(pos); dummy.quaternion.copy(q); dummy.scale.setScalar(sc);
-    dummy.updateMatrix(); beans.setMatrixAt(i,dummy.matrix);
+    dummy.updateMatrix(); beanMeshes[d.mesh].setMatrixAt(d.local,dummy.matrix);
   }
-  beans.instanceMatrix.needsUpdate=true;
+  for(const m of beanMeshes) m.instanceMatrix.needsUpdate=true;
 }
 
 function renderFrame(p, now){
-  // pack: gentle 3/4 sway (never edge-on — a flat bag looks bad sideways) + float
+  // pack: continuous turntable spin + gentle float
   if(pack){
-    pack.rotation.y = reduce ? 0.42 : 0.34 + Math.sin((now-t0)*0.00034)*0.34;
+    pack.rotation.y = reduce ? 0.5 : (now-t0)*0.00052;     // full turn ~12s
     pack.position.y = reduce ? 0 : Math.sin((now-t0)*0.0009)*0.05;
     pack.rotation.z = reduce ? 0 : Math.sin((now-t0)*0.0006)*0.012;
   }
@@ -600,7 +622,7 @@ function renderFrame(p, now){
   camera.position.y = lerp(0.45, 0.55, smooth(0,0.62,p));
   camera.lookAt(0,0,0);
 
-  if(beans && p!==beansP){ updateBeans(p); beansP=p; }
+  if(beansReady && p!==beansP){ updateBeans(p); beansP=p; }
 
   // brand + hint
   const bo=smooth(0.8,0.99,p);
