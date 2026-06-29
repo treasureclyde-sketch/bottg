@@ -448,11 +448,13 @@ const lerp   = (a,b,t)=>a+(b-a)*t;
 const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 60 : 110);
 const beanData = [];
 const BEAN_SIZE = 0.19;                     // longest dimension of a bean (world units)
-const INFL_S = 0.40, INFL_E = 0.50;        // the bag inflates (anticipation) over this range
-const BURST_S = 0.50;                       // ...then ruptures: fragments + beans blast out
-const EXP_S = 0.50, EXP_E = 0.96;          // progress range over which the pack bursts beans outward
+const TRIGGER = 0.45;                        // scroll spins the pack up to here, then the burst auto-plays
+const AUTO_DUR = 1850;                       // ms for the self-running explosion + hand-off
+const INFL_S = 0.46, INFL_E = 0.58;        // the bag inflates (anticipation) over this range
+const BURST_S = 0.58;                       // ...then ruptures: fragments + beans blast out
+const EXP_S = 0.58, EXP_E = 0.99;          // progress range over which the pack bursts beans outward
 let t0 = performance.now();
-let prog = 0, target = 0, introActive = true, finished = false;
+let prog = 0, target = 0, introActive = true, finished = false, autoPlaying = false, autoStart = 0;
 
 /* ---------- procedural STUDIO environment (softboxes baked to PMREM) ---------- */
 function studioEnv(renderer){
@@ -710,8 +712,16 @@ function finishIntro(){
 let lastP=-1, beansP=-1, rendering=true;
 function loop(now){
   if(rendering){
-    prog += (target-prog)*0.12;                    // eased momentum
-    if(introActive && target>=0.999 && prog>0.985){ prog=1; finishIntro(); }
+    if(autoPlaying){
+      // self-running: scroll is done, the burst + hand-off play on their own
+      const t=clamp((now-autoStart)/AUTO_DUR,0,1);
+      const te=t<0.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;   // easeInOutQuad
+      prog=TRIGGER+(1-TRIGGER)*te;
+      if(t>=1){ prog=1; finishIntro(); }
+    } else {
+      prog += (target-prog)*0.12;                        // scroll-driven spin (eased)
+      if(prog>=TRIGGER){ prog=TRIGGER; autoPlaying=true; autoStart=now; introActive=false; }
+    }
     renderFrame(prog, now);
   }
   requestAnimationFrame(loop);
