@@ -45,14 +45,14 @@
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange-2);transform:translateY(-2px)}
 
   /* ===== INTRO (full-screen overlay; plays on scroll/swipe, then hands off to the site) ===== */
-  #intro{position:fixed;inset:0;z-index:200;overflow:hidden;
+  #intro{position:fixed;inset:0;z-index:200;overflow:hidden;touch-action:none;
       background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%);
       transition:opacity .8s ease, visibility .8s ease}
   #intro.done{opacity:0;visibility:hidden;pointer-events:none}
   #scene{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s ease}
   #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
       background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
-  body.intro-lock{overflow:hidden;height:100vh}
+  body.intro-lock{overflow:hidden;height:100vh;touch-action:none;overscroll-behavior:none}
   .stage-brand{position:absolute;left:0;right:0;bottom:5%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
   .ib-tag{margin-top:14px;font-size:clamp(11px,1.4vw,13px);font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:var(--orange);text-shadow:0 1px 10px rgba(0,0,0,.4)}
   .ib-line{width:min(220px,46vw);height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
@@ -445,7 +445,7 @@ const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
 const lerp   = (a,b,t)=>a+(b-a)*t;
 
-const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 60 : 110);
+const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 42 : 110);
 const beanData = [];
 const BEAN_SIZE = 0.19;                     // longest dimension of a bean (world units)
 const TRIGGER = 0.45;                        // scroll spins the pack up to here, then the burst auto-plays
@@ -455,6 +455,15 @@ const BURST_S = 0.58;                       // ...then ruptures: fragments + bea
 const EXP_S = 0.58, EXP_E = 0.99;          // progress range over which the pack bursts beans outward
 let t0 = performance.now();
 let prog = 0, target = 0, introActive = true, finished = false, autoPlaying = false, autoStart = 0;
+let camBase = 6.0, camBaseX = 1.7, camBaseY = 0.45, camLookY = 0;
+function computeCam(){                        // fit the pack on any aspect (pull back on narrow/portrait screens)
+  const a = innerWidth/Math.max(1,innerHeight);
+  const need = 1.15/(Math.tan(15*Math.PI/180)*Math.max(a,0.01));   // distance so the bag fits horizontally
+  camBase = Math.min(9.6, Math.max(6.0, need));
+  camBaseX = a<1 ? 0.7 : 1.7;                 // centre the bag more on portrait
+  camBaseY = a<1 ? 0.15 : 0.45;
+  camLookY = a<1 ? -0.25 : 0;                 // aim a touch lower so the bag sits centred on tall screens
+}
 
 /* ---------- procedural STUDIO environment (softboxes baked to PMREM) ---------- */
 function studioEnv(renderer){
@@ -481,7 +490,7 @@ function init(){
   if(reduce){ finishIntro(); return; }              // no motion preference → skip straight to the site
   try{ renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false}); }
   catch(e){ fallback(); return; }
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, innerWidth<760?1.5:2));   // cap DPR on phones for perf
   renderer.setSize(window.innerWidth, window.innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -491,8 +500,9 @@ function init(){
   scene.background = new THREE.Color(0x0E0A07);
   scene.environment = studioEnv(renderer);
 
+  computeCam();
   camera = new THREE.PerspectiveCamera(30, window.innerWidth/window.innerHeight, 0.1, 100);
-  camera.position.set(1.7, 0.5, 6.3);
+  camera.position.set(camBaseX, 0.5, camBase);
   camera.lookAt(0,0,0);
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.15));
@@ -673,10 +683,10 @@ function renderFrame(p, now){
   }
   // camera eases back through the explosion, with a short shake on the rupture
   const shake = smooth(BURST_S, BURST_S+0.03, p) * (1-smooth(BURST_S+0.04, BURST_S+0.18, p));
-  camera.position.z = lerp(6.0, 7.4, smooth(EXP_S-0.04, 0.98, p));
-  camera.position.x = 1.7 + (Math.random()-.5)*shake*0.6;
-  camera.position.y = lerp(0.45, 0.6, smooth(0, 0.6, p)) + (Math.random()-.5)*shake*0.6;
-  camera.lookAt(0,0,0);
+  camera.position.z = lerp(camBase, camBase*1.22, smooth(EXP_S-0.04, 0.98, p));
+  camera.position.x = camBaseX + (Math.random()-.5)*shake*0.6;
+  camera.position.y = camBaseY + smooth(0,0.6,p)*0.15 + (Math.random()-.5)*shake*0.6;
+  camera.lookAt(0, camLookY, 0);
 
   if(beansReady && p!==beansP){ updateBeans(p); beansP=p; }
 
@@ -728,6 +738,7 @@ function loop(now){
 }
 function onResize(){
   if(!renderer) return;
+  computeCam();
   camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight); lastP=-1; beansP=-1;
 }
@@ -743,6 +754,7 @@ function decorBeanGeo(){
   g.computeVertexNormals(); return g;
 }
 function initDecorBeans(){
+  if(innerWidth<=1000) return;             // these canvases are hidden on mobile/tablet — don't spin up extra WebGL contexts
   const nodes=[...document.querySelectorAll('canvas.bean3d')];
   nodes.forEach((el,idx)=>{
     let rn; try{ rn=new THREE.WebGLRenderer({canvas:el,alpha:true,antialias:true}); }catch(e){ return; }
