@@ -44,12 +44,15 @@
   .btn-ghost{background:transparent;color:var(--cream);border:1px solid var(--line)}
   .btn-ghost:hover{border-color:var(--orange);color:var(--orange-2);transform:translateY(-2px)}
 
-  /* ===== STAGE (scroll-driven 3D pour) ===== */
-  #stage{position:relative;height:240vh;background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%)}
-  .stage-sticky{position:sticky;top:0;height:100vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  /* ===== INTRO (full-screen overlay; plays on scroll/swipe, then hands off to the site) ===== */
+  #intro{position:fixed;inset:0;z-index:200;overflow:hidden;
+      background:radial-gradient(120% 55% at 50% 16%,#241710 0%,#0E0A07 58%);
+      transition:opacity .8s ease, visibility .8s ease}
+  #intro.done{opacity:0;visibility:hidden;pointer-events:none}
   #scene{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0;transition:opacity .5s ease}
-  .stage-sticky::after{content:"";position:absolute;inset:0;pointer-events:none;
+  #intro::after{content:"";position:absolute;inset:0;pointer-events:none;
       background:radial-gradient(120% 80% at 50% 62%,transparent 52%,rgba(0,0,0,.6) 100%)}
+  body.intro-lock{overflow:hidden;height:100vh}
   .stage-brand{position:absolute;left:0;right:0;bottom:5%;z-index:3;text-align:center;opacity:0;pointer-events:none;will-change:opacity,transform}
   .ib-tag{margin-top:14px;font-size:clamp(11px,1.4vw,13px);font-weight:700;letter-spacing:.42em;text-transform:uppercase;color:var(--orange);text-shadow:0 1px 10px rgba(0,0,0,.4)}
   .ib-line{width:min(220px,46vw);height:1px;margin:0 auto;background:linear-gradient(90deg,transparent,var(--orange),transparent)}
@@ -197,17 +200,15 @@
 </head>
 <body>
 
-<!-- ================= STAGE (scroll-driven 3D bean pour) ================= -->
-<section id="stage">
-  <div class="stage-sticky">
-    <canvas id="scene"></canvas>
-    <div class="stage-brand" id="brand">
-      <div class="ib-line"></div>
-      <div class="ib-tag">Кофе · Чай · Аксессуары</div>
-    </div>
-    <div class="scroll-hint" id="hint"><span class="chev"></span></div>
+<!-- ================= INTRO OVERLAY (3D pack burst, then reveals the site) ================= -->
+<div id="intro">
+  <canvas id="scene"></canvas>
+  <div class="stage-brand" id="brand">
+    <div class="ib-line"></div>
+    <div class="ib-tag">Кофе · Чай · Аксессуары</div>
   </div>
-</section>
+  <div class="scroll-hint" id="hint"><span class="chev"></span></div>
+</div>
 
 <!-- ================= HEADER ================= -->
 <header id="hdr">
@@ -432,7 +433,7 @@ const DECOR_BEAN_URLS = ["assets/h2o/models/bean1.glb","assets/h2o/models/bean2.
 /* ========================= */
 
 const canvas = document.getElementById('scene');
-const stage  = document.getElementById('stage');
+const intro  = document.getElementById('intro');
 const brand  = document.getElementById('brand');
 const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
@@ -447,9 +448,9 @@ const lerp   = (a,b,t)=>a+(b-a)*t;
 const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 60 : 110);
 const beanData = [];
 const BEAN_SIZE = 0.19;                     // longest dimension of a bean (world units)
-const EXP_S = 0.46, EXP_E = 0.80;          // scroll range over which the pack bursts beans outward
-const EXIT_S = 0.82;                        // after this the stage clears (beans & pack fly off) → next module
+const EXP_S = 0.46, EXP_E = 0.96;          // progress range over which the pack bursts beans outward
 let t0 = performance.now();
+let prog = 0, target = 0, introActive = true, finished = false;
 
 /* ---------- procedural STUDIO environment (softboxes baked to PMREM) ---------- */
 function studioEnv(renderer){
@@ -472,6 +473,8 @@ function studioEnv(renderer){
 }
 
 function init(){
+  document.body.classList.add('intro-lock');       // hold the site still while the intro plays
+  if(reduce){ finishIntro(); return; }              // no motion preference → skip straight to the site
   try{ renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:false}); }
   catch(e){ fallback(); return; }
   renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
@@ -583,17 +586,9 @@ function loadPack(url){
   }, undefined, ()=>{ canvas.style.opacity='1'; lastP=-1; });     // reveal anyway on error
 }
 
-/* ---------- scroll & render ---------- */
-function scrollProgress(){
-  if(reduce) return 1;
-  const total=stage.offsetHeight-window.innerHeight;
-  const scrolled=-stage.getBoundingClientRect().top;
-  return clamp(scrolled/Math.max(1,total),0,1);
-}
-
+/* ---------- progress, input & render ---------- */
 function updateBeans(p){
   if(!beansReady) return;
-  const exit=smooth(EXIT_S,1.0,p);                // final clear-out: sweep everything off-screen
   for(let i=0;i<N_BEANS;i++){
     const d=beanData[i];
     const e=clamp((p-d.start)/d.span,0,1);
@@ -604,7 +599,6 @@ function updateBeans(p){
       pos.lerpVectors(d.from, d.to, ee);
       sc=d.scale*clamp(e/0.05,0,1);               // pop into existence as it leaves the bag
       q.setFromAxisAngle(d.axis, d.spin*(1-ee));  // fast tumble, eases to rest
-      if(exit>0){ pos.multiplyScalar(1+exit*5.0); pos.y+=exit*3.4; sc*=Math.max(0,1-exit*1.15); }  // fling out & fade as the intro ends
     }
     dummy.position.copy(pos); dummy.quaternion.copy(q); dummy.scale.setScalar(sc);
     dummy.updateMatrix(); beanMeshes[d.mesh].setMatrixAt(d.local,dummy.matrix);
@@ -613,44 +607,60 @@ function updateBeans(p){
 }
 
 function renderFrame(p, now){
-  const exit = smooth(EXIT_S, 1.0, p);            // intro hand-off: clear the stage for the next module
-  // pack: scroll tumbles it across all three axes, then a quick "burst" pop, then it recedes away
+  // pack: progress tumbles it across all three axes; a quick recoil "pop" when the beans blast out
   if(pack){
     if(reduce){ pack.rotation.set(0.2,0.5,0); }
     else{
-      // a full 360 tumble on every axis across the scroll — lands clean & front-facing at the end
       pack.rotation.x = p*6.2832;
       pack.rotation.y = p*6.6832;
       pack.rotation.z = p*6.2832;
+      pack.position.y = Math.sin((now-t0)*0.0009)*0.04;
     }
-    const pop = smooth(EXP_S, EXP_S+0.05, p) * (1-smooth(EXP_S+0.06, EXP_S+0.20, p));
-    pack.position.y = (reduce?0:Math.sin((now-t0)*0.0009)*0.04) + exit*4.2;  // drifts up out of frame
-    pack.position.z = -exit*8.5;                              // recedes into the distance
-    pack.scale.setScalar((1 + pop*0.12) * Math.max(0.0001, 1 - exit*1.05));  // ...and shrinks away to nothing
+    const pop = smooth(EXP_S, EXP_S+0.05, p) * (1-smooth(EXP_S+0.06, EXP_S+0.22, p));
+    pack.scale.setScalar(1 + pop*0.12);
   }
-  if(contact) contact.material.opacity = 1-exit;             // fade the floor shadow as the stage clears
-  // camera pulls back through the explosion to reveal the spray of beans
-  camera.position.z = lerp(6.0, 7.6, smooth(EXP_S-0.04, 0.92, p));
-  camera.position.y = lerp(0.45, 0.62, smooth(0, 0.6, p));
+  // camera eases back through the explosion to reveal the spray of beans
+  camera.position.z = lerp(6.0, 7.4, smooth(EXP_S-0.04, 0.98, p));
+  camera.position.y = lerp(0.45, 0.6, smooth(0, 0.6, p));
   camera.lookAt(0,0,0);
 
   if(beansReady && p!==beansP){ updateBeans(p); beansP=p; }
 
-  // brand flashes in on the dispersal, then fades out as the stage clears
-  const bo=smooth(0.62,0.74,p) * (1-smooth(0.84,0.96,p));
-  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-smooth(0.62,0.74,p))*12}px)`;
-  hint.style.opacity=(1-smooth(0,0.12,p)).toFixed(3);
+  // brand line flashes in toward the end of the burst
+  const bo=smooth(0.66,0.84,p);
+  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*12}px)`;
+  hint.style.opacity=(1-smooth(0,0.10,p)).toFixed(3);
 
   renderer.render(scene,camera);
 }
 
-let lastP=-1, beansP=-1, maxP=0;
+/* advance the intro on wheel / swipe / keys, then hand off to the site */
+function advance(d){ if(introActive) target=clamp(target+d,0,1); }
+addEventListener('wheel', e=>{ if(introActive){ e.preventDefault(); advance(e.deltaY*0.0011); } }, {passive:false});
+let ty=0;
+addEventListener('touchstart', e=>{ ty=e.touches[0].clientY; }, {passive:true});
+addEventListener('touchmove', e=>{ if(introActive){ e.preventDefault(); const y=e.touches[0].clientY; advance((ty-y)*0.0032); ty=y; } }, {passive:false});
+addEventListener('keydown', e=>{ if(!introActive) return;
+  if(e.key==='Escape'||e.key==='Enter'){ target=1; }
+  else if(e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){ e.preventDefault(); advance(0.12); }
+  else if(e.key==='ArrowUp'||e.key==='PageUp'){ e.preventDefault(); advance(-0.12); }
+});
+if(hint) hint.addEventListener('click', ()=>{ target=1; });
+
+function finishIntro(){
+  if(finished) return; finished=true; introActive=false;
+  document.body.classList.remove('intro-lock');
+  intro.classList.add('done');
+  scrollTo(0,0);
+  setTimeout(()=>{ rendering=false; }, 1000);     // stop rendering once the overlay is hidden
+}
+
+let lastP=-1, beansP=-1, rendering=true;
 function loop(now){
-  const r=stage.getBoundingClientRect();
-  const visible=r.bottom>0 && r.top<window.innerHeight;
-  if(visible){
-    maxP=Math.max(maxP, scrollProgress());   // one-way: beans only settle, never un-pour
-    renderFrame(maxP, now);                   // render every frame (idle motion is always live)
+  if(rendering){
+    prog += (target-prog)*0.12;                    // eased momentum
+    if(introActive && target>=0.999 && prog>0.985){ prog=1; finishIntro(); }
+    renderFrame(prog, now);
   }
   requestAnimationFrame(loop);
 }
@@ -659,7 +669,7 @@ function onResize(){
   camera.aspect=window.innerWidth/window.innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight); lastP=-1; beansP=-1;
 }
-function fallback(){ canvas.style.display='none'; brand.style.opacity=1; if(hint) hint.style.display='none'; }
+function fallback(){ canvas.style.display='none'; if(hint) hint.style.display='none'; finishIntro(); }  // no WebGL → just show the site
 
 /* ---------- decorative slowly-rotating beans (scattered in the sections) ---------- */
 function decorBeanGeo(){
