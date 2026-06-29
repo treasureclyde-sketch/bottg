@@ -438,7 +438,7 @@ const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
 let renderer, scene, camera, dummy = new THREE.Object3D();
-let pack, beanMeshes = [], beansReady = false;
+let pack, beanMeshes = [], beansReady = false, contact;
 const beanProtos = [];                     // {geo,mat} extracted from the real bean .glb models
 const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
@@ -447,7 +447,8 @@ const lerp   = (a,b,t)=>a+(b-a)*t;
 const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 60 : 110);
 const beanData = [];
 const BEAN_SIZE = 0.19;                     // longest dimension of a bean (world units)
-const EXP_S = 0.46, EXP_E = 0.86;          // scroll range over which the pack bursts beans outward
+const EXP_S = 0.46, EXP_E = 0.80;          // scroll range over which the pack bursts beans outward
+const EXIT_S = 0.82;                        // after this the stage clears (beans & pack fly off) → next module
 let t0 = performance.now();
 
 /* ---------- procedural STUDIO environment (softboxes baked to PMREM) ---------- */
@@ -512,7 +513,7 @@ function buildContactShadow(){
   const t=new THREE.CanvasTexture(cv);
   const m=new THREE.Mesh(new THREE.PlaneGeometry(4.4,4.4),
     new THREE.MeshBasicMaterial({map:t, transparent:true, depthWrite:false}));
-  m.rotation.x=-Math.PI/2; m.position.y=-1.3; m.scale.set(0.82,0.55,1); scene.add(m);
+  m.rotation.x=-Math.PI/2; m.position.y=-1.3; m.scale.set(0.82,0.55,1); scene.add(m); contact=m;
 }
 // motion params for every bean — they start INSIDE the pack and blast radially outward
 function buildBeans(){
@@ -592,6 +593,7 @@ function scrollProgress(){
 
 function updateBeans(p){
   if(!beansReady) return;
+  const exit=smooth(EXIT_S,1.0,p);                // final clear-out: sweep everything off-screen
   for(let i=0;i<N_BEANS;i++){
     const d=beanData[i];
     const e=clamp((p-d.start)/d.span,0,1);
@@ -602,6 +604,7 @@ function updateBeans(p){
       pos.lerpVectors(d.from, d.to, ee);
       sc=d.scale*clamp(e/0.05,0,1);               // pop into existence as it leaves the bag
       q.setFromAxisAngle(d.axis, d.spin*(1-ee));  // fast tumble, eases to rest
+      if(exit>0){ pos.multiplyScalar(1+exit*5.0); pos.y+=exit*3.4; sc*=Math.max(0,1-exit*1.15); }  // fling out & fade as the intro ends
     }
     dummy.position.copy(pos); dummy.quaternion.copy(q); dummy.scale.setScalar(sc);
     dummy.updateMatrix(); beanMeshes[d.mesh].setMatrixAt(d.local,dummy.matrix);
@@ -610,7 +613,8 @@ function updateBeans(p){
 }
 
 function renderFrame(p, now){
-  // pack: scroll tumbles it across all three axes, then a quick "burst" pop at the explosion
+  const exit = smooth(EXIT_S, 1.0, p);            // intro hand-off: clear the stage for the next module
+  // pack: scroll tumbles it across all three axes, then a quick "burst" pop, then it recedes away
   if(pack){
     if(reduce){ pack.rotation.set(0.2,0.5,0); }
     else{
@@ -618,11 +622,13 @@ function renderFrame(p, now){
       pack.rotation.x = p*6.2832;
       pack.rotation.y = p*6.6832;
       pack.rotation.z = p*6.2832;
-      pack.position.y = Math.sin((now-t0)*0.0009)*0.04;       // gentle float
     }
     const pop = smooth(EXP_S, EXP_S+0.05, p) * (1-smooth(EXP_S+0.06, EXP_S+0.20, p));
-    pack.scale.setScalar(1 + pop*0.12);                        // recoil pop as the beans blast out
+    pack.position.y = (reduce?0:Math.sin((now-t0)*0.0009)*0.04) + exit*4.2;  // drifts up out of frame
+    pack.position.z = -exit*8.5;                              // recedes into the distance
+    pack.scale.setScalar((1 + pop*0.12) * Math.max(0.0001, 1 - exit*1.05));  // ...and shrinks away to nothing
   }
+  if(contact) contact.material.opacity = 1-exit;             // fade the floor shadow as the stage clears
   // camera pulls back through the explosion to reveal the spray of beans
   camera.position.z = lerp(6.0, 7.6, smooth(EXP_S-0.04, 0.92, p));
   camera.position.y = lerp(0.45, 0.62, smooth(0, 0.6, p));
@@ -630,9 +636,9 @@ function renderFrame(p, now){
 
   if(beansReady && p!==beansP){ updateBeans(p); beansP=p; }
 
-  // brand + hint
-  const bo=smooth(0.8,0.99,p);
-  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-bo)*12}px)`;
+  // brand flashes in on the dispersal, then fades out as the stage clears
+  const bo=smooth(0.62,0.74,p) * (1-smooth(0.84,0.96,p));
+  brand.style.opacity=bo; brand.style.transform=`translateY(${(1-smooth(0.62,0.74,p))*12}px)`;
   hint.style.opacity=(1-smooth(0,0.12,p)).toFixed(3);
 
   renderer.render(scene,camera);
