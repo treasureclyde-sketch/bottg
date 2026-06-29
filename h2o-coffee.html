@@ -439,7 +439,7 @@ const hint   = document.getElementById('hint');
 const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
 
 let renderer, scene, camera, dummy = new THREE.Object3D();
-let pack, beanMeshes = [], beansReady = false, contact;
+let pack, beanMeshes = [], beansReady = false, contact, fragments = [];
 const beanProtos = [];                     // {geo,mat} extracted from the real bean .glb models
 const clamp  = (v,a,b)=>Math.max(a,Math.min(b,v));
 const smooth = (e0,e1,x)=>{ const t=clamp((x-e0)/(e1-e0),0,1); return t*t*(3-2*t); };
@@ -448,7 +448,9 @@ const lerp   = (a,b,t)=>a+(b-a)*t;
 const N_BEANS = (+new URLSearchParams(location.search).get('beans')) || (innerWidth<760 ? 60 : 110);
 const beanData = [];
 const BEAN_SIZE = 0.19;                     // longest dimension of a bean (world units)
-const EXP_S = 0.46, EXP_E = 0.96;          // progress range over which the pack bursts beans outward
+const INFL_S = 0.40, INFL_E = 0.50;        // the bag inflates (anticipation) over this range
+const BURST_S = 0.50;                       // ...then ruptures: fragments + beans blast out
+const EXP_S = 0.50, EXP_E = 0.96;          // progress range over which the pack bursts beans outward
 let t0 = performance.now();
 let prog = 0, target = 0, introActive = true, finished = false;
 
@@ -575,15 +577,57 @@ function buildBeanInstances(){
 
 function loadPack(url){
   new GLTFLoader().load(url,(gltf)=>{
-    const o=gltf.scene;
-    o.traverse(n=>{ if(n.isMesh){ n.castShadow=true; if(n.material) n.material.envMapIntensity=1.4; } });
+    const o=gltf.scene; let mesh=null;
+    o.traverse(n=>{ if(n.isMesh){ n.castShadow=true; if(n.material) n.material.envMapIntensity=1.4; if(!mesh) mesh=n; } });
     let box=new THREE.Box3().setFromObject(o); const s=new THREE.Vector3(); box.getSize(s);
-    const k=2.2/s.y; o.scale.setScalar(k);                       // height ~2.2 world units
+    const k=2.2/s.y; o.scale.setScalar(k); o.updateMatrixWorld(true);      // height ~2.2 world units
     box.setFromObject(o); const c=new THREE.Vector3(); box.getCenter(c);
-    o.position.sub(c);                                           // centre on its own axis
-    pack=new THREE.Group(); pack.add(o); scene.add(pack);
+    pack=new THREE.Group(); scene.add(pack);
+    if(mesh){
+      const geo=mesh.geometry.clone(); geo.applyMatrix4(mesh.matrixWorld);  // bake transform
+      geo.translate(-c.x,-c.y,-c.z);                                        // centre on its own axis
+      fragments=splitIntoFragments(geo, mesh.material, 3);                  // break the bag into shards
+      for(const f of fragments) pack.add(f.mesh);
+    }
     canvas.style.opacity='1'; lastP=-1;
-  }, undefined, ()=>{ canvas.style.opacity='1'; lastP=-1; });     // reveal anyway on error
+  }, undefined, ()=>{ canvas.style.opacity='1'; lastP=-1; });               // reveal anyway on error
+}
+// split a baked geometry into N organic shards (nearest-seed buckets of triangles)
+function splitIntoFragments(geo, mat, n){
+  const g = geo.index ? geo.toNonIndexed() : geo;
+  const pos=g.attributes.position.array;
+  const nor=g.attributes.normal ? g.attributes.normal.array : null;
+  const uv =g.attributes.uv ? g.attributes.uv.array : null;
+  const tris=pos.length/9;
+  g.computeBoundingBox(); const bb=g.boundingBox;
+  const seeds=[ new THREE.Vector3(bb.min.x*0.6, bb.max.y*0.7, 0),
+                new THREE.Vector3(bb.max.x*0.6, bb.max.y*0.05, 0),
+                new THREE.Vector3(0, bb.min.y*0.7, 0) ].slice(0,n);
+  const B=seeds.map(()=>({p:[],n:[],u:[]}));
+  const c=new THREE.Vector3();
+  for(let t=0;t<tris;t++){ const i=t*9;
+    c.set((pos[i]+pos[i+3]+pos[i+6])/3,(pos[i+1]+pos[i+4]+pos[i+7])/3,(pos[i+2]+pos[i+5]+pos[i+8])/3);
+    let bi=0,bd=1e9; for(let k=0;k<seeds.length;k++){ const d=c.distanceToSquared(seeds[k]); if(d<bd){bd=d;bi=k;} }
+    const b=B[bi];
+    for(let j=0;j<9;j++) b.p.push(pos[i+j]);
+    if(nor) for(let j=0;j<9;j++) b.n.push(nor[i+j]);
+    if(uv)  for(let j=0;j<6;j++) b.u.push(uv[t*6+j]);
+  }
+  const out=[];
+  for(const b of B){ if(!b.p.length) continue;
+    const fg=new THREE.BufferGeometry();
+    fg.setAttribute('position', new THREE.Float32BufferAttribute(b.p,3));
+    if(nor) fg.setAttribute('normal', new THREE.Float32BufferAttribute(b.n,3)); else fg.computeVertexNormals();
+    if(uv)  fg.setAttribute('uv', new THREE.Float32BufferAttribute(b.u,2));
+    fg.computeBoundingBox(); const fc=new THREE.Vector3(); fg.boundingBox.getCenter(fc);
+    const outDir=fc.clone(); outDir.z*=0.35;                                // bias lateral so shards fly to the screen edges
+    if(outDir.lengthSq()<1e-4) outDir.set(Math.random()-.5,Math.random()-.5,0);
+    outDir.normalize();
+    out.push({ mesh:new THREE.Mesh(fg, mat), outDir,
+      axis:new THREE.Vector3(Math.random()-.5,Math.random()-.5,Math.random()-.5).normalize(),
+      spin:3.5+Math.random()*4, dist:2.6+Math.random()*2.2 });
+  }
+  return out;
 }
 
 /* ---------- progress, input & render ---------- */
@@ -607,21 +651,29 @@ function updateBeans(p){
 }
 
 function renderFrame(p, now){
-  // pack: progress tumbles it across all three axes; a quick recoil "pop" when the beans blast out
   if(pack){
-    if(reduce){ pack.rotation.set(0.2,0.5,0); }
-    else{
-      pack.rotation.x = p*6.2832;
-      pack.rotation.y = p*6.6832;
-      pack.rotation.z = p*6.2832;
-      pack.position.y = Math.sin((now-t0)*0.0009)*0.04;
+    // tumble across all three axes
+    pack.rotation.x = p*6.2832;
+    pack.rotation.y = p*6.6832;
+    pack.rotation.z = p*6.2832;
+    pack.position.y = Math.sin((now-t0)*0.0009)*0.04;
+    // anticipation: the bag inflates like a balloon (with a tense little wobble)
+    const infl = smooth(INFL_S, INFL_E, p);
+    const wob  = infl*(1-smooth(INFL_E, INFL_E+0.03, p))*Math.sin((now-t0)*0.045)*0.018;
+    pack.scale.setScalar(1 + infl*0.30 + wob);
+    // ...then it ruptures: the shards blast apart, tumble and shrink away
+    const bt = smooth(BURST_S, BURST_S+0.30, p), be = bt*bt;
+    for(const f of fragments){
+      f.mesh.position.copy(f.outDir).multiplyScalar(be*f.dist);
+      f.mesh.quaternion.setFromAxisAngle(f.axis, be*f.spin);
+      f.mesh.scale.setScalar(Math.max(0.001, 1 - bt*0.72));
     }
-    const pop = smooth(EXP_S, EXP_S+0.05, p) * (1-smooth(EXP_S+0.06, EXP_S+0.22, p));
-    pack.scale.setScalar(1 + pop*0.12);
   }
-  // camera eases back through the explosion to reveal the spray of beans
+  // camera eases back through the explosion, with a short shake on the rupture
+  const shake = smooth(BURST_S, BURST_S+0.03, p) * (1-smooth(BURST_S+0.04, BURST_S+0.18, p));
   camera.position.z = lerp(6.0, 7.4, smooth(EXP_S-0.04, 0.98, p));
-  camera.position.y = lerp(0.45, 0.6, smooth(0, 0.6, p));
+  camera.position.x = 1.7 + (Math.random()-.5)*shake*0.6;
+  camera.position.y = lerp(0.45, 0.6, smooth(0, 0.6, p)) + (Math.random()-.5)*shake*0.6;
   camera.lookAt(0,0,0);
 
   if(beansReady && p!==beansP){ updateBeans(p); beansP=p; }
