@@ -580,7 +580,11 @@ function loadBeanModels(){
         const s=new THREE.Vector3(); bb.getSize(s);
         geo.translate(-c.x,-c.y,-c.z);                                          // centre at origin
         const f=1/Math.max(s.x,s.y,s.z); geo.scale(f,f,f);                      // normalise to unit size
-        const mat=mesh.material; if(mat) mat.envMapIntensity=1.0;
+        const mat=mesh.material;
+        if(mat){ mat.envMapIntensity=1.0;
+          // bean2 & bean3 models are pale (read like peanuts) — roast them down to coffee brown
+          if((k===1||k===2) && mat.color) mat.color.multiply(new THREE.Color(0.50,0.34,0.22));
+        }
         beanProtos[k]={geo, mat};
       }
       if(++done===DECOR_BEAN_URLS.length) buildBeanInstances();
