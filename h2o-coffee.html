@@ -147,8 +147,10 @@
   .rev-top{display:flex;align-items:center;justify-content:space-between}
   .rev-top img{width:60px;height:60px;border-radius:50%;object-fit:cover;border:2px solid rgba(232,101,30,.4)}
   .rev .stars{color:var(--orange);font-size:15px;letter-spacing:2px}
-  .rev blockquote{font-family:'Fraunces',serif;font-size:17px;line-height:1.45;color:var(--cream)}
-  .rev figcaption{font-size:13px;letter-spacing:.04em;color:var(--cream-d)}
+  .rev blockquote{font-size:14.5px;line-height:1.6;color:var(--cream);display:flex;flex-direction:column;gap:11px}
+  .rev blockquote p{margin:0}
+  .rev figcaption{margin-top:auto;font-family:'Fraunces',serif;font-size:16px;color:var(--cream)}
+  .rev figcaption span{display:block;font-family:inherit;font-size:12.5px;letter-spacing:.04em;color:var(--cream-d);margin-top:3px}
 
   /* ===== CTA STRIP ===== */
   .cta{position:relative;border-radius:26px;overflow:hidden;padding:70px 50px;text-align:center;
@@ -335,23 +337,34 @@
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">Отзывы</span>
-      <h2 class="serif">Что говорят наши гости</h2>
+      <h2 class="serif">Что о нас говорят</h2>
     </div>
     <div class="reviews">
       <figure class="rev">
         <div class="rev-top"><img src="assets/h2o/rev07f.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
-        <blockquote>Беру кофе уже полгода — вкус насыщенный, аромат сводит с ума, а упаковка такая, что не стыдно подарить.</blockquote>
-        <figcaption>Марина · Уфа</figcaption>
+        <blockquote>
+          <p>Ваш чай и кофе — это восторг! Нам нравится, что в каждом продукте чувствуется качество: вкус насыщенный, упаковка стильная, а аромат просто сводит с ума.</p>
+          <p>И главное — ваш продукт нравится не только нам, но и нашим клиентам: после совместных проектов люди пишут, что теперь пьют только ваш кофе по утрам.</p>
+          <p>Спасибо, что делаете не просто напитки, а эмоции.</p>
+        </blockquote>
+        <figcaption>Медиагруппа «Brandbook»<span>Партнёр</span></figcaption>
       </figure>
       <figure class="rev">
         <div class="rev-top"><img src="assets/h2o/revd49.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
-        <blockquote>Заказывала набор в подарок — приехало быстро и бережно. Чай Да Хун Пао просто открытие, теперь только у них.</blockquote>
-        <figcaption>Алина · Казань</figcaption>
+        <blockquote>
+          <p>Когда речь идёт о партнёрских отношениях, мы делаем ставку на H2O — в особенности на их подарочные наборы с чаем. Продуманные купажи, глубокие ароматы и тонкое послевкусие становятся прекрасным подарком, который действительно запоминается.</p>
+          <p>Это не просто знак внимания, а отражение нашего отношения: уважительного, содержательного и по-настоящему тёплого.</p>
+        </blockquote>
+        <figcaption>Бизнес FM<span>Партнёр</span></figcaption>
       </figure>
       <figure class="rev">
         <div class="rev-top"><img src="assets/h2o/revddb.jpg" alt="Отзыв" onerror="this.style.opacity=.15"><div class="stars">★★★★★</div></div>
-        <blockquote>Помогли подобрать зерно под мою кофемашину, расписали вкус. Эфиопия Guji — теперь мой фаворит на утро.</blockquote>
-        <figcaption>Дмитрий · Москва</figcaption>
+        <blockquote>
+          <p>Получили в офис свои любимые ароматные пакеты кофе. Пользуемся услугами H2O уже пару лет: потрясающее качество, замечательный выбор, редкие сорта.</p>
+          <p>Всегда грамотно консультируют приятные, вежливые сотрудницы — самые лучшие впечатления от доброжелательности персонала. Жду свою очередную ароматную чашку кофе с нетерпением по утрам.</p>
+          <p>Благодарим всю команду. Процветания вам и новых высот!</p>
+        </blockquote>
+        <figcaption>Новое радио<span>101.2 FM</span></figcaption>
       </figure>
     </div>
   </div>
