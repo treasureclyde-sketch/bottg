@@ -262,26 +262,33 @@
   .catalog-cta .btn{position:relative;z-index:1;flex-shrink:0}
   @media(max-width:720px){.catalog-cta{padding:30px 26px}}
 
-  /* ---------- gallery ---------- */
-  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:200px;gap:14px}
-  .gal-item{overflow:hidden;position:relative;cursor:pointer;border-radius:14px}
-  .gal-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
-  .gal-item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(18,14,66,.4));opacity:0;transition:opacity .3s ease}
-  .gal-item:hover img{transform:scale(1.07)}
-  .gal-item:hover::after{opacity:1}
-  .gal-item .zoom{position:absolute;right:14px;bottom:14px;width:38px;height:38px;background:rgba(255,255,255,.9);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--navy);opacity:0;transform:translateY(6px);transition:all .3s ease;z-index:2}
-  .gal-item:hover .zoom{opacity:1;transform:translateY(0)}
-  .gal-item.w2{grid-column:span 2}
-  .gal-item.h2{grid-row:span 2}
-  /* spotlight reveal: image blurred, sharp circle follows cursor */
-  .gal-item{--mx:-999px;--my:-999px}
-  .gal-item .blur{position:absolute;inset:0;z-index:1;background-size:cover;background-position:center;filter:blur(8px) brightness(.9) saturate(1.03);transform:scale(1.08);transition:opacity .35s ease;
-    -webkit-mask:radial-gradient(circle 135px at var(--mx) var(--my), rgba(0,0,0,0) 74px, #000 150px);
-    mask:radial-gradient(circle 135px at var(--mx) var(--my), rgba(0,0,0,0) 74px, #000 150px)}
-  .gal-item .lens{position:absolute;z-index:2;width:150px;height:150px;border:1px solid rgba(255,255,255,.8);border-radius:50%;pointer-events:none;transform:translate(-50%,-50%) scale(.55);left:var(--mx);top:var(--my);opacity:0;transition:opacity .25s ease,transform .25s ease;box-shadow:0 0 0 1px rgba(27,20,100,.12),0 10px 30px rgba(0,0,0,.28)}
-  .gal-item:hover .lens{opacity:1;transform:translate(-50%,-50%) scale(1)}
-  @media(hover:none){.gal-item .blur,.gal-item .lens{display:none}}
-  @media(max-width:900px){.gal-grid{grid-template-columns:repeat(2,1fr);grid-auto-rows:170px}.gal-item.w2{grid-column:span 2}.gal-item.h2{grid-row:span 1}}
+  /* ---------- gallery: coverflow carousel ---------- */
+  .car-stage{position:relative;height:min(62vh,600px);perspective:1900px;overflow:hidden;margin:0 -8px}
+  .car-track{position:absolute;inset:0;transform-style:preserve-3d}
+  .car-slide{position:absolute;top:50%;left:50%;width:min(62%,820px);height:88%;
+    transform:translate(-50%,-50%);transform-origin:center;border-radius:18px;overflow:hidden;
+    box-shadow:var(--shadow-lg);background:#0b0930;will-change:transform,opacity;
+    transition:transform .65s cubic-bezier(.4,0,.2,1),opacity .65s ease,filter .65s ease;
+    -webkit-backface-visibility:hidden;backface-visibility:hidden;opacity:0;pointer-events:none}
+  .car-slide.vis{pointer-events:auto}
+  .car-slide.active{cursor:zoom-in}
+  .car-slide img{position:absolute;inset:-4% -4%;width:108%;height:108%;object-fit:cover;transition:transform .3s ease-out}
+  .car-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(11,9,48,.55));opacity:0;transition:opacity .5s ease}
+  .car-slide:not(.active){filter:brightness(.72) saturate(.95)}
+  .car-slide.active::after{opacity:1}
+  .car-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:52px;height:52px;border-radius:999px;
+    background:rgba(255,255,255,.92);color:var(--navy);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+    cursor:pointer;box-shadow:var(--shadow-md);transition:transform .2s cubic-bezier(.34,1.6,.5,1),background .2s ease,color .2s ease}
+  .car-nav:hover{background:var(--navy);color:#fff;transform:translateY(-50%) scale(1.08)}
+  .car-prev{left:14px}.car-next{right:14px}
+  .car-foot{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px;flex-wrap:wrap}
+  .car-caption{font-family:'Playfair Display';font-size:19px;font-weight:600;color:var(--navy);min-height:24px;transition:opacity .3s ease}
+  .car-dots{display:flex;gap:9px;order:3;flex:1;justify-content:center}
+  .car-dot{width:9px;height:9px;border-radius:999px;background:var(--line-navy);border:none;cursor:pointer;padding:0;transition:all .3s ease}
+  .car-dot.on{width:26px;background:var(--gold)}
+  .car-count{font-size:14px;color:var(--muted-fg);font-variant-numeric:tabular-nums}
+  .car-count span{color:var(--navy);font-weight:600}
+  @media(max-width:760px){.car-stage{height:52vh}.car-slide{width:82%}.car-nav{width:44px;height:44px}.car-caption,.car-count{width:100%;text-align:center}.car-dots{order:2}}
 
   /* lightbox */
   .lightbox{position:fixed;inset:0;z-index:300;background:rgba(12,9,40,.94);display:none;align-items:center;justify-content:center;padding:40px}
@@ -764,16 +771,17 @@
       <h2>Как это выглядит</h2>
       <p>Архитектурные визуализации проекта. Итоговый вид может отличаться — визуализация носит ориентировочный характер.</p>
     </div>
-    <div class="gal-grid reveal" id="gal">
-      <div class="gal-item w2 h2" data-src="assets/parusa/about/pic6.webp"><img src="assets/parusa/about/pic6.webp" alt="Вид на комплекс с воды"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/pic2.webp"><img src="assets/parusa/about/pic2.webp" alt="Генплан комплекса"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/pic3.webp"><img src="assets/parusa/about/pic3.webp" alt="Двор и благоустройство"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/back2.webp"><img src="assets/parusa/about/back2.webp" alt="Пешеходная зона"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/pic5.webp"><img src="assets/parusa/about/pic5.webp" alt="Спортивная площадка"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item w2" data-src="assets/parusa/main-3.webp"><img src="assets/parusa/main-3.webp" alt="Дома на закате"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/pic7.webp"><img src="assets/parusa/about/pic7.webp" alt="Вид сверху на двор"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/back1.webp"><img src="assets/parusa/about/back1.webp" alt="Фасады на закате"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
-      <div class="gal-item" data-src="assets/parusa/about/pic8.webp"><img src="assets/parusa/about/pic8.webp" alt="Улица комплекса"><span class="zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span></div>
+    <div class="car reveal" id="car">
+      <div class="car-stage" id="car-stage">
+        <div class="car-track" id="car-track"></div>
+        <button class="car-nav car-prev" id="car-prev" aria-label="Назад"><svg class="icon"><use href="#i-arrow-l"/></svg></button>
+        <button class="car-nav car-next" id="car-next" aria-label="Вперёд"><svg class="icon"><use href="#i-arrow"/></svg></button>
+      </div>
+      <div class="car-foot">
+        <div class="car-caption" id="car-caption"></div>
+        <div class="car-dots" id="car-dots"></div>
+        <div class="car-count"><span id="car-cur">1</span> / <span id="car-total">9</span></div>
+      </div>
     </div>
   </div>
 </section>
@@ -1014,43 +1022,97 @@
   if (!localStorage.getItem('parusa_cookie_ok')) setTimeout(() => cookie.classList.add('show'), 1000);
   document.getElementById('cookie-ok').addEventListener('click', () => { cookie.classList.remove('show'); localStorage.setItem('parusa_cookie_ok','1'); });
 
-  // lightbox gallery
-  const items = [...document.querySelectorAll('#gal .gal-item')];
-  const srcs = items.map(i => i.dataset.src);
-
-  // spotlight reveal (blurred image, sharp circle follows cursor)
-  if (matchMedia('(hover:hover)').matches) {
-    items.forEach(it => {
-      const img = it.querySelector('img');
-      const blur = document.createElement('div'); blur.className = 'blur';
-      blur.style.backgroundImage = "url('" + (img.currentSrc || img.src) + "')";
-      const lens = document.createElement('div'); lens.className = 'lens';
-      blur.style.pointerEvents = 'none';
-      it.appendChild(blur); it.appendChild(lens);
-      it.addEventListener('mousemove', e => {
-        const r = it.getBoundingClientRect();
-        it.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        it.style.setProperty('--my', (e.clientY - r.top) + 'px');
-      });
-      it.addEventListener('mouseleave', () => {
-        it.style.setProperty('--mx', '-999px');
-        it.style.setProperty('--my', '-999px');
-      });
-    });
-  }
+  // ===== gallery: coverflow carousel (21st.dev-inspired) =====
+  const CAR = [
+    ['assets/parusa/about/pic6.webp','Вид на комплекс с воды'],
+    ['assets/parusa/about/pic2.webp','Генплан комплекса'],
+    ['assets/parusa/about/pic3.webp','Двор и благоустройство'],
+    ['assets/parusa/about/back2.webp','Пешеходная зона'],
+    ['assets/parusa/about/pic5.webp','Спортивная инфраструктура'],
+    ['assets/parusa/main-3.webp','Комплекс на закате'],
+    ['assets/parusa/about/pic7.webp','Двор с высоты'],
+    ['assets/parusa/about/back1.webp','Фасады на закате'],
+    ['assets/parusa/about/pic8.webp','Улица комплекса']
+  ];
+  const track = document.getElementById('car-track');
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
-  let idx = 0;
-  const show = i => { idx = (i + srcs.length) % srcs.length; lbImg.src = srcs[idx]; };
-  items.forEach((it, i) => it.addEventListener('click', () => { show(i); lb.classList.add('open'); }));
+  let lbIdx = 0;
+  if (track) {
+    const capEl = document.getElementById('car-caption'),
+          dotsEl = document.getElementById('car-dots'),
+          curEl = document.getElementById('car-cur'),
+          stage = document.getElementById('car-stage');
+    document.getElementById('car-total').textContent = CAR.length;
+    let cur = 0;
+    const slides = CAR.map(([src,title], i) => {
+      const s = document.createElement('div'); s.className = 'car-slide';
+      const im = document.createElement('img'); im.src = src; im.alt = title; im.loading = i < 3 ? 'eager' : 'lazy';
+      s.appendChild(im);
+      s.addEventListener('click', () => { if (i === cur) { lbIdx = i; lbImg.src = src; lb.classList.add('open'); } else go(i); });
+      // cursor parallax on active slide
+      s.addEventListener('mousemove', e => {
+        if (i !== cur) return;
+        const r = s.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width/2) / 26, y = (e.clientY - r.top - r.height/2) / 26;
+        im.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+      });
+      s.addEventListener('mouseleave', () => { im.style.transform = ''; });
+      track.appendChild(s); return s;
+    });
+    const dots = CAR.map((_, i) => {
+      const d = document.createElement('button'); d.className = 'car-dot'; d.setAttribute('aria-label','Слайд '+(i+1));
+      d.addEventListener('click', () => go(i)); dotsEl.appendChild(d); return d;
+    });
+    function layout(){
+      const n = CAR.length;
+      slides.forEach((s, i) => {
+        let off = i - cur; if (off > n/2) off -= n; if (off < -n/2) off += n;
+        const a = Math.abs(off);
+        s.classList.toggle('active', off === 0);
+        s.classList.toggle('vis', a <= 2);
+        if (a > 2) { s.style.opacity = 0; s.style.transform = 'translate(-50%,-50%) scale(.5)'; return; }
+        const tx = off * 46, scale = off === 0 ? 1 : (a === 1 ? .8 : .66), ry = off === 0 ? 0 : (off < 0 ? 20 : -20);
+        s.style.opacity = a === 0 ? 1 : (a === 1 ? .96 : .5);
+        s.style.zIndex = 10 - a;
+        s.style.transform = 'translate(-50%,-50%) translateX(' + tx + '%) scale(' + scale + ') rotateY(' + ry + 'deg)';
+      });
+      dots.forEach((d, i) => d.classList.toggle('on', i === cur));
+      capEl.style.opacity = 0;
+      setTimeout(() => { capEl.textContent = CAR[cur][1]; capEl.style.opacity = 1; }, 180);
+      curEl.textContent = cur + 1;
+    }
+    let timer;
+    function go(i){ cur = (i + CAR.length) % CAR.length; layout(); restart(); }
+    function restart(){ clearInterval(timer); timer = setInterval(() => go(cur + 1), 5200); }
+    document.getElementById('car-next').addEventListener('click', () => go(cur + 1));
+    document.getElementById('car-prev').addEventListener('click', () => go(cur - 1));
+    stage.addEventListener('mouseenter', () => clearInterval(timer));
+    stage.addEventListener('mouseleave', restart);
+    // swipe
+    let sx = null;
+    stage.addEventListener('pointerdown', e => sx = e.clientX);
+    stage.addEventListener('pointerup', e => { if (sx === null) return; const dx = e.clientX - sx; if (Math.abs(dx) > 45) go(cur + (dx < 0 ? 1 : -1)); sx = null; });
+    // keyboard when gallery in view
+    document.addEventListener('keydown', e => {
+      if (lb.classList.contains('open')) return;
+      const r = stage.getBoundingClientRect(); if (r.top > innerHeight || r.bottom < 0) return;
+      if (e.key === 'ArrowRight') go(cur + 1);
+      if (e.key === 'ArrowLeft') go(cur - 1);
+    });
+    layout(); restart();
+  }
+
+  // lightbox (full-size from carousel)
+  const lbShow = i => { lbIdx = (i + CAR.length) % CAR.length; lbImg.src = CAR[lbIdx][0]; };
   document.getElementById('lb-close').addEventListener('click', () => lb.classList.remove('open'));
-  document.getElementById('lb-next').addEventListener('click', () => show(idx + 1));
-  document.getElementById('lb-prev').addEventListener('click', () => show(idx - 1));
+  document.getElementById('lb-next').addEventListener('click', () => lbShow(lbIdx + 1));
+  document.getElementById('lb-prev').addEventListener('click', () => lbShow(lbIdx - 1));
   lb.addEventListener('click', e => { if (e.target === lb) lb.classList.remove('open'); });
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('open')) return;
     if (e.key === 'Escape') lb.classList.remove('open');
-    if (e.key === 'ArrowRight') show(idx + 1);
-    if (e.key === 'ArrowLeft') show(idx - 1);
+    if (e.key === 'ArrowRight') lbShow(lbIdx + 1);
+    if (e.key === 'ArrowLeft') lbShow(lbIdx - 1);
   });
 </script>
 
