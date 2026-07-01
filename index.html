@@ -403,6 +403,11 @@
   #pintro-hint{position:absolute;left:0;right:0;bottom:28px;text-align:center;color:rgba(255,255,255,.75);font:600 12px/1 'Inter',sans-serif;letter-spacing:.22em;text-transform:uppercase;pointer-events:none}
   #pintro-load{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.15)}
   #pintro-load i{display:block;height:100%;width:0;background:var(--gold);transition:width .3s ease}
+  #pintro-loading{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:center;gap:16px;color:#fff;transition:opacity .6s ease;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+  #pintro-loading.hide{opacity:0;pointer-events:none}
+  #pintro-loading .ring{width:42px;height:42px;border:2px solid rgba(255,255,255,.25);border-top-color:var(--gold);border-radius:50%;animation:pintroSpin .9s linear infinite}
+  #pintro-loading span{font:600 13px/1 'Inter',sans-serif;letter-spacing:.28em;text-transform:uppercase;opacity:.9}
+  @keyframes pintroSpin{to{transform:rotate(360deg)}}
   body.pintro-lock{overflow:hidden}
 </style>
 </head>
@@ -418,6 +423,7 @@
   <div id="pintro-curtain"></div>
   <div id="pintro-sails"><svg viewBox="0 -4 62 58" xmlns="http://www.w3.org/2000/svg"><path d="M10.5006 21.685C10.5006 21.685 26.7436 26.0319 23.378 47.0959C28.9964 42.7489 48.0281 41.0791 60.1454 51.774C58.453 41.1905 44.5012 17.6721 10.5006 21.685Z" fill="#C49A6C"/><path d="M0.245239 0.585726C0.245239 0.585726 13.0788 4.02034 10.4186 20.6613C14.856 17.2267 29.8932 15.9072 39.4678 24.3593C38.1336 15.9995 27.1072 -2.58282 0.245239 0.585726Z" fill="#C49A6C"/></svg></div>
   <img id="pintro-logo" src="assets/parusa/logo.svg" alt="ЖК Паруса">
+  <div id="pintro-loading"><div class="ring"></div><span>Паруса</span></div>
   <div id="pintro-hint">Паруса · Уфа</div>
   <button id="pintro-skip" type="button">Пропустить
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1051,7 +1057,9 @@
   document.getElementById('pintro-skip').addEventListener('click', finish);
 
   var seaEl=document.getElementById('pintro-sea'),bloomEl=document.getElementById('pintro-bloom'),curtEl=document.getElementById('pintro-curtain'),
-      msEl=document.getElementById('pintro-sails'),mlEl=document.getElementById('pintro-logo'),cv=document.getElementById('pintro-canvas');
+      msEl=document.getElementById('pintro-sails'),mlEl=document.getElementById('pintro-logo'),cv=document.getElementById('pintro-canvas'),
+      loadingEl=document.getElementById('pintro-loading');
+  function hideLoading(){ if(loadingEl) loadingEl.classList.add('hide'); }
   var rn=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
   rn.setPixelRatio(Math.min(devicePixelRatio||1,2)); rn.setSize(innerWidth,innerHeight);
   rn.outputEncoding=THREE.sRGBEncoding; rn.toneMapping=THREE.ACESFilmicToneMapping; rn.toneMappingExposure=0.52;
@@ -1083,11 +1091,11 @@
   addEventListener('resize',function(){portrait=innerWidth<innerHeight;distMul=portrait?1.6:1;cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();rn.setSize(innerWidth,innerHeight);});
   var REVEAL_AT=7.0, started=0;
   function loop(now){ if(finished)return; var t=(now-started)/1000; renderAt(t); if(t>=REVEAL_AT){finish();return;} requestAnimationFrame(loop); }
-  var fallback=setTimeout(function(){ if(!started&&!finished){ curtEl.style.transition='opacity .6s'; mlEl.style.transition='opacity .8s'; curtEl.style.opacity=1; mlEl.style.opacity=1; setTimeout(finish,1400); } },9000);
+  var fallback=setTimeout(function(){ if(!started&&!finished){ hideLoading(); curtEl.style.transition='opacity .6s'; mlEl.style.transition='opacity .8s'; curtEl.style.opacity=1; mlEl.style.opacity=1; setTimeout(finish,1400); } },7000);
   new THREE.RGBELoader().load('assets/parusa/3d/env.hdr',function(tx){ scene.environment=pm.fromEquirectangular(tx).texture; tx.dispose(); if(loadBar)loadBar.style.width='35%';
     new THREE.GLTFLoader().load('assets/parusa/3d/parus.glb',function(g){ boat=g.scene; var b=new THREE.Box3().setFromObject(boat),sz=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
       boat.position.sub(c); boat.scale.setScalar(1/Math.max(sz.x,sz.y,sz.z)); boat.traverse(function(o){if(o.isMesh)o.material.envMapIntensity=0.22;}); scene.add(boat);
-      if(loadBar)loadBar.style.width='100%'; clearTimeout(fallback); started=performance.now(); requestAnimationFrame(loop);
+      if(loadBar)loadBar.style.width='100%'; hideLoading(); clearTimeout(fallback); started=performance.now(); requestAnimationFrame(loop);
     }, function(p){ if(loadBar&&p.total)loadBar.style.width=(35+60*p.loaded/p.total)+'%'; }, function(){ clearTimeout(fallback); finish(); });
   }, undefined, function(){ clearTimeout(fallback); finish(); });
 })();
