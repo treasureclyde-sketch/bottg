@@ -393,7 +393,7 @@
   .mobile-call-bar{position:fixed;left:0;right:0;bottom:0;z-index:150;background:#fff;border-top:1px solid var(--line);display:none;padding:12px 16px;box-shadow:0 -8px 24px rgba(23,20,58,.1);gap:10px}
   @media(max-width:720px){.mobile-call-bar{display:flex}body{padding-bottom:74px}}
 
-  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
   .reveal.in{opacity:1;transform:translateY(0)}
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
 </style>
@@ -979,7 +979,8 @@
   })();
 
   // reveal
-  const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:.1});
+  // reveal elements well before they enter view, so nothing is ever seen mid-fade
+  const io = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), {threshold:0, rootMargin:'0px 0px 600px 0px'});
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
   // phone mask
