@@ -317,12 +317,22 @@
 
   /* ---------- purchase ---------- */
   .buy-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-  .buy-card{background:var(--paper);padding:34px 30px;transition:background .25s ease;position:relative}
-  .buy-card:hover{background:#fff}
-  .buy-card .ic{width:44px;height:44px;color:var(--gold-deep);margin-bottom:20px}
-  .buy-card h3{font-size:18px;margin-bottom:10px;line-height:1.2}
-  .buy-card p{font-size:13.5px;color:var(--muted-fg)}
-  .buy-card .no{position:absolute;top:26px;right:28px;font-family:'Playfair Display';font-size:15px;color:var(--line-navy)}
+  .buy-card{background:var(--paper);padding:34px 30px;position:relative;overflow:hidden;
+    transition:background .3s ease,color .3s ease,transform .3s cubic-bezier(.34,1.4,.5,1),box-shadow .3s ease}
+  .buy-card::before{content:"";position:absolute;right:-34px;bottom:-40px;width:190px;height:190px;
+    background:url('assets/parusa/sail-white.svg') no-repeat center/contain;opacity:0;transform:rotate(-8deg) scale(.9);
+    transition:opacity .35s ease,transform .5s cubic-bezier(.2,.8,.2,1);pointer-events:none}
+  .buy-card:hover{background:linear-gradient(135deg,var(--gold),var(--gold-deep));transform:translateY(-4px);box-shadow:var(--shadow-md);color:#fff}
+  .buy-card:hover::before{opacity:.16;transform:rotate(0) scale(1)}
+  .buy-card>*{position:relative;z-index:1}
+  .buy-card .ic{width:44px;height:44px;color:var(--gold-deep);margin-bottom:20px;transition:color .3s ease}
+  .buy-card:hover .ic{color:#fff}
+  .buy-card h3{font-size:18px;margin-bottom:10px;line-height:1.2;transition:color .3s ease}
+  .buy-card:hover h3{color:#fff}
+  .buy-card p{font-size:13.5px;color:var(--muted-fg);transition:color .3s ease}
+  .buy-card:hover p{color:rgba(255,255,255,.88)}
+  .buy-card .no{position:absolute;top:26px;right:28px;font-family:'Playfair Display';font-size:15px;color:var(--line-navy);transition:color .3s ease;z-index:1}
+  .buy-card:hover .no{color:rgba(255,255,255,.55)}
   @media(max-width:900px){.buy-grid{grid-template-columns:1fr 1fr}}
   @media(max-width:520px){.buy-grid{grid-template-columns:1fr}}
 
