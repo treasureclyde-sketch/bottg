@@ -262,33 +262,29 @@
   .catalog-cta .btn{position:relative;z-index:1;flex-shrink:0}
   @media(max-width:720px){.catalog-cta{padding:30px 26px}}
 
-  /* ---------- gallery: coverflow carousel ---------- */
-  .car-stage{position:relative;height:min(62vh,600px);perspective:1900px;overflow:hidden;margin:0 -8px}
-  .car-track{position:absolute;inset:0;transform-style:preserve-3d}
-  .car-slide{position:absolute;top:50%;left:50%;width:min(62%,820px);height:88%;
-    transform:translate(-50%,-50%);transform-origin:center;border-radius:18px;overflow:hidden;
-    box-shadow:var(--shadow-lg);background:#0b0930;will-change:transform,opacity;
-    transition:transform .65s cubic-bezier(.4,0,.2,1),opacity .65s ease,filter .65s ease;
-    -webkit-backface-visibility:hidden;backface-visibility:hidden;opacity:0;pointer-events:none}
-  .car-slide.vis{pointer-events:auto}
-  .car-slide.active{cursor:zoom-in}
-  .car-slide img{position:absolute;inset:-4% -4%;width:108%;height:108%;object-fit:cover;transition:transform .3s ease-out}
-  .car-slide::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(11,9,48,.55));opacity:0;transition:opacity .5s ease}
-  .car-slide:not(.active){filter:brightness(.72) saturate(.95)}
-  .car-slide.active::after{opacity:1}
-  .car-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:52px;height:52px;border-radius:999px;
-    background:rgba(255,255,255,.92);color:var(--navy);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-    cursor:pointer;box-shadow:var(--shadow-md);transition:transform .2s cubic-bezier(.34,1.6,.5,1),background .2s ease,color .2s ease}
-  .car-nav:hover{background:var(--navy);color:#fff;transform:translateY(-50%) scale(1.08)}
-  .car-prev{left:14px}.car-next{right:14px}
-  .car-foot{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-top:26px;flex-wrap:wrap}
-  .car-caption{font-family:'Playfair Display';font-size:19px;font-weight:600;color:var(--navy);min-height:24px;transition:opacity .3s ease}
-  .car-dots{display:flex;gap:9px;order:3;flex:1;justify-content:center}
-  .car-dot{width:9px;height:9px;border-radius:999px;background:var(--line-navy);border:none;cursor:pointer;padding:0;transition:all .3s ease}
-  .car-dot.on{width:26px;background:var(--gold)}
-  .car-count{font-size:14px;color:var(--muted-fg);font-variant-numeric:tabular-nums}
-  .car-count span{color:var(--navy);font-weight:600}
-  @media(max-width:760px){.car-stage{height:52vh}.car-slide{width:82%}.car-nav{width:44px;height:44px}.car-caption,.car-count{width:100%;text-align:center}.car-dots{order:2}}
+  /* ---------- gallery: expand-on-hover panels ---------- */
+  .exg{display:flex;gap:10px;height:min(60vh,560px)}
+  .exg-item{position:relative;flex:1 1 0;min-width:0;border-radius:18px;overflow:hidden;cursor:pointer;
+    transition:flex .6s cubic-bezier(.4,0,.2,1),filter .5s ease;filter:brightness(.68) saturate(.92);will-change:flex}
+  .exg-item.active{flex:7 1 0;filter:none}
+  .exg-item img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform 6s ease-out}
+  .exg-item.active img{transform:scale(1.06)}
+  .exg-item::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(11,9,48,.7));opacity:0;transition:opacity .5s ease}
+  .exg-item.active::after{opacity:1}
+  .exg-cap{position:absolute;left:0;right:0;bottom:0;padding:24px 26px;color:#fff;opacity:0;transform:translateY(10px);transition:opacity .4s ease .1s,transform .4s ease .1s;z-index:2}
+  .exg-item.active .exg-cap{opacity:1;transform:none}
+  .exg-cap b{display:block;font-family:'Playfair Display';font-size:22px;font-weight:600}
+  .exg-cap span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft)}
+  .exg-item .exg-num{position:absolute;top:16px;left:0;right:0;text-align:center;color:#fff;font-family:'Playfair Display';font-size:15px;font-weight:600;opacity:.85;transition:opacity .4s ease;z-index:2}
+  .exg-item.active .exg-num{opacity:0}
+  .exg-item .exg-zoom{position:absolute;top:16px;right:16px;width:38px;height:38px;border-radius:999px;background:rgba(255,255,255,.9);color:var(--navy);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);transition:all .3s ease;z-index:3}
+  .exg-item.active .exg-zoom{opacity:1;transform:none}
+  @media(max-width:760px){
+    .exg{height:auto;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;gap:12px;padding-bottom:6px}
+    .exg-item{flex:0 0 84%;height:44vh;scroll-snap-align:center;filter:none}
+    .exg-item::after,.exg-item .exg-cap{opacity:1}
+    .exg-item .exg-cap{transform:none}.exg-item .exg-num{display:none}
+  }
 
   /* lightbox */
   .lightbox{position:fixed;inset:0;z-index:300;background:rgba(12,9,40,.94);display:none;align-items:center;justify-content:center;padding:40px}
@@ -771,16 +767,7 @@
       <h2>Как это выглядит</h2>
       <p>Архитектурные визуализации проекта. Итоговый вид может отличаться — визуализация носит ориентировочный характер.</p>
     </div>
-    <div class="car reveal" id="car">
-      <div class="car-stage" id="car-stage">
-        <div class="car-track" id="car-track"></div>
-      </div>
-      <div class="car-foot">
-        <div class="car-caption" id="car-caption"></div>
-        <div class="car-dots" id="car-dots"></div>
-        <div class="car-count"><span id="car-cur">1</span> / <span id="car-total">9</span></div>
-      </div>
-    </div>
+    <div class="exg reveal" id="exg"></div>
   </div>
 </section>
 
@@ -1020,85 +1007,47 @@
   if (!localStorage.getItem('parusa_cookie_ok')) setTimeout(() => cookie.classList.add('show'), 1000);
   document.getElementById('cookie-ok').addEventListener('click', () => { cookie.classList.remove('show'); localStorage.setItem('parusa_cookie_ok','1'); });
 
-  // ===== gallery: coverflow carousel (21st.dev-inspired) =====
+  // ===== gallery: expand-on-hover panels (21st.dev-inspired) =====
   const CAR = [
-    ['assets/parusa/about/pic6.webp','Вид на комплекс с воды'],
-    ['assets/parusa/about/pic2.webp','Генплан комплекса'],
-    ['assets/parusa/about/pic3.webp','Двор и благоустройство'],
-    ['assets/parusa/about/back2.webp','Пешеходная зона'],
-    ['assets/parusa/about/pic5.webp','Спортивная инфраструктура'],
-    ['assets/parusa/main-3.webp','Комплекс на закате'],
-    ['assets/parusa/about/pic7.webp','Двор с высоты'],
-    ['assets/parusa/about/back1.webp','Фасады на закате'],
-    ['assets/parusa/about/pic8.webp','Улица комплекса']
+    ['assets/parusa/about/pic6.webp','Вид на комплекс с воды','Панорама'],
+    ['assets/parusa/about/pic2.webp','Генплан комплекса','Генплан'],
+    ['assets/parusa/about/pic3.webp','Двор и благоустройство','Двор'],
+    ['assets/parusa/about/back2.webp','Пешеходная зона','Прогулки'],
+    ['assets/parusa/about/pic5.webp','Спортивная инфраструктура','Спорт'],
+    ['assets/parusa/main-3.webp','Комплекс на закате','Закат'],
+    ['assets/parusa/about/pic7.webp','Двор с высоты','С высоты'],
+    ['assets/parusa/about/back1.webp','Фасады на закате','Фасады'],
+    ['assets/parusa/about/pic8.webp','Улица комплекса','Улица']
   ];
-  const track = document.getElementById('car-track');
+  const exg = document.getElementById('exg');
   const lb = document.getElementById('lightbox'), lbImg = document.getElementById('lb-img');
   let lbIdx = 0;
-  if (track) {
-    const capEl = document.getElementById('car-caption'),
-          dotsEl = document.getElementById('car-dots'),
-          curEl = document.getElementById('car-cur'),
-          stage = document.getElementById('car-stage');
-    document.getElementById('car-total').textContent = CAR.length;
-    let cur = 0;
-    const slides = CAR.map(([src,title], i) => {
-      const s = document.createElement('div'); s.className = 'car-slide';
-      const im = document.createElement('img'); im.src = src; im.alt = title; im.loading = i < 3 ? 'eager' : 'lazy';
-      s.appendChild(im);
-      s.addEventListener('click', () => { if (i === cur) { lbIdx = i; lbImg.src = src; lb.classList.add('open'); } else go(i); });
-      // cursor parallax on active slide
-      s.addEventListener('mousemove', e => {
-        if (i !== cur) return;
-        const r = s.getBoundingClientRect();
-        const x = (e.clientX - r.left - r.width/2) / 26, y = (e.clientY - r.top - r.height/2) / 26;
-        im.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+  if (exg) {
+    const desktop = matchMedia('(hover:hover) and (min-width:761px)').matches;
+    let cur = desktop ? 1 : -1, timer;
+    const items = CAR.map(([src,title,tag], i) => {
+      const it = document.createElement('div'); it.className = 'exg-item';
+      it.innerHTML = '<img src="'+src+'" alt="'+title+'" loading="'+(i<3?'eager':'lazy')+'">'
+        + '<span class="exg-num">'+String(i+1).padStart(2,'0')+'</span>'
+        + '<span class="exg-zoom"><svg class="icon" style="width:18px;height:18px"><use href="#i-zoom"/></svg></span>'
+        + '<div class="exg-cap"><span>'+tag+'</span><b>'+title+'</b></div>';
+      it.addEventListener('click', () => {
+        if (desktop && !it.classList.contains('active')) { setActive(i); return; }
+        lbIdx = i; lbImg.src = src; lb.classList.add('open');
       });
-      s.addEventListener('mouseleave', () => { im.style.transform = ''; });
-      track.appendChild(s); return s;
+      if (desktop) it.addEventListener('mouseenter', () => { setActive(i); clearInterval(timer); });
+      exg.appendChild(it); return it;
     });
-    const dots = CAR.map((_, i) => {
-      const d = document.createElement('button'); d.className = 'car-dot'; d.setAttribute('aria-label','Слайд '+(i+1));
-      d.addEventListener('click', () => go(i)); dotsEl.appendChild(d); return d;
-    });
-    function layout(){
-      const n = CAR.length;
-      slides.forEach((s, i) => {
-        let off = i - cur; if (off > n/2) off -= n; if (off < -n/2) off += n;
-        const a = Math.abs(off);
-        s.classList.toggle('active', off === 0);
-        s.classList.toggle('vis', a <= 2);
-        if (a > 2) { s.style.opacity = 0; s.style.transform = 'translate(-50%,-50%) scale(.5)'; return; }
-        const tx = off * 46, scale = off === 0 ? 1 : (a === 1 ? .8 : .66), ry = off === 0 ? 0 : (off < 0 ? 20 : -20);
-        s.style.opacity = a === 0 ? 1 : (a === 1 ? .96 : .5);
-        s.style.zIndex = 10 - a;
-        s.style.transform = 'translate(-50%,-50%) translateX(' + tx + '%) scale(' + scale + ') rotateY(' + ry + 'deg)';
-      });
-      dots.forEach((d, i) => d.classList.toggle('on', i === cur));
-      capEl.style.opacity = 0;
-      setTimeout(() => { capEl.textContent = CAR[cur][1]; capEl.style.opacity = 1; }, 180);
-      curEl.textContent = cur + 1;
+    function setActive(i){ cur = i; items.forEach((it,k) => it.classList.toggle('active', k===i)); }
+    function play(){ clearInterval(timer); timer = setInterval(() => setActive((cur+1) % CAR.length), 3000); }
+    if (desktop) {
+      setActive(cur);
+      exg.addEventListener('mouseleave', play);
+      play();
     }
-    let timer;
-    function go(i){ cur = (i + CAR.length) % CAR.length; layout(); restart(); }
-    function restart(){ clearInterval(timer); timer = setInterval(() => go(cur + 1), 3200); }
-    stage.addEventListener('mouseenter', () => clearInterval(timer));
-    stage.addEventListener('mouseleave', restart);
-    // swipe
-    let sx = null;
-    stage.addEventListener('pointerdown', e => sx = e.clientX);
-    stage.addEventListener('pointerup', e => { if (sx === null) return; const dx = e.clientX - sx; if (Math.abs(dx) > 45) go(cur + (dx < 0 ? 1 : -1)); sx = null; });
-    // keyboard when gallery in view
-    document.addEventListener('keydown', e => {
-      if (lb.classList.contains('open')) return;
-      const r = stage.getBoundingClientRect(); if (r.top > innerHeight || r.bottom < 0) return;
-      if (e.key === 'ArrowRight') go(cur + 1);
-      if (e.key === 'ArrowLeft') go(cur - 1);
-    });
-    layout(); restart();
   }
 
-  // lightbox (full-size from carousel)
+  // lightbox (full-size)
   const lbShow = i => { lbIdx = (i + CAR.length) % CAR.length; lbImg.src = CAR[lbIdx][0]; };
   document.getElementById('lb-close').addEventListener('click', () => lb.classList.remove('open'));
   document.getElementById('lb-next').addEventListener('click', () => lbShow(lbIdx + 1));
