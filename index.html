@@ -391,11 +391,14 @@
   #pintro.done{opacity:0;transform:translateY(-6vh);pointer-events:none}
   #pintro-sea{position:absolute;inset:0;background:url('assets/parusa/intro/sea.jpg') center 52%/cover no-repeat;will-change:transform}
   #pintro-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-  #pintro-bloom{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 50% 40%,rgba(255,244,214,.98),rgba(255,206,120,.7) 22%,rgba(240,170,80,.25) 42%,transparent 62%)}
+  #pintro-grade{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:radial-gradient(60% 55% at 50% 46%,rgba(255,180,90,.55),rgba(180,90,40,.25) 55%,rgba(40,20,60,.35));opacity:.85}
+  #pintro-warm{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;background:linear-gradient(180deg,rgba(255,150,70,.18),rgba(120,60,120,.12));opacity:.7}
+  #pintro-bloom{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 50% 44%,rgba(255,247,224,.98),rgba(255,209,120,.72) 20%,rgba(240,170,80,.28) 40%,transparent 60%)}
   #pintro-curtain{position:absolute;inset:0;opacity:0;background:#F7F4EE}
-  #pintro-logo{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0}
-  #pintro-logo img{width:min(440px,64vw)}
-  #pintro-skip{position:absolute;right:26px;bottom:24px;z-index:5;color:rgba(255,255,255,.85);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.38);backdrop-filter:blur(6px);padding:11px 22px;font:600 13px/1 'Inter',sans-serif;letter-spacing:.04em;border-radius:2px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .2s ease,color .2s ease,transform .2s ease}
+  #pintro-sails{position:absolute;left:50%;top:50%;width:150px;opacity:0;transform:translate(-50%,-50%);filter:drop-shadow(0 6px 18px rgba(120,80,20,.22))}
+  #pintro-sails svg{width:100%;display:block}
+  #pintro-logo{position:absolute;left:50%;top:50%;width:min(440px,64vw);opacity:0;transform:translate(-50%,-50%)}
+  #pintro-skip{position:absolute;right:26px;bottom:24px;z-index:5;color:rgba(255,255,255,.85);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.38);backdrop-filter:blur(6px);padding:11px 22px;font:600 13px/1 'Inter',sans-serif;letter-spacing:.04em;border-radius:2px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .2s ease,color .2s ease}
   #pintro-skip:hover{background:#fff;color:#1B1464}
   #pintro-hint{position:absolute;left:0;right:0;bottom:28px;text-align:center;color:rgba(255,255,255,.75);font:600 12px/1 'Inter',sans-serif;letter-spacing:.22em;text-transform:uppercase;pointer-events:none}
   #pintro-load{position:absolute;left:0;right:0;bottom:0;height:2px;background:rgba(255,255,255,.15)}
@@ -409,9 +412,12 @@
 <div id="pintro" aria-hidden="true">
   <div id="pintro-sea"></div>
   <canvas id="pintro-canvas"></canvas>
+  <div id="pintro-grade"></div>
+  <div id="pintro-warm"></div>
   <div id="pintro-bloom"></div>
   <div id="pintro-curtain"></div>
-  <div id="pintro-logo"><img src="assets/parusa/logo.svg" alt="ЖК Паруса"></div>
+  <div id="pintro-sails"><svg viewBox="0 -4 62 58" xmlns="http://www.w3.org/2000/svg"><path d="M10.5006 21.685C10.5006 21.685 26.7436 26.0319 23.378 47.0959C28.9964 42.7489 48.0281 41.0791 60.1454 51.774C58.453 41.1905 44.5012 17.6721 10.5006 21.685Z" fill="#C49A6C"/><path d="M0.245239 0.585726C0.245239 0.585726 13.0788 4.02034 10.4186 20.6613C14.856 17.2267 29.8932 15.9072 39.4678 24.3593C38.1336 15.9995 27.1072 -2.58282 0.245239 0.585726Z" fill="#C49A6C"/></svg></div>
+  <img id="pintro-logo" src="assets/parusa/logo.svg" alt="ЖК Паруса">
   <div id="pintro-hint">Паруса · Уфа</div>
   <button id="pintro-skip" type="button">Пропустить
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -1023,119 +1029,66 @@
   });
 </script>
 
-<!-- ===== INTRO (3D sail -> logo) ===== -->
+<!-- ===== INTRO (3D sails -> logo morph) ===== -->
 <script src="assets/parusa/3d/vendor/three.min.js"></script>
 <script src="assets/parusa/3d/vendor/RGBELoader.js"></script>
 <script src="assets/parusa/3d/vendor/GLTFLoader.js"></script>
 <script>
 (function(){
-  var pintro = document.getElementById('pintro');
-  if (!pintro) return;
-  var skip = document.getElementById('pintro-skip');
-  var loadBar = document.querySelector('#pintro-load i');
-  function removeNow(){ if (pintro.parentNode) pintro.parentNode.removeChild(pintro); document.body.classList.remove('pintro-lock'); }
+  var pintro=document.getElementById('pintro'); if(!pintro) return;
+  var loadBar=document.querySelector('#pintro-load i');
+  function removeNow(){ if(pintro.parentNode) pintro.parentNode.removeChild(pintro); document.body.classList.remove('pintro-lock'); }
+  var params=new URL(location.href).searchParams, force=params.has('intro');
+  var seen=sessionStorage.getItem('parusa_intro_seen');
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var saveData=navigator.connection && navigator.connection.saveData;
+  var noWebGL=(function(){try{var c=document.createElement('canvas');return !(window.WebGLRenderingContext&&(c.getContext('webgl')||c.getContext('experimental-webgl')));}catch(e){return true;}})();
+  if(!force && (seen||reduce||saveData||noWebGL||typeof THREE==='undefined')){ removeNow(); return; }
+  document.body.classList.add('pintro-lock'); window.scrollTo(0,0);
 
-  var params = new URL(location.href).searchParams;
-  var force = params.has('intro');
-  var seen = sessionStorage.getItem('parusa_intro_seen');
-  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var saveData = navigator.connection && navigator.connection.saveData;
-  var noWebGL = (function(){ try { var c=document.createElement('canvas'); return !(window.WebGLRenderingContext && (c.getContext('webgl')||c.getContext('experimental-webgl'))); } catch(e){ return true; } })();
+  var finished=false;
+  function finish(){ if(finished)return; finished=true; sessionStorage.setItem('parusa_intro_seen','1'); pintro.classList.add('done'); document.body.classList.remove('pintro-lock'); setTimeout(removeNow,1050); }
+  document.getElementById('pintro-skip').addEventListener('click', finish);
 
-  if (!force && (seen || reduce || saveData || noWebGL || typeof THREE === 'undefined')) { removeNow(); return; }
-
-  document.body.classList.add('pintro-lock');
-  window.scrollTo(0,0);
-
-  var finished = false;
-  function finish(){
-    if (finished) return; finished = true;
-    sessionStorage.setItem('parusa_intro_seen','1');
-    pintro.classList.add('done');
-    document.body.classList.remove('pintro-lock');
-    setTimeout(removeNow, 1050);
-  }
-  skip.addEventListener('click', finish);
-
-  var seaEl = document.getElementById('pintro-sea'),
-      bloomEl = document.getElementById('pintro-bloom'),
-      curtEl = document.getElementById('pintro-curtain'),
-      logoEl = document.getElementById('pintro-logo'),
-      logoImg = logoEl.querySelector('img'),
-      cv = document.getElementById('pintro-canvas');
-
-  var rn = new THREE.WebGLRenderer({canvas:cv, antialias:true, alpha:true});
-  rn.setPixelRatio(Math.min(devicePixelRatio||1, 2));
-  rn.setSize(innerWidth, innerHeight);
-  rn.outputEncoding = THREE.sRGBEncoding;
-  rn.toneMapping = THREE.ACESFilmicToneMapping;
-  rn.toneMappingExposure = 1.05;
-  var scene = new THREE.Scene();
-  var cam = new THREE.PerspectiveCamera(32, innerWidth/innerHeight, 0.01, 100);
-  var pm = new THREE.PMREMGenerator(rn);
-  var boat = null;
-  var AZ = 0.7, EL = 0.07, LOOKY = 0.72;
-  var portrait = innerWidth < innerHeight;
-  var distMul = portrait ? 1.7 : 1;
-
-  function clamp(x){ return x<0?0:x>1?1:x; }
-  function easeOut(x){ return 1-Math.pow(1-x,3); }
-  function camAt(d){ cam.position.set(Math.sin(AZ)*Math.cos(EL)*d, Math.sin(EL)*d, Math.cos(AZ)*Math.cos(EL)*d); cam.lookAt(0, LOOKY, 0); }
-
+  var seaEl=document.getElementById('pintro-sea'),bloomEl=document.getElementById('pintro-bloom'),curtEl=document.getElementById('pintro-curtain'),
+      msEl=document.getElementById('pintro-sails'),mlEl=document.getElementById('pintro-logo'),cv=document.getElementById('pintro-canvas');
+  var rn=new THREE.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
+  rn.setPixelRatio(Math.min(devicePixelRatio||1,2)); rn.setSize(innerWidth,innerHeight);
+  rn.outputEncoding=THREE.sRGBEncoding; rn.toneMapping=THREE.ACESFilmicToneMapping; rn.toneMappingExposure=0.52;
+  var scene=new THREE.Scene();
+  var cam=new THREE.PerspectiveCamera(32,innerWidth/innerHeight,0.01,100);
+  var pm=new THREE.PMREMGenerator(rn);
+  var boat=null;
+  var AZ=0.7, EL=0.07, portrait=innerWidth<innerHeight, distMul=portrait?1.6:1;
+  var c0=new THREE.Vector3(Math.sin(AZ)*Math.cos(EL),Math.sin(EL),Math.cos(AZ)*Math.cos(EL));
+  var back=new THREE.DirectionalLight(0xffd39a,7); back.position.copy(c0.clone().multiplyScalar(-8)); back.position.y+=2.2; back.target.position.set(0,0.2,0); scene.add(back,back.target);
+  var fill=new THREE.DirectionalLight(0xffe9c8,0.25); fill.position.copy(c0.clone().multiplyScalar(6)); fill.position.y+=1.5; scene.add(fill);
+  scene.add(new THREE.AmbientLight(0x66507a,0.25));
+  function cl(x){return x<0?0:x>1?1:x} function eo(x){return 1-Math.pow(1-x,3)} function eio(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2} function lerp(a,b,k){return a+(b-a)*k}
+  function camAt(d,ly){cam.position.set(c0.x*d,c0.y*d,c0.z*d);cam.lookAt(0,ly,0);}
   function renderAt(t){
-    var bz = 1.07 - 0.07*easeOut(clamp(t/6.2)); seaEl.style.transform = 'scale('+bz+')';
-    var dist = (6.4 - 0.9*easeOut(clamp(t/5.5))) * distMul; camAt(dist);
-    if (boat){
-      var inp = clamp(t/0.9), out = clamp((t-4.3)/1.1);
-      boat.traverse(function(o){ if (o.isMesh){ o.material.transparent = true; o.material.opacity = inp*(1-out); } });
-      boat.rotation.z = Math.sin(t*0.8)*0.02;
-      boat.position.y = Math.sin(t*0.9)*0.012;
-      boat.position.x = 0.06*easeOut(clamp(t/5.5));
-    }
-    rn.render(scene, cam);
-    var bl; if (t<4.3) bl=0; else if (t<5.0) bl=easeOut((t-4.3)/0.7); else bl=1-0.82*easeOut(clamp((t-5.0)/1.4));
-    bloomEl.style.opacity = bl;
-    curtEl.style.opacity = easeOut(clamp((t-4.8)/1.1));
-    var lp = easeOut(clamp((t-4.9)/1.3));
-    logoEl.style.opacity = lp;
-    logoImg.style.transform = 'scale('+(0.84+0.16*lp)+')';
+    var bz=1.06-0.06*eo(cl(t/6)); seaEl.style.transform='scale('+bz+')';
+    var dist=(6.4-2.6*eo(cl(t/3.8)))*distMul, ly=0.72-0.37*eo(cl(t/3.8)); camAt(dist,ly);
+    if(boat){var ip=cl(t/0.9),op=cl((t-3.8)/0.8); boat.traverse(function(o){if(o.isMesh){o.material.transparent=true;o.material.opacity=ip*(1-op);}});
+      boat.rotation.z=Math.sin(t*0.8)*0.02; boat.position.y=Math.sin(t*0.9)*0.012; boat.position.x=0.05*eo(cl(t/3.8));}
+    rn.render(scene,cam);
+    var bl; if(t<3.8)bl=0; else if(t<4.4)bl=eo((t-3.8)/0.6); else bl=1-0.88*eo(cl((t-4.4)/1.6)); bloomEl.style.opacity=bl;
+    var W=Math.min(440,0.64*innerWidth);
+    var msOp=cl((t-3.9)/0.6)*(1-cl((t-5.7)/0.6)); msEl.style.opacity=msOp;
+    var k=eio(cl((t-4.5)/1.5)), offX=-(62.5/185)*W, tx=lerp(0,offX,k), ty=lerp(-40,-3,k), s=lerp(2.4,((60/185)*W)/145.16,k);
+    msEl.style.transform='translate(calc(-50% + '+tx+'px), calc(-50% + '+ty+'px)) scale('+s+')';
+    curtEl.style.opacity=eo(cl((t-4.4)/1.2));
+    mlEl.style.opacity=eo(cl((t-5.5)/0.9));
   }
-
-  addEventListener('resize', function(){
-    portrait = innerWidth < innerHeight; distMul = portrait ? 1.7 : 1;
-    cam.aspect = innerWidth/innerHeight; cam.updateProjectionMatrix();
-    rn.setSize(innerWidth, innerHeight);
-  });
-
-  var REVEAL_AT = 6.7, started = 0;
-  function loop(now){
-    if (finished) return;
-    var t = (now - started)/1000;
-    renderAt(t);
-    if (t >= REVEAL_AT){ finish(); return; }
-    requestAnimationFrame(loop);
-  }
-
-  // fallback if assets are slow
-  var fallback = setTimeout(function(){ if (!started && !finished){ // show logo briefly then reveal
-    curtEl.style.transition='opacity .6s'; logoEl.style.transition='opacity .8s';
-    curtEl.style.opacity=1; logoEl.style.opacity=1; setTimeout(finish, 1400);
-  }}, 9000);
-
-  new THREE.RGBELoader().load('assets/parusa/3d/env.hdr', function(tx){
-    scene.environment = pm.fromEquirectangular(tx).texture; tx.dispose();
-    if (loadBar) loadBar.style.width = '35%';
-    new THREE.GLTFLoader().load('assets/parusa/3d/parus.glb', function(g){
-      boat = g.scene;
-      var box = new THREE.Box3().setFromObject(boat), sz = box.getSize(new THREE.Vector3()), c = box.getCenter(new THREE.Vector3());
-      boat.position.sub(c); boat.scale.setScalar(1/Math.max(sz.x, sz.y, sz.z));
-      scene.add(boat);
-      if (loadBar) loadBar.style.width = '100%';
-      clearTimeout(fallback);
-      started = performance.now();
-      requestAnimationFrame(loop);
-    }, function(p){ if (loadBar && p.total) loadBar.style.width = (35 + 60*p.loaded/p.total) + '%'; },
-    function(){ clearTimeout(fallback); finish(); });
+  addEventListener('resize',function(){portrait=innerWidth<innerHeight;distMul=portrait?1.6:1;cam.aspect=innerWidth/innerHeight;cam.updateProjectionMatrix();rn.setSize(innerWidth,innerHeight);});
+  var REVEAL_AT=7.0, started=0;
+  function loop(now){ if(finished)return; var t=(now-started)/1000; renderAt(t); if(t>=REVEAL_AT){finish();return;} requestAnimationFrame(loop); }
+  var fallback=setTimeout(function(){ if(!started&&!finished){ curtEl.style.transition='opacity .6s'; mlEl.style.transition='opacity .8s'; curtEl.style.opacity=1; mlEl.style.opacity=1; setTimeout(finish,1400); } },9000);
+  new THREE.RGBELoader().load('assets/parusa/3d/env.hdr',function(tx){ scene.environment=pm.fromEquirectangular(tx).texture; tx.dispose(); if(loadBar)loadBar.style.width='35%';
+    new THREE.GLTFLoader().load('assets/parusa/3d/parus.glb',function(g){ boat=g.scene; var b=new THREE.Box3().setFromObject(boat),sz=b.getSize(new THREE.Vector3()),c=b.getCenter(new THREE.Vector3());
+      boat.position.sub(c); boat.scale.setScalar(1/Math.max(sz.x,sz.y,sz.z)); boat.traverse(function(o){if(o.isMesh)o.material.envMapIntensity=0.22;}); scene.add(boat);
+      if(loadBar)loadBar.style.width='100%'; clearTimeout(fallback); started=performance.now(); requestAnimationFrame(loop);
+    }, function(p){ if(loadBar&&p.total)loadBar.style.width=(35+60*p.loaded/p.total)+'%'; }, function(){ clearTimeout(fallback); finish(); });
   }, undefined, function(){ clearTimeout(fallback); finish(); });
 })();
 </script>
