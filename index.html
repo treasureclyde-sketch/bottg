@@ -171,7 +171,7 @@
   .statband-cell{padding:40px 24px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
   .statband-cell:last-child{border-right:none}
   .statband-cell b{font-family:'Playfair Display';font-size:32px;font-weight:600;display:block;color:#fff}
-  .statband-cell b em{font-style:normal;color:var(--gold)}
+  .statband-cell b em{font-style:normal;color:inherit}
   .statband-cell span{font-size:12.5px;letter-spacing:.06em;color:rgba(255,255,255,.65);margin-top:8px;display:block}
   @media(max-width:860px){.statband-row{grid-template-columns:repeat(2,1fr)}.statband-cell{border-bottom:1px solid rgba(255,255,255,.1)}.statband-cell:nth-child(2){border-right:none}}
 
@@ -774,8 +774,6 @@
     <div class="car reveal" id="car">
       <div class="car-stage" id="car-stage">
         <div class="car-track" id="car-track"></div>
-        <button class="car-nav car-prev" id="car-prev" aria-label="Назад"><svg class="icon"><use href="#i-arrow-l"/></svg></button>
-        <button class="car-nav car-next" id="car-next" aria-label="Вперёд"><svg class="icon"><use href="#i-arrow"/></svg></button>
       </div>
       <div class="car-foot">
         <div class="car-caption" id="car-caption"></div>
@@ -1083,9 +1081,7 @@
     }
     let timer;
     function go(i){ cur = (i + CAR.length) % CAR.length; layout(); restart(); }
-    function restart(){ clearInterval(timer); timer = setInterval(() => go(cur + 1), 5200); }
-    document.getElementById('car-next').addEventListener('click', () => go(cur + 1));
-    document.getElementById('car-prev').addEventListener('click', () => go(cur - 1));
+    function restart(){ clearInterval(timer); timer = setInterval(() => go(cur + 1), 3200); }
     stage.addEventListener('mouseenter', () => clearInterval(timer));
     stage.addEventListener('mouseleave', restart);
     // swipe
