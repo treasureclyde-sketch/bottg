@@ -252,6 +252,16 @@
   .plan-empty{display:none;text-align:center;color:var(--muted-fg);font-size:15px;padding:50px 20px}
   .plan-empty.show{display:block}
   .plan-empty a{color:var(--gold-deep);font-weight:600}
+  /* live Profitbase 3D catalog embed */
+  .pb-wrap{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .pb-front{position:relative;width:100%;min-height:680px}
+  .pb-front iframe{width:100%!important;min-height:680px;border:0;display:block}
+  .pb-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:40px;color:var(--muted-fg)}
+  .pb-loader p{font-size:14.5px;max-width:420px}
+  .pb-spin{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:pbspin 1s linear infinite}
+  @keyframes pbspin{to{transform:rotate(360deg)}}
+  @media(max-width:720px){.pb-front,.pb-front iframe{min-height:560px}}
+
   .catalog-cta{margin-top:40px;background:var(--navy);color:#fff;border-radius:14px;padding:38px 44px;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
   .catalog-cta::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(196,154,108,.22),transparent 70%)}
   .catalog-cta-left{position:relative;z-index:1}
@@ -757,6 +767,17 @@
     </div>
     <p class="plan-empty" id="plan-empty">В этой категории пока нет подходящих вариантов — <a href="#lead">оставьте заявку</a>, подберём под ваш запрос.</p>
 
+    <!-- Live Profitbase 3D catalog (developer's real widget) -->
+    <div class="pb-wrap reveal">
+      <div id="profitbase_front" class="pb-front">
+        <div class="pb-loader" id="pb-loader">
+          <div class="pb-spin"></div>
+          <p>Загружаем 3D-каталог: генплан, дома, этажи и свободные квартиры…</p>
+          <a href="https://smart-catalog.profitbase.ru/eco" target="_blank" rel="noopener" class="btn btn-outline btn-sm">Открыть в новой вкладке <svg class="icon" style="width:15px;height:15px"><use href="#i-arrow"/></svg></a>
+        </div>
+      </div>
+    </div>
+
     <!-- Full catalog CTA -->
     <div class="catalog-cta reveal">
       <div class="catalog-cta-left">
@@ -986,6 +1007,42 @@
       c.classList.add('active');
       apply(c.dataset.filter);
     }));
+  })();
+
+  // ===== live Profitbase 3D catalog (developer's real widget) =====
+  (function(){
+    const front = document.getElementById('profitbase_front'); if (!front) return;
+    let loaded = false;
+    function initPB(){
+      if (typeof ProfitbaseWidget === 'undefined') return;
+      window.widget = ProfitbaseWidget();
+      window.widget.init({
+        embedElement: '#profitbase_front',
+        params: {
+          src: 'https://smart-catalog.profitbase.ru/eco',
+          pbDomain: 'profitbase.ru',
+          accountId: '8070',
+          referrer: 'https://parusa.iskufa.ru',
+          pbApiKey: '72f7a243de98bfd87353f31696029361',
+          isEmbedded: true
+        }
+      });
+      // hide loader once the widget injects its iframe
+      const obs = new MutationObserver(() => {
+        if (front.querySelector('iframe')) { const l = document.getElementById('pb-loader'); if (l) l.style.display = 'none'; obs.disconnect(); }
+      });
+      obs.observe(front, { childList: true, subtree: true });
+    }
+    function load(){
+      if (loaded) return; loaded = true;
+      const s = document.createElement('script');
+      s.src = 'https://cdn.profitbase.ru/smart/sw.js'; s.async = true;
+      s.onload = initPB;
+      document.body.appendChild(s);
+    }
+    // load when the catalog is near the viewport
+    const io2 = new IntersectionObserver((es) => es.forEach(e => { if (e.isIntersecting) { load(); io2.disconnect(); } }), { rootMargin: '600px' });
+    io2.observe(front);
   })();
 
   // reveal
