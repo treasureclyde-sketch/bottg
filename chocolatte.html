@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Шоко&Латте — кафе и шоколадная лавка · Уфа</title>
+<meta name="description" content="Шоко&Латте — семейное кафе и шоколадная лавка в Уфе. Ремесленный шоколад «от боба до плитки», завтраки, европейская кухня, десерты и кофе. ул. Зайнаб Биишевой, 19.">
+<meta property="og:title" content="Шоко&Латте — кафе и шоколадная лавка">
+<meta property="og:description" content="Ремесленный шоколад «от боба до плитки», завтраки весь день, европейская кухня и уютная атмосфера рядом с парком.">
+<meta property="og:type" content="restaurant">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+  :root{
+    --espresso:#241811;      /* самый тёмный */
+    --cocoa:#3a271a;
+    --coffee:#5c3d26;
+    --caramel:#b07b3f;       /* акцент */
+    --gold:#c9a35c;
+    --cream:#f7efe3;         /* фон */
+    --cream-2:#f1e6d6;
+    --paper:#fffdf8;         /* карточки */
+    --line:#e2d4c0;
+    --line-soft:#ece0cf;
+    --ink:#2b1f16;
+    --muted:#8a745c;
+    --muted-2:#a9967e;
+    --shadow-sm:0 1px 2px rgba(58,39,26,.05), 0 8px 24px rgba(58,39,26,.06);
+    --shadow-lg:0 24px 60px -20px rgba(36,24,17,.35);
+    --radius:18px;
+    --maxw:1180px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Manrope',system-ui,-apple-system,sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,h4,.serif{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;line-height:1.08;letter-spacing:.2px}
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+  section{position:relative}
+  .eyebrow{
+    font-family:'Manrope';font-weight:700;font-size:12px;letter-spacing:.28em;
+    text-transform:uppercase;color:var(--caramel);display:inline-flex;align-items:center;gap:10px;
+  }
+  .eyebrow::before{content:"";width:26px;height:1.5px;background:var(--caramel);opacity:.7}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;top:0;z-index:60;
+    background:rgba(247,239,227,.82);backdrop-filter:blur(14px);
+    border-bottom:1px solid transparent;transition:border-color .3s, box-shadow .3s;
+  }
+  header.nav.scrolled{border-color:var(--line);box-shadow:0 6px 24px rgba(36,24,17,.06)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .brand{display:flex;align-items:center;gap:12px;font-weight:800;letter-spacing:.02em}
+  .brand .mark{width:40px;height:40px;flex:none}
+  .brand b{font-family:'Manrope';font-weight:800;font-size:18px;text-transform:uppercase;letter-spacing:.12em;line-height:1}
+  .brand small{display:block;font-weight:600;font-size:9.5px;letter-spacing:.24em;color:var(--muted);text-transform:uppercase;margin-top:3px}
+  .nav-links{display:flex;gap:30px;align-items:center}
+  .nav-links a{font-size:14px;font-weight:600;color:var(--cocoa);opacity:.82;transition:opacity .2s}
+  .nav-links a:hover{opacity:1}
+  .btn{
+    display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;
+    padding:12px 22px;border-radius:999px;cursor:pointer;border:1.5px solid transparent;
+    transition:transform .18s ease, box-shadow .2s, background .2s;white-space:nowrap;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--espresso);color:#fbf3e6;box-shadow:0 10px 26px -10px rgba(36,24,17,.6)}
+  .btn-primary:hover{background:var(--cocoa);box-shadow:0 16px 34px -12px rgba(36,24,17,.7)}
+  .btn-ghost{background:transparent;border-color:var(--coffee);color:var(--coffee)}
+  .btn-ghost:hover{background:var(--coffee);color:#fbf3e6}
+  .btn-wa{background:#25a35a;color:#fff;box-shadow:0 10px 26px -10px rgba(37,163,90,.7)}
+  .btn-wa:hover{background:#20904f}
+  .nav-cta{display:flex;gap:10px;align-items:center}
+  .burger{display:none;flex-direction:column;gap:5px;padding:8px;cursor:pointer}
+  .burger span{width:24px;height:2px;background:var(--cocoa);border-radius:2px;transition:.25s}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;padding:72px 0 88px;overflow:hidden}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+  .hero-badges{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
+  .chip{
+    display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:700;
+    padding:7px 14px;border-radius:999px;background:var(--paper);border:1px solid var(--line);
+    color:var(--coffee);box-shadow:var(--shadow-sm)
+  }
+  .chip .star{color:var(--gold)}
+  .hero h1{font-size:clamp(46px,7vw,86px);color:var(--espresso);margin-bottom:10px}
+  .hero h1 em{font-style:italic;color:var(--caramel)}
+  .hero .lead{font-size:19px;color:var(--coffee);max-width:520px;margin:18px 0 32px}
+  .hero .lead b{color:var(--espresso)}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:34px}
+  .hero-meta{display:flex;gap:28px;flex-wrap:wrap;padding-top:26px;border-top:1px solid var(--line)}
+  .hero-meta div{display:flex;flex-direction:column}
+  .hero-meta .k{font-family:'Cormorant Garamond';font-size:34px;font-weight:700;color:var(--espresso);line-height:1}
+  .hero-meta .v{font-size:12.5px;font-weight:600;color:var(--muted);margin-top:5px;letter-spacing:.02em}
+
+  .hero-visual{position:relative}
+  .hero-photo{
+    position:relative;border-radius:26px;overflow:hidden;box-shadow:var(--shadow-lg);
+    aspect-ratio:4/5;background:var(--cream-2);
+  }
+  .hero-photo img{width:100%;height:100%;object-fit:cover}
+  .hero-photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(36,24,17,.28))}
+  .hero-float{
+    position:absolute;left:-26px;bottom:34px;background:var(--paper);border:1px solid var(--line);
+    border-radius:16px;padding:16px 20px;box-shadow:var(--shadow-lg);max-width:230px;
+    display:flex;gap:13px;align-items:center;
+  }
+  .hero-float .ic{width:42px;height:42px;border-radius:12px;background:var(--cream-2);display:grid;place-items:center;flex:none;color:var(--caramel)}
+  .hero-float b{font-size:14px;display:block;color:var(--espresso)}
+  .hero-float span{font-size:12px;color:var(--muted)}
+  .cocoa-bg{position:absolute;pointer-events:none;opacity:.06;color:var(--coffee)}
+  .cocoa-bg.one{top:-60px;right:-40px;width:340px;transform:rotate(12deg)}
+
+  /* ---------- MARQUEE ---------- */
+  .marquee{background:var(--espresso);color:#e9d9c2;overflow:hidden;padding:16px 0}
+  .marquee-track{display:flex;gap:44px;white-space:nowrap;width:max-content;animation:scroll 32s linear infinite}
+  .marquee span{font-family:'Cormorant Garamond';font-size:22px;font-weight:500;display:inline-flex;align-items:center;gap:44px;letter-spacing:.03em}
+  .marquee span::after{content:"✦";color:var(--gold);font-size:13px}
+  @keyframes scroll{to{transform:translateX(-50%)}}
+
+  /* ---------- ABOUT ---------- */
+  .about{padding:100px 0}
+  .about-grid{display:grid;grid-template-columns:.92fr 1.08fr;gap:64px;align-items:center}
+  .about-imgs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .about-imgs img{border-radius:16px;box-shadow:var(--shadow-sm);width:100%;height:100%;object-fit:cover;aspect-ratio:3/4}
+  .about-imgs .tall{grid-row:span 2;aspect-ratio:3/5.2}
+  .about h2{font-size:clamp(36px,4.6vw,56px);color:var(--espresso);margin:14px 0 22px}
+  .about h2 em{font-style:italic;color:var(--caramel)}
+  .about p{font-size:17px;color:var(--coffee);margin-bottom:18px;max-width:560px}
+  .about .signature{font-family:'Cormorant Garamond';font-style:italic;font-size:26px;color:var(--caramel);margin-top:8px}
+
+  /* ---------- FEATURES ---------- */
+  .features{padding:26px 0 100px}
+  .feat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:44px}
+  .feat{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:28px 24px;box-shadow:var(--shadow-sm);transition:transform .2s, box-shadow .2s}
+  .feat:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+  .feat .ic{width:50px;height:50px;border-radius:14px;background:var(--cream-2);display:grid;place-items:center;color:var(--caramel);margin-bottom:18px}
+  .feat h4{font-size:23px;color:var(--espresso);margin-bottom:6px}
+  .feat p{font-size:14px;color:var(--muted)}
+  .sec-head{text-align:center;max-width:640px;margin:0 auto}
+  .sec-head h2{font-size:clamp(36px,4.8vw,58px);color:var(--espresso);margin:14px 0 12px}
+  .sec-head h2 em{font-style:italic;color:var(--caramel)}
+  .sec-head p{color:var(--coffee);font-size:17px}
+
+  /* ---------- MENU ---------- */
+  .menu{padding:100px 0;background:linear-gradient(180deg,var(--cream) 0%,#f2e7d7 100%)}
+  .tabs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:40px 0 46px}
+  .tab{
+    font-family:'Manrope';font-weight:700;font-size:14px;padding:11px 20px;border-radius:999px;
+    background:var(--paper);border:1px solid var(--line);color:var(--coffee);cursor:pointer;transition:.2s
+  }
+  .tab:hover{border-color:var(--caramel);color:var(--espresso)}
+  .tab.active{background:var(--espresso);color:#fbf3e6;border-color:var(--espresso)}
+  .menu-panel{display:none;animation:fade .4s ease}
+  .menu-panel.active{display:block}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .menu-cols{columns:2;column-gap:56px}
+  .menu-group{break-inside:avoid;margin-bottom:34px}
+  .menu-group > h3{
+    font-size:16px;font-family:'Manrope';font-weight:800;text-transform:uppercase;letter-spacing:.18em;
+    color:var(--caramel);padding-bottom:12px;margin-bottom:16px;border-bottom:1.5px solid var(--line);
+    display:flex;align-items:center;gap:10px;
+  }
+  .dish{margin-bottom:18px;break-inside:avoid}
+  .dish-row{display:flex;align-items:baseline;gap:8px}
+  .dish-row .nm{font-weight:700;font-size:16px;color:var(--espresso)}
+  .dish-row .dots{flex:1;border-bottom:1.5px dotted var(--line);transform:translateY(-4px);min-width:16px}
+  .dish-row .pr{font-weight:800;font-size:15.5px;color:var(--coffee);white-space:nowrap}
+  .dish-row .gr{font-size:12px;color:var(--muted-2);font-weight:600;white-space:nowrap}
+  .dish-desc{font-size:13.5px;color:var(--muted);margin-top:3px;max-width:92%}
+  .menu-note{background:var(--paper);border:1px dashed var(--line);border-radius:14px;padding:16px 18px;font-size:13.5px;color:var(--coffee)}
+  .menu-note b{color:var(--espresso)}
+  .menu-foot{text-align:center;margin-top:44px;color:var(--muted);font-size:14px}
+
+  /* ---------- GALLERY ---------- */
+  .gallery{padding:100px 0}
+  .gal-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:190px;gap:14px;margin-top:44px}
+  .gal-grid a{overflow:hidden;border-radius:14px;position:relative;box-shadow:var(--shadow-sm)}
+  .gal-grid img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+  .gal-grid a:hover img{transform:scale(1.07)}
+  .gal-grid .big{grid-column:span 2;grid-row:span 2}
+  .gal-grid .wide{grid-column:span 2}
+
+  /* ---------- CONTACT ---------- */
+  .contact{padding:100px 0;background:var(--espresso);color:#f1e2cd;position:relative;overflow:hidden}
+  .contact .cocoa-bg{opacity:.05;color:#fff}
+  .contact .cocoa-bg.c1{top:-40px;left:-60px;width:300px;transform:rotate(-14deg)}
+  .contact .cocoa-bg.c2{bottom:-80px;right:-40px;width:360px;transform:rotate(160deg)}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;position:relative;z-index:2}
+  .contact .eyebrow{color:var(--gold)}
+  .contact .eyebrow::before{background:var(--gold)}
+  .contact h2{font-size:clamp(36px,4.8vw,58px);color:#fdf6ea;margin:14px 0 14px}
+  .contact h2 em{font-style:italic;color:var(--gold)}
+  .contact .sub{color:#d3bfa4;font-size:17px;margin-bottom:34px;max-width:460px}
+  .info-list{display:flex;flex-direction:column;gap:2px;margin-bottom:32px}
+  .info-row{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+  .info-row .ic{width:44px;height:44px;border-radius:12px;background:rgba(201,163,92,.16);display:grid;place-items:center;color:var(--gold);flex:none}
+  .info-row .lbl{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:3px}
+  .info-row .val{font-size:16px;color:#f4e8d6;font-weight:600}
+  .info-row .val span{display:block;font-size:13.5px;color:#c8b295;font-weight:500}
+  .contact-cta{display:flex;gap:12px;flex-wrap:wrap}
+  .map-card{border-radius:22px;overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,.12);position:relative;aspect-ratio:5/6;background:#2f2015}
+  .map-card img{width:100%;height:100%;object-fit:cover;opacity:.92}
+  .map-pin{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+  .map-pin .dot{background:var(--espresso);color:var(--gold);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:var(--shadow-lg);border:1px solid var(--gold);pointer-events:auto;display:inline-flex;gap:8px;align-items:center}
+
+  /* ---------- FOOTER ---------- */
+  footer.ft{background:#1c130d;color:#b8a488;padding:56px 0 34px}
+  .ft-top{display:flex;justify-content:space-between;gap:40px;flex-wrap:wrap;padding-bottom:32px;border-bottom:1px solid rgba(255,255,255,.08)}
+  .ft .brand b{color:#f1e2cd}
+  .ft-desc{max-width:320px;font-size:14px;margin-top:16px;color:#9c8a70}
+  .ft-cols{display:flex;gap:64px;flex-wrap:wrap}
+  .ft-col h5{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;font-weight:700}
+  .ft-col a,.ft-col p{display:block;font-size:14px;color:#b8a488;margin-bottom:9px;transition:color .2s}
+  .ft-col a:hover{color:#f1e2cd}
+  .ft-bottom{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;font-size:13px;color:#7d6d57}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .7s ease, transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- RESPONSIVE ---------- */
+  @media(max-width:960px){
+    .hero-grid,.about-grid,.contact-grid{grid-template-columns:1fr;gap:40px}
+    .about-imgs{max-width:440px}
+    .feat-grid{grid-template-columns:1fr 1fr}
+    .hero-visual{order:-1;max-width:420px;margin:0 auto}
+    .menu-cols{columns:1}
+    .gal-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}
+  }
+  @media(max-width:680px){
+    .wrap{padding:0 18px}
+    .nav-links{display:none}
+    .nav-cta .btn-ghost{display:none}
+    .burger{display:flex}
+    .nav-links.open{display:flex;position:absolute;top:72px;left:0;right:0;flex-direction:column;background:var(--paper);padding:22px;gap:18px;border-bottom:1px solid var(--line);box-shadow:var(--shadow-lg)}
+    .feat-grid{grid-template-columns:1fr}
+    .hero-meta{gap:20px}
+    .hero-float{left:0;right:0;margin:0 auto;bottom:-20px;position:relative;margin-top:16px}
+    .gal-grid .big{grid-column:span 2;grid-row:span 1}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="nav" id="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="brand">
+      <svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <circle cx="24" cy="24" r="23" stroke="#b07b3f" stroke-width="1.5"/>
+        <path d="M24 8c-6 5-6 27 0 32 6-5 6-27 0-32Z" fill="#3a271a"/>
+        <path d="M24 8c-6 5-6 27 0 32" stroke="#c9a35c" stroke-width="1.2" fill="none"/>
+        <path d="M18 15c2 1 2 3 0 4M18 22c2 1 2 3 0 4M18 29c2 1 2 3 0 4M30 15c-2 1-2 3 0 4M30 22c-2 1-2 3 0 4M30 29c-2 1-2 3 0 4" stroke="#c9a35c" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+      <span><b>Шоко&amp;Латте</b><small>Кафе · Шоколадная лавка</small></span>
+    </a>
+    <nav class="nav-links" id="navlinks">
+      <a href="#about">О нас</a>
+      <a href="#features">Атмосфера</a>
+      <a href="#menu">Меню</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="tel:+70000000000" class="btn btn-ghost">Забронировать</a>
+      <a href="https://wa.me/79999999999" target="_blank" rel="noopener" class="btn btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 4.8 5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6 0-1.3.6-1.9.9-2.1.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.9.1.1.1.3 0 .4l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.6-.7c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.5.3.1.2.1.6-.1 1.1Z"/></svg>
+        WhatsApp
+      </a>
+    </div>
+    <div class="burger" id="burger"><span></span><span></span><span></span></div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <svg class="cocoa-bg one" viewBox="0 0 200 300" fill="none" aria-hidden="true"><ellipse cx="100" cy="150" rx="70" ry="130" fill="currentColor"/><path d="M100 20v260M60 60c15 8 15 20 0 28M60 120c15 8 15 20 0 28M60 180c15 8 15 20 0 28M140 60c-15 8-15 20 0 28M140 120c-15 8-15 20 0 28M140 180c-15 8-15 20 0 28" stroke="#f7efe3" stroke-width="3"/></svg>
+  <div class="wrap hero-grid">
+    <div class="hero-text">
+      <div class="hero-badges">
+        <span class="chip"><span class="star">★</span> Лучшая кондитерская 2025 · 2026</span>
+        <span class="chip">🍫 Шоколад собственного производства</span>
+      </div>
+      <h1>Вкус настоящего <em>шоколада</em> и уюта</h1>
+      <p class="lead">Семейное кафе и шоколадная лавка рядом с парком. Мы делаем ремесленный шоколад <b>от боба до плитки</b>, готовим завтраки весь день и блюда европейской кухни — с душой и заботой.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary">Смотреть меню</a>
+        <a href="https://wa.me/79999999999" target="_blank" rel="noopener" class="btn btn-wa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 4.8 5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6 0-1.3.6-1.9.9-2.1.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.9.1.1.1.3 0 .4l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.6-.7c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.5.3.1.2.1.6-.1 1.1Z"/></svg>
+          Забронировать столик
+        </a>
+      </div>
+      <div class="hero-meta">
+        <div><span class="k">от боба</span><span class="v">до плитки — свой шоколад</span></div>
+        <div><span class="k">до 32</span><span class="v">посадочных мест</span></div>
+        <div><span class="k">🐾 · Wi-Fi</span><span class="v">можно с питомцем</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="hero-photo">
+        <img src="https://i0.photo.2gis.com/photo-gallery/e43e04a4-9089-4e06-a83f-440f615e44ef.jpg" alt="Интерьер кафе Шоко&Латте" loading="eager">
+      </div>
+      <div class="hero-float">
+        <div class="ic">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg>
+        </div>
+        <div>
+          <b>ул. Зайнаб Биишевой, 19</b>
+          <span>Уфа · рядом с парком, есть парковка</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MARQUEE ===== -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track">
+    <span>Завтраки весь день</span><span>Ремесленный шоколад</span><span>Своя выпечка &amp; десерты</span><span>Кофе на альтернативном молоке</span><span>Детское меню</span><span>Живая музыка</span>
+    <span>Завтраки весь день</span><span>Ремесленный шоколад</span><span>Своя выпечка &amp; десерты</span><span>Кофе на альтернативном молоке</span><span>Детское меню</span><span>Живая музыка</span>
+  </div>
+</div>
+
+<!-- ===== ABOUT ===== -->
+<section class="about" id="about">
+  <div class="wrap about-grid">
+    <div class="about-imgs reveal">
+      <img class="tall" src="https://i1.photo.2gis.com/photo-gallery/84db6a67-4cf0-44eb-8a09-d3e070cb6e92.jpg" alt="Десерт">
+      <img src="https://i3.photo.2gis.com/photo-gallery/1f3e41be-31e4-421e-88de-34313af5f340.jpg" alt="Шоколад ручной работы">
+      <img src="https://i6.photo.2gis.com/photo-gallery/6df8fc47-07c0-43b8-925a-02cc58856a5e.jpg" alt="Блюдо">
+    </div>
+    <div class="about-text reveal">
+      <span class="eyebrow">О нас</span>
+      <h2>Каждый кусочек пропитан <em>уютом и заботой</em></h2>
+      <p>Представьте: вы гуляете по парку, а затем заходите к нам — и вас встречает аромат шоколада, созданного с душой прямо здесь. Мы гордимся шоколадом собственного производства «от боба до плитки»: каждая плитка — результат мастерства и любви.</p>
+      <p>У нас — разнообразные блюда европейской кухни и десерты, от которых легко забыть обо всём на свете. Атмосфера уюта — идеальное место для семейного отдыха или спокойного вечера в тишине.</p>
+      <p class="signature">— Приходите почувствовать вкус настоящего шоколада</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Атмосфера</span>
+      <h2>Место, куда хочется <em>возвращаться</em></h2>
+      <p>Семейное кафе с панорамным видом, живой музыкой и всем, что делает вечер тёплым.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8Z"/><path d="M16 9h2.5a2.5 2.5 0 0 1 0 5H16"/><path d="M7 3v2M10 3v2M13 3v2"/></svg></div>
+        <h4>Завтраки весь день</h4>
+        <p>Шакшука, сырники, скрэмблы и блины с утра до вечера.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 4v16M4 9h5M4 14h5"/></svg></div>
+        <h4>Ремесленный шоколад</h4>
+        <p>Плитки, конфеты и дубайский шоколад из собственного цеха.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h4>Живая музыка</h4>
+        <p>Уютные вечера с музыкой и панорамным видом на город.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/><circle cx="12" cy="7" r="4"/><path d="M18 11l1-1 1 1"/></svg></div>
+        <h4>Детям — рады</h4>
+        <p>Детское меню, аниматоры и мастер-классы по выходным.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 11l2-6h14l2 6"/><path d="M3 11h18v3a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3v-3Z"/><path d="M7 21v-4M17 21v-4"/></svg></div>
+        <h4>Банкеты</h4>
+        <p>Проведём праздник до 32 гостей — тёплый приём гарантируем.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M10 5.5C10 4 11 3 12.5 3S15 4 15 5.5c0 2-3 3-3 5"/><circle cx="12" cy="10.5" r=".6" fill="currentColor"/><path d="M5 21c1-5 4-7 7-7s6 2 7 7"/><path d="M4 14l1.5-1.5M20 14l-1.5-1.5"/></svg></div>
+        <h4>Можно с собакой</h4>
+        <p>Pet-friendly, Wi-Fi для гостей и заказ навынос.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 12h4l2 5 4-12 2 7h6"/></svg></div>
+        <h4>Бизнес-ланч</h4>
+        <p>Завтраки и обеды со скидкой в будни — сытно и быстро.</p>
+      </div>
+      <div class="feat reveal">
+        <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <h4>Доставка &amp; навынос</h4>
+        <p>Кофе и шоколад с собой, доставка и заказ столиков.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MENU ===== -->
+<section class="menu" id="menu">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Меню</span>
+      <h2>Что у нас на <em>столе</em></h2>
+      <p>Европейская кухня, авторские завтраки, паста и пицца, десерты и кофе. Цены указаны в рублях.</p>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-tab="breakfast">Завтраки</button>
+      <button class="tab" data-tab="starters">Закуски и салаты</button>
+      <button class="tab" data-tab="hot">Горячее</button>
+      <button class="tab" data-tab="pasta">Паста</button>
+      <button class="tab" data-tab="pizza">Пицца</button>
+      <button class="tab" data-tab="kids">Детское</button>
+      <button class="tab" data-tab="drinks">Напитки</button>
+    </div>
+
+    <!-- BREAKFAST -->
+    <div class="menu-panel active" id="breakfast">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Завтраки</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Шакшука</span><span class="gr">300 г</span><span class="dots"></span><span class="pr">380 ₽</span></div><p class="dish-desc">Из двух яиц с томатами, печёным перцем и зеленью</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сытный омлет</span><span class="gr">430 г</span><span class="dots"></span><span class="pr">450 ₽</span></div><p class="dish-desc">Колбаски, бекон, копчёный сулугуни, салат из свежих овощей и авокадо</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Глазунья</span><span class="gr">330 г</span><span class="dots"></span><span class="pr">450 ₽</span></div><p class="dish-desc">Из двух яиц с колбасками, картофелем и сыром фета</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Скрэмбл с креветкой</span><span class="gr">270 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">С муссом из сливочного сыра и бриошью</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Скрэмбл</span><span class="gr">300 г</span><span class="dots"></span><span class="pr">540 ₽</span></div><p class="dish-desc">С лососем и авокадо</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Бифштекс</span><span class="gr">270 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">С картофельным драником и яйцом пашот</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Баварский завтрак</span><span class="gr">310 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">Драник, колбаски братвурст, яйцо пашот, салат из свежих овощей и авокадо · соус тартар/кетчуп 50 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Норвежский завтрак</span><span class="gr">280 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">Драник, лосось с/с, яйцо пашот, салат из свежих овощей и авокадо · соус сливочный мусс/цезарь 50 ₽</p></div>
+        </div>
+        <div class="menu-group">
+          <h3>Блины · сырники · каши</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Блины с пастрами</span><span class="gr">200 г</span><span class="dots"></span><span class="pr">390 ₽</span></div><p class="dish-desc">С пастрами из индейки и сыром чеддар</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Блины с лососем</span><span class="gr">220 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">С лососем, сливочным муссом, салатом романо, соусом песто</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Блины со сметаной</span><span class="gr">130 г</span><span class="dots"></span><span class="pr">240 ₽</span></div><p class="dish-desc">Добавки: сгущёнка 60 ₽ · варенье 60 ₽ · шоколадный топпинг 60 ₽ · мёд 85 ₽ · карамель 100 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сэндвич</span><span class="gr">210/60 г</span><span class="dots"></span><span class="pr">390 ₽</span></div><p class="dish-desc">С пастрами из индейки или ветчиной</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сырники</span><span class="gr">200 г</span><span class="dots"></span><span class="pr">365 ₽</span></div><p class="dish-desc">С вареньем и сметаной</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Творог</span><span class="gr">180 г</span><span class="dots"></span><span class="pr">340 ₽</span></div><p class="dish-desc">С орехами и смородиновым вареньем</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Каша пшённая</span><span class="gr">130 г</span><span class="dots"></span><span class="pr">270 ₽</span></div><p class="dish-desc">С тыквой</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Каша овсяная</span><span class="gr">130 г</span><span class="dots"></span><span class="pr">270 ₽</span></div><p class="dish-desc">С бананом и карамелью</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STARTERS & SALADS -->
+    <div class="menu-panel" id="starters">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Закуски</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Пармеджано</span><span class="gr">200 г</span><span class="dots"></span><span class="pr">340 ₽</span></div><p class="dish-desc">Из печёного баклажана с сырным соусом и пепперонати</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Пастрами</span><span class="gr">170 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">Из индейки с соусом из тунца</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Фирменный ростбиф</span><span class="gr">200 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">С сыром страчателла, руколой и луковым соусом</p></div>
+        </div>
+        <div class="menu-group">
+          <h3>Ассорти</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Антипасти</span><span class="gr">70/60/40 г</span><span class="dots"></span><span class="pr">690 ₽</span></div><p class="dish-desc">Ассорти колбас, прошутто, соус сальса и тар-тар, хлеб чиабатта</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Бастурма</span><span class="gr">50 г</span><span class="dots"></span><span class="pr">320 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Ассорти сыров</span><span class="gr">170 г</span><span class="dots"></span><span class="pr">650 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Ассорти оливок</span><span class="gr">100 г</span><span class="dots"></span><span class="pr">350 ₽</span></div></div>
+        </div>
+        <div class="menu-group">
+          <h3>Салаты</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Овощной салат</span><span class="gr">290 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">В греческом стиле с томатами, оливками, каперсами и маринованным перцем</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Паштет</span><span class="gr">170 г</span><span class="dots"></span><span class="pr">390 ₽</span></div><p class="dish-desc">Из куриной печени с томлёной грушей и фундуком</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Лосось</span><span class="gr">145 г</span><span class="dots"></span><span class="pr">550 ₽</span></div><p class="dish-desc">Фирменного посола с муссом из сливочного сыра и зелени</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Салат с тунцом</span><span class="gr">270 г</span><span class="dots"></span><span class="pr">520 ₽</span></div><p class="dish-desc">Консервированный тунец, отварной картофель, черри, шпинат, бальзамик</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Цезарь</span><span class="gr">240 г</span><span class="dots"></span><span class="pr">530 ₽</span></div><p class="dish-desc">На выбор: с креветками · с лососем фирменного посола · с пастрами из индейки</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Зелёный салат</span><span class="gr">220 г</span><span class="dots"></span><span class="pr">450 ₽</span></div><p class="dish-desc">С ореховым соусом · добавки: креветки / лосось / пастрами по 150 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Салат с ростбифом</span><span class="gr">235 г</span><span class="dots"></span><span class="pr">540 ₽</span></div><p class="dish-desc">С печёными баклажанами, страчателлой и томатами</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HOT -->
+    <div class="menu-panel" id="hot">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Горячее</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Томлёная говяжья щека</span><span class="gr">335 г</span><span class="dots"></span><span class="pr">760 ₽</span></div><p class="dish-desc">С грибным орзо</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Медальоны</span><span class="gr">150/120/70 г</span><span class="dots"></span><span class="pr">850 ₽</span></div><p class="dish-desc">Из говяжьей вырезки с молодым картофелем и грибным соусом</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Индейка Миланезе</span><span class="gr">200/100/50 г</span><span class="dots"></span><span class="pr">580 ₽</span></div><p class="dish-desc">С трюфельным айоли и овощным салатом</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Цыплёнок каччиаторе</span><span class="gr">335 г</span><span class="dots"></span><span class="pr">540 ₽</span></div><p class="dish-desc">Куриное бедро в томатном соусе с овощами и оливками</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Биточки из лосося</span><span class="gr">130/150/40 г</span><span class="dots"></span><span class="pr">580 ₽</span></div><p class="dish-desc">Под греческим соусом, с молодым картофелем</p></div>
+        </div>
+        <div class="menu-group">
+          <h3>Гриль &amp; сеты</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Лосось</span><span class="gr">120/200 г</span><span class="dots"></span><span class="pr">1100 ₽</span></div><p class="dish-desc">С зелёными овощами и сливочно-имбирным соусом</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сковорода с морепродуктами</span><span class="gr">270 г</span><span class="dots"></span><span class="pr">620 ₽</span></div><p class="dish-desc">Вонголе, креветки, лосось, кольца кальмара в имбирно-сливочном соусе</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Бургер от шефа</span><span class="gr">370/120/40 г</span><span class="dots"></span><span class="pr">580 ₽</span></div><p class="dish-desc">Греческий соус, микс салата, овощи, чеддер, говяжья котлета</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Хот-дог Братвурст</span><span class="gr">220 г</span><span class="dots"></span><span class="pr">280 ₽</span></div><p class="dish-desc">Соус дьябло, кетчуп, красный лук, маринованные огурцы, томаты, чипсы из пармезана</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Пивной сет</span><span class="gr">480 г</span><span class="dots"></span><span class="pr">490 ₽</span></div><p class="dish-desc">Картофель фри, охотничьи колбаски, кольца кальмара, чесночные гренки, соус</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Суп дня</span><span class="dots"></span><span class="pr">300 ₽</span></div><p class="dish-desc">Уточняйте у официанта</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PASTA -->
+    <div class="menu-panel" id="pasta">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Пасты</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Казаречче с лососем</span><span class="gr">280 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">Сливочный соус, брокколи, цукини, шпинат</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Казаречче с томлёной уткой</span><span class="gr">250 г</span><span class="dots"></span><span class="pr">550 ₽</span></div><p class="dish-desc">Сливочный соус, демигласе, пармезан</p></div>
+        </div>
+        <div class="menu-group">
+          <div class="dish"><div class="dish-row"><span class="nm">Тальятелли с ягнёнком</span><span class="gr">250 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">Томлёный ягнёнок, томатный соус, вяленые томаты, каперсы, зелень, пармезан</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Спагетти с креветками</span><span class="gr">280 г</span><span class="dots"></span><span class="pr">590 ₽</span></div><p class="dish-desc">Сливочно-имбирный соус, цукини, пудра из водорослей, цедра лайма</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PIZZA -->
+    <div class="menu-panel" id="pizza">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Пицца</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">В стиле цезарь</span><span class="dots"></span><span class="pr">620 ₽</span></div><p class="dish-desc">С пастрами из индейки, соусом из тунца и пармезаном</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">С грибным рагу</span><span class="dots"></span><span class="pr">620 ₽</span></div><p class="dish-desc">Из вёшенок, шампиньонов и белых грибов</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">С креветкой</span><span class="dots"></span><span class="pr">770 ₽</span></div><p class="dish-desc">С соусом Альфредо, томатами черри и кабачками</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Маргарита</span><span class="dots"></span><span class="pr">480 ₽</span></div><p class="dish-desc">С муссом из сливочного сыра и вялеными томатами</p></div>
+        </div>
+        <div class="menu-group">
+          <div class="dish"><div class="dish-row"><span class="nm">По-деревенски</span><span class="dots"></span><span class="pr">610 ₽</span></div><p class="dish-desc">С беконом, грибами и молодым картофелем</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">5 сыров</span><span class="dots"></span><span class="pr">670 ₽</span></div><p class="dish-desc">Моцарелла, чеддер, дор блю, копчёный сулугуни, пармезан</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Пепперони с зелёным луком</span><span class="dots"></span><span class="pr">670 ₽</span></div><p class="dish-desc">С пепперонати и томатами</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KIDS -->
+    <div class="menu-panel" id="kids">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Детское — горячее и гарнир</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Фрикадельки говядина-курица</span><span class="gr">100 г</span><span class="dots"></span><span class="pr">230 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Стрипсы куриные</span><span class="gr">150 г</span><span class="dots"></span><span class="pr">230 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Биточки куриные</span><span class="gr">110 г</span><span class="dots"></span><span class="pr">230 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Картофельное пюре</span><span class="gr">150 г</span><span class="dots"></span><span class="pr">150 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Картошка фри</span><span class="gr">120 г</span><span class="dots"></span><span class="pr">150 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Макароны</span><span class="gr">150 г</span><span class="dots"></span><span class="pr">150 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Соус</span><span class="gr">30 г</span><span class="dots"></span><span class="pr">50 ₽</span></div><p class="dish-desc">Тар-тар · томатный · сливочно-сырный</p></div>
+        </div>
+        <div class="menu-group">
+          <h3>Комплекс &amp; напитки</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Комплексный обед</span><span class="dots"></span><span class="pr">370 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Бургер-малыш</span><span class="gr">170/120 г</span><span class="dots"></span><span class="pr">390 ₽</span></div><p class="dish-desc">С куриной котлетой и картофелем фри</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сок яблочный</span><span class="gr">0,2 л</span><span class="dots"></span><span class="pr">50 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Компот из сухофруктов</span><span class="gr">0,25 л</span><span class="dots"></span><span class="pr">60 ₽</span></div><p class="dish-desc">1 л — 240 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Морс ягодный</span><span class="gr">0,25 л</span><span class="dots"></span><span class="pr">75 ₽</span></div><p class="dish-desc">1 л — 300 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Молочный коктейль</span><span class="gr">0,3 л</span><span class="dots"></span><span class="pr">290 ₽</span></div><p class="dish-desc">Ваниль или шоколад</p></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRINKS -->
+    <div class="menu-panel" id="drinks">
+      <div class="menu-cols">
+        <div class="menu-group">
+          <h3>Фирменные напитки</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Бичерин</span><span class="gr">200 мл</span><span class="dots"></span><span class="pr">270 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Бамбл</span><span class="gr">300/500 мл</span><span class="dots"></span><span class="pr">280 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Латте халва</span><span class="gr">350 мл</span><span class="dots"></span><span class="pr">280 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Эспрессо с мороженым</span><span class="gr">150 мл</span><span class="dots"></span><span class="pr">250 ₽</span></div><p class="dish-desc">С мороженым и шоколадом</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Горячий шоколад</span><span class="gr">150 мл</span><span class="dots"></span><span class="pr">350 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Какао</span><span class="gr">250 мл</span><span class="dots"></span><span class="pr">220 ₽</span></div><p class="dish-desc">Миндальное / кокосовое — 240 ₽ · без сахара — 250 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Молочный коктейль</span><span class="gr">300 мл</span><span class="dots"></span><span class="pr">290 ₽</span></div><p class="dish-desc">Ваниль или шоколад</p></div>
+        </div>
+        <div class="menu-group">
+          <h3>Кофе</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Эспрессо</span><span class="gr">40 мл</span><span class="dots"></span><span class="pr">160 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Американо</span><span class="gr">150/250 мл</span><span class="dots"></span><span class="pr">190–220 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Капучино</span><span class="gr">250/350 мл</span><span class="dots"></span><span class="pr">250–280 ₽</span></div><p class="dish-desc">На альтернативном молоке — 280–350 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Флэт Уайт</span><span class="gr">250 мл</span><span class="dots"></span><span class="pr">280 ₽</span></div><p class="dish-desc">На альтернативном молоке — 300 ₽</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Латте</span><span class="gr">350 мл</span><span class="dots"></span><span class="pr">260 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">ICE Latte</span><span class="gr">350 мл</span><span class="dots"></span><span class="pr">280 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Альтернативный латте</span><span class="gr">350 мл</span><span class="dots"></span><span class="pr">300 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Раф-кофе</span><span class="gr">350 мл</span><span class="dots"></span><span class="pr">330 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Глясе</span><span class="gr">150 мл</span><span class="dots"></span><span class="pr">250 ₽</span></div></div>
+        </div>
+        <div class="menu-group">
+          <h3>Чай &amp; ещё</h3>
+          <div class="dish"><div class="dish-row"><span class="nm">Чай в ассортименте</span><span class="gr">700 мл</span><span class="dots"></span><span class="pr">250 ₽</span></div><p class="dish-desc">Зелёный, чёрный, травяной — сенча, улун, ассам, чабрец, пуэр и др.</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Согревающий чай</span><span class="gr">500 мл</span><span class="dots"></span><span class="pr">390 ₽</span></div><p class="dish-desc">Облепиха/мёд/апельсин · малина/имбирь/мята · имбирь/мёд/лимон</p></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Лимонад в ассортименте</span><span class="gr">0,4 л</span><span class="dots"></span><span class="pr">250 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Сок Rich</span><span class="gr">0,2 л / 1 л</span><span class="dots"></span><span class="pr">120 / 280 ₽</span></div></div>
+          <div class="dish"><div class="dish-row"><span class="nm">Глинтвейн</span><span class="gr">250 мл</span><span class="dots"></span><span class="pr">300 / 350 ₽</span></div><p class="dish-desc">Безалкогольный / алкогольный</p></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="menu-foot">Полное меню и сезонные предложения — уточняйте у официанта. Возможен заказ навынос и доставка.</p>
+  </div>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="gallery" id="gallery">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Галерея</span>
+      <h2>Немного <em>вкусных</em> кадров</h2>
+      <p>Атмосфера, десерты и блюда нашего кафе.</p>
+    </div>
+    <div class="gal-grid reveal">
+      <a class="big" href="https://i9.photo.2gis.com/photo-gallery/b2d3ea36-e09f-4c34-9f5c-77788b3cad61.jpg" target="_blank" rel="noopener"><img src="https://i9.photo.2gis.com/photo-gallery/b2d3ea36-e09f-4c34-9f5c-77788b3cad61.jpg" alt="Кафе"></a>
+      <a href="https://i7.photo.2gis.com/photo-gallery/07e16782-434f-4e5c-8f1c-9a30cd930acf.jpg" target="_blank" rel="noopener"><img src="https://i7.photo.2gis.com/photo-gallery/07e16782-434f-4e5c-8f1c-9a30cd930acf.jpg" alt="Блюдо"></a>
+      <a href="https://i9.photo.2gis.com/photo-gallery/09e99ab5-8f06-4cb8-acc8-4c6c1cc60da0.jpg" target="_blank" rel="noopener"><img src="https://i9.photo.2gis.com/photo-gallery/09e99ab5-8f06-4cb8-acc8-4c6c1cc60da0.jpg" alt="Десерт"></a>
+      <a href="https://i3.photo.2gis.com/photo-gallery/e32c9271-f43e-4d20-8354-bbc67c69e6f3.jpg" target="_blank" rel="noopener"><img src="https://i3.photo.2gis.com/photo-gallery/e32c9271-f43e-4d20-8354-bbc67c69e6f3.jpg" alt="Кофе"></a>
+      <a class="wide" href="https://i8.photo.2gis.com/photo-gallery/923026e0-c5c2-47ff-9159-70cffaf28f43.jpg" target="_blank" rel="noopener"><img src="https://i8.photo.2gis.com/photo-gallery/923026e0-c5c2-47ff-9159-70cffaf28f43.jpg" alt="Интерьер"></a>
+      <a href="https://i7.photo.2gis.com/photo-gallery/8a95d0f8-b05b-4f46-b4b9-9d3bc3c20d2d.jpg" target="_blank" rel="noopener"><img src="https://i7.photo.2gis.com/photo-gallery/8a95d0f8-b05b-4f46-b4b9-9d3bc3c20d2d.jpg" alt="Шоколад"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/50ec2b67-79e8-46e5-bc7d-51c0b75891e4.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/50ec2b67-79e8-46e5-bc7d-51c0b75891e4.jpg" alt="Блюдо"></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section class="contact" id="contact">
+  <svg class="cocoa-bg c1" viewBox="0 0 200 300" fill="none" aria-hidden="true"><ellipse cx="100" cy="150" rx="70" ry="130" fill="currentColor"/><path d="M100 20v260M60 60c15 8 15 20 0 28M60 120c15 8 15 20 0 28M140 60c-15 8-15 20 0 28M140 120c-15 8-15 20 0 28" stroke="#241811" stroke-width="3"/></svg>
+  <svg class="cocoa-bg c2" viewBox="0 0 200 300" fill="none" aria-hidden="true"><ellipse cx="100" cy="150" rx="70" ry="130" fill="currentColor"/><path d="M100 20v260M60 60c15 8 15 20 0 28M60 120c15 8 15 20 0 28M140 60c-15 8-15 20 0 28M140 120c-15 8-15 20 0 28" stroke="#241811" stroke-width="3"/></svg>
+  <div class="wrap contact-grid">
+    <div class="reveal">
+      <span class="eyebrow">Контакты</span>
+      <h2>Ждём вас в <em>Шоко&amp;Латте</em></h2>
+      <p class="sub">Забронируйте столик или закажите торт — напишите нам в WhatsApp, ответим быстро.</p>
+      <div class="info-list">
+        <div class="info-row">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg></div>
+          <div><div class="lbl">Адрес</div><div class="val">ул. Зайнаб Биишевой, 19<span>Уфа · рядом с парком, есть парковка</span></div></div>
+        </div>
+        <div class="info-row">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 8h18M8 3v3M16 3v3"/></svg></div>
+          <div><div class="lbl">Время работы</div><div class="val">Ежедневно · 09:00–22:00<span>Завтраки с утра, бизнес-ланч в будни</span></div></div>
+        </div>
+        <div class="info-row">
+          <div class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L20 13l2 5v2a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg></div>
+          <div><div class="lbl">Бронь и заказ</div><div class="val">Пишите в WhatsApp<span>Столики, банкеты и торты на заказ</span></div></div>
+        </div>
+      </div>
+      <div class="contact-cta">
+        <a href="https://wa.me/79999999999" target="_blank" rel="noopener" class="btn btn-wa">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.7 15l-1.3 4.8 5-1.3A10 10 0 1 0 12 2Zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-1.6-.1-.4-.1-.9-.3-1.5-.6-2.6-1.1-4.3-3.8-4.4-4-.1-.2-1-1.4-1-2.6 0-1.3.6-1.9.9-2.1.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5.2.5.7 1.7.7 1.9.1.1.1.3 0 .4l-.3.5-.4.4c-.1.1-.3.3-.1.5.1.3.6 1 1.3 1.6.9.8 1.6 1 1.9 1.2.2.1.4.1.5-.1l.6-.7c.2-.2.3-.2.5-.1l1.6.8c.2.1.4.2.5.3.1.2.1.6-.1 1.1Z"/></svg>
+          Написать в WhatsApp
+        </a>
+        <a href="https://2gis.ru/firm/70000001092069461" target="_blank" rel="noopener" class="btn btn-ghost" style="border-color:#c9a35c;color:#f1e2cd">Открыть в 2ГИС</a>
+      </div>
+    </div>
+    <a class="map-card reveal" href="https://2gis.ru/firm/70000001092069461" target="_blank" rel="noopener">
+      <img src="https://static.maps.2gis.com/1.0?s=520x620&c=56.007,54.735&z=15&pt=56.007,54.735~b:%233a271a" alt="Карта — ул. Зайнаб Биишевой, 19" onerror="this.style.display='none'">
+      <span class="map-pin"><span class="dot"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-7-10a7 7 0 0 1 14 0c0 5.5-7 10-7 10Z"/><circle cx="12" cy="11" r="2.5"/></svg>Мы на карте</span></span>
+    </a>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-top">
+      <div>
+        <div class="brand">
+          <svg class="mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <circle cx="24" cy="24" r="23" stroke="#c9a35c" stroke-width="1.5"/>
+            <path d="M24 8c-6 5-6 27 0 32 6-5 6-27 0-32Z" fill="#c9a35c"/>
+          </svg>
+          <span><b>Шоко&amp;Латте</b><small>Кафе · Шоколадная лавка</small></span>
+        </div>
+        <p class="ft-desc">Семейное кафе и шоколадная лавка в Уфе. Ремесленный шоколад «от боба до плитки», завтраки, десерты и европейская кухня.</p>
+      </div>
+      <div class="ft-cols">
+        <div class="ft-col">
+          <h5>Меню</h5>
+          <a href="#menu">Завтраки</a><a href="#menu">Горячее и паста</a><a href="#menu">Десерты</a><a href="#menu">Кофе и напитки</a>
+        </div>
+        <div class="ft-col">
+          <h5>Заведение</h5>
+          <a href="#about">О нас</a><a href="#features">Атмосфера</a><a href="#gallery">Галерея</a><a href="#contact">Банкеты</a>
+        </div>
+        <div class="ft-col">
+          <h5>Контакты</h5>
+          <p>ул. Зайнаб Биишевой, 19</p><p>Уфа · 09:00–22:00</p><a href="https://wa.me/79999999999" target="_blank" rel="noopener">WhatsApp</a><a href="https://2gis.ru/firm/70000001092069461" target="_blank" rel="noopener">2ГИС</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <span>© 2026 Шоко&amp;Латте. Все права защищены.</span>
+      <span>Сделано с любовью к шоколаду 🍫</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // nav scroll state
+  const nav = document.getElementById('nav');
+  addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 12));
+
+  // burger
+  const burger = document.getElementById('burger');
+  const navlinks = document.getElementById('navlinks');
+  burger.addEventListener('click', () => navlinks.classList.toggle('open'));
+  navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
+
+  // menu tabs
+  const tabs = document.querySelectorAll('.tab');
+  tabs.forEach(t => t.addEventListener('click', () => {
+    tabs.forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById(t.dataset.tab).classList.add('active');
+  }));
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  }, { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
