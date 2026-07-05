@@ -260,15 +260,7 @@
   .pb-loader p{font-size:14.5px;max-width:420px}
   .pb-spin{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:pbspin 1s linear infinite}
   @keyframes pbspin{to{transform:rotate(360deg)}}
-  .pb-preview{position:absolute;inset:0;overflow:hidden}
-  .pb-preview>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-  .pb-preview::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(11,9,48,.92) 0%,rgba(11,9,48,.72) 42%,rgba(11,9,48,.25) 100%)}
-  .pb-preview-body{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;justify-content:center;gap:16px;max-width:520px;padding:44px 48px;color:#fff}
-  .pb-preview-body h3{color:#fff;font-size:clamp(22px,2.6vw,30px);line-height:1.2}
-  .pb-preview-body p{color:rgba(255,255,255,.82);font-size:15px}
-  .pb-badge{display:inline-flex;align-items:center;gap:8px;align-self:flex-start;font:600 12px/1 'Inter',sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--gold-soft);border:1px solid rgba(228,210,188,.4);padding:8px 14px;border-radius:999px}
-  .pb-preview-body .btn{align-self:flex-start;margin-top:6px}
-  @media(max-width:720px){.pb-front,.pb-front iframe{min-height:560px}.pb-preview-body{padding:30px 26px}.pb-preview::after{background:linear-gradient(180deg,rgba(11,9,48,.55),rgba(11,9,48,.9))}}
+  @media(max-width:720px){.pb-front,.pb-front iframe{min-height:560px}}
 
   .catalog-cta{margin-top:40px;background:var(--navy);color:#fff;border-radius:14px;padding:38px 44px;display:flex;align-items:center;justify-content:space-between;gap:30px;flex-wrap:wrap;position:relative;overflow:hidden}
   .catalog-cta::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(196,154,108,.22),transparent 70%)}
@@ -782,15 +774,6 @@
           <div class="pb-spin"></div>
           <p>Загружаем 3D-каталог: генплан, дома, этажи и свободные квартиры…</p>
         </div>
-        <div class="pb-preview" id="pb-preview" hidden>
-          <img src="assets/parusa/main-1.webp" alt="3D-каталог ЖК Паруса">
-          <div class="pb-preview-body">
-            <div class="pb-badge"><svg class="icon" style="width:16px;height:16px"><use href="#i-cube"/></svg> Интерактивный 3D-каталог</div>
-            <h3>Генплан · дома · этажи · свободные квартиры</h3>
-            <p>Выберите дом, наведите на этаж и смотрите доступные квартиры и цены в реальном времени.</p>
-            <a href="https://smart-catalog.profitbase.ru/eco" target="_blank" rel="noopener" class="btn btn-gold">Открыть 3D-каталог <svg class="icon" style="width:18px;height:18px"><use href="#i-arrow"/></svg></a>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -1043,33 +1026,25 @@
           isEmbedded: true
         }
       });
-      // success: widget injects its iframe -> hide loader/preview
+      // success: widget injects its iframe -> hide loader
       const obs = new MutationObserver(() => {
         if (front.querySelector('iframe')) {
           const l = document.getElementById('pb-loader'); if (l) l.style.display = 'none';
-          const pv = document.getElementById('pb-preview'); if (pv) pv.hidden = true;
           clearTimeout(failTimer); obs.disconnect();
         }
       });
       obs.observe(front, { childList: true, subtree: true });
     }
-    // graceful fallback: if the widget can't render here (e.g. domain-locked), show a preview + open button
+    // if the widget never renders (domain not whitelisted in Profitbase), collapse the block — no fake substitute
     let failTimer;
-    function armFallback(){
-      failTimer = setTimeout(() => {
-        if (!front.querySelector('iframe')) {
-          const l = document.getElementById('pb-loader'); if (l) l.style.display = 'none';
-          const pv = document.getElementById('pb-preview'); if (pv) pv.hidden = false;
-        }
-      }, 4500);
-    }
+    function collapse(){ const w = document.querySelector('.pb-wrap'); if (w && !front.querySelector('iframe')) w.style.display = 'none'; }
     function load(){
       if (loaded) return; loaded = true;
-      armFallback();
+      failTimer = setTimeout(collapse, 8000);
       const s = document.createElement('script');
       s.src = 'https://cdn.profitbase.ru/smart/sw.js'; s.async = true;
       s.onload = initPB;
-      s.onerror = () => { const l = document.getElementById('pb-loader'); if (l) l.style.display='none'; const pv = document.getElementById('pb-preview'); if (pv) pv.hidden = false; };
+      s.onerror = collapse;
       document.body.appendChild(s);
     }
     // load when the catalog is near the viewport
