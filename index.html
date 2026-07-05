@@ -254,8 +254,8 @@
   .plan-empty a{color:var(--gold-deep);font-weight:600}
   /* live Profitbase 3D catalog embed */
   .pb-wrap{margin-top:40px;background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-sm)}
-  .pb-front{position:relative;width:100%;min-height:680px}
-  .pb-front iframe{width:100%!important;min-height:680px;border:0;display:block}
+  .pb-front{position:relative;width:100%;min-height:720px}
+  .pb-front iframe{width:100%!important;min-height:720px;border:0;display:block}
   .pb-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center;padding:40px;color:var(--muted-fg)}
   .pb-loader p{font-size:14.5px;max-width:420px}
   .pb-spin{width:40px;height:40px;border:3px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:pbspin 1s linear infinite}
@@ -767,7 +767,7 @@
     </div>
     <p class="plan-empty" id="plan-empty">В этой категории пока нет подходящих вариантов — <a href="#lead">оставьте заявку</a>, подберём под ваш запрос.</p>
 
-    <!-- Live Profitbase 3D catalog (developer's real widget) -->
+    <!-- Live Profitbase 3D catalog (developer's real widget; renders on whitelisted domain) -->
     <div class="pb-wrap reveal">
       <div id="profitbase_front" class="pb-front">
         <div class="pb-loader" id="pb-loader">
