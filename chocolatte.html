@@ -211,8 +211,10 @@
   .info-row .val span{display:block;font-size:13.5px;color:#c8b295;font-weight:500}
   .contact-cta{display:flex;gap:12px;flex-wrap:wrap}
   .map-card{border-radius:22px;overflow:hidden;box-shadow:var(--shadow-lg);border:1px solid rgba(255,255,255,.12);position:relative;aspect-ratio:5/6;background:#2f2015}
-  .map-card img{width:100%;height:100%;object-fit:cover;opacity:.92}
-  .map-pin{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none}
+  .map-card img{width:100%;height:100%;object-fit:cover;filter:blur(7px) saturate(.9) brightness(1.03);transform:scale(1.12);transition:filter .5s ease}
+  .map-card::before{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(155deg,rgba(247,239,227,.5),rgba(92,61,38,.32) 55%,rgba(36,24,17,.5));backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+  .map-card:hover img{filter:blur(3px) saturate(1) brightness(1.05)}
+  .map-pin{position:absolute;inset:0;display:grid;place-items:center;pointer-events:none;z-index:2}
   .map-pin .dot{background:var(--espresso);color:var(--gold);padding:10px 18px;border-radius:999px;font-weight:700;font-size:14px;box-shadow:var(--shadow-lg);border:1px solid var(--gold);pointer-events:auto;display:inline-flex;gap:8px;align-items:center}
 
   /* ---------- FOOTER ---------- */
@@ -338,8 +340,8 @@
   <div class="wrap about-grid">
     <div class="about-imgs reveal">
       <img class="tall" src="https://i0.photo.2gis.com/photo-gallery/8a95d0f8-b05b-4f46-b4b9-9d3bc3c20d2d.jpg" alt="Капучино">
-      <img src="https://i0.photo.2gis.com/photo-gallery/4d48b42a-0314-4b4d-b14b-aa7e83a2cb50.jpg" alt="Шоколад ручной работы">
-      <img src="https://i0.photo.2gis.com/photo-gallery/1c121e00-9373-4f2b-a400-5659c9502c07.jpg" alt="Интерьер зала">
+      <img src="https://i0.photo.2gis.com/photo-gallery/2791bf92-c2cc-418b-bd06-7b2dfe8830b2.jpg" alt="Шоколад ручной работы с фисташкой">
+      <img src="https://i0.photo.2gis.com/photo-gallery/4f46ca17-201e-42f4-a932-99761d7287fd.jpg" alt="Шоколадный десерт">
     </div>
     <div class="about-text reveal">
       <span class="eyebrow">О нас</span>
@@ -610,13 +612,13 @@
       <p>Атмосфера, десерты и блюда нашего кафе.</p>
     </div>
     <div class="gal-grid reveal">
-      <a class="big" href="https://i0.photo.2gis.com/photo-gallery/1f3e41be-31e4-421e-88de-34313af5f340.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/1f3e41be-31e4-421e-88de-34313af5f340.jpg" alt="Светлый зал у окна"></a>
-      <a href="https://i0.photo.2gis.com/photo-gallery/6df8fc47-07c0-43b8-925a-02cc58856a5e.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/6df8fc47-07c0-43b8-925a-02cc58856a5e.jpg" alt="Зал кафе"></a>
-      <a href="https://i0.photo.2gis.com/photo-gallery/923026e0-c5c2-47ff-9159-70cffaf28f43.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/923026e0-c5c2-47ff-9159-70cffaf28f43.jpg" alt="Витрина с десертами"></a>
-      <a href="https://i0.photo.2gis.com/photo-gallery/07e16782-434f-4e5c-8f1c-9a30cd930acf.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/07e16782-434f-4e5c-8f1c-9a30cd930acf.jpg" alt="Барная стойка"></a>
-      <a class="wide" href="https://i0.photo.2gis.com/photo-gallery/b2d3ea36-e09f-4c34-9f5c-77788b3cad61.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/b2d3ea36-e09f-4c34-9f5c-77788b3cad61.jpg" alt="Вход в кафе"></a>
-      <a href="https://i0.photo.2gis.com/photo-gallery/fce936c8-8169-48cf-bc9e-a6a9bc03a243.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/fce936c8-8169-48cf-bc9e-a6a9bc03a243.jpg" alt="Блюда навынос"></a>
-      <a href="https://i0.photo.2gis.com/photo-gallery/e43e04a4-9089-4e06-a83f-440f615e44ef.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/e43e04a4-9089-4e06-a83f-440f615e44ef.jpg" alt="Фасад кафе"></a>
+      <a class="big" href="https://i0.photo.2gis.com/photo-gallery/fb7cc120-20e0-48b1-ae82-b99ee0395c54.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/fb7cc120-20e0-48b1-ae82-b99ee0395c54.jpg" alt="Шакшука" loading="lazy"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/acb9fb5b-971a-435b-a1fb-4f6661173f6b.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/acb9fb5b-971a-435b-a1fb-4f6661173f6b.jpg" alt="Пицца" loading="lazy"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/4bf18442-54d3-40e7-9b71-9820a8f6bf2f.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/4bf18442-54d3-40e7-9b71-9820a8f6bf2f.jpg" alt="Салат с лососем" loading="lazy"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/e95dcb32-681b-4fcc-a1c2-f02a70de01e5.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/e95dcb32-681b-4fcc-a1c2-f02a70de01e5.jpg" alt="Шоколадный десерт" loading="lazy"></a>
+      <a class="wide" href="https://i0.photo.2gis.com/photo-gallery/b561a209-5e31-4076-b700-8bb88c100339.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/b561a209-5e31-4076-b700-8bb88c100339.jpg" alt="Мясная тарелка антипасти" loading="lazy"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/868a8f74-2eb9-4273-be0a-ba155231dd85.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/868a8f74-2eb9-4273-be0a-ba155231dd85.jpg" alt="Паста карбонара" loading="lazy"></a>
+      <a href="https://i0.photo.2gis.com/photo-gallery/1c27d589-e94c-450d-8493-271b0ca48ad9.jpg" target="_blank" rel="noopener"><img src="https://i0.photo.2gis.com/photo-gallery/1c27d589-e94c-450d-8493-271b0ca48ad9.jpg" alt="Авторский десерт" loading="lazy"></a>
     </div>
   </div>
 </section>
