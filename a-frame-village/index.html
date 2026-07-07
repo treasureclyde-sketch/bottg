@@ -193,17 +193,7 @@ section{position:relative}
 .tile.img p{color:rgba(255,255,255,.9)}
 .tile.img .cost{color:#E8C9A8}
 
-/* gallery */
-/* slider */
-.gal-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap}
-.gal-nav{display:flex; align-items:center; gap:18px}
-.gal-count{font-family:"Playfair Display",serif; font-size:1.05rem; color:var(--muted); font-variant-numeric:tabular-nums}
-.gal-count b{color:var(--ink); font-size:1.5rem}
-.gal-arrows{display:flex; gap:10px}
-.arrow{width:52px; height:52px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:transform .5s var(--ease),background .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease)}
-.arrow:hover{background:var(--pine); color:#F6F1E9; border-color:var(--pine); transform:translateY(-1px)}
-.arrow:active{transform:scale(.94)}
-.arrow:disabled{opacity:.35; cursor:default; transform:none; background:var(--card); color:var(--ink); border-color:var(--line)}
+/* gallery slider */
 .slider{overflow:hidden; margin-top:48px; padding-bottom:8px; cursor:grab}
 .slider.grabbing{cursor:grabbing}
 .slider-track{display:flex; gap:22px; will-change:transform; transition:transform .8s var(--ease)}
@@ -566,19 +556,10 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
 <!-- GALLERY -->
 <section class="pad" id="gallery" style="background:var(--bg-2)">
   <div class="wrap">
-    <div class="gal-head rv">
-      <div class="sec-head">
-        <span class="kicker">Галерея</span>
-        <h2>Один взгляд <em>стоит тысячи слов</em></h2>
-        <p>Так выглядит отдых в A-Frame village — в любое время года.</p>
-      </div>
-      <div class="gal-nav">
-        <div class="gal-count"><b id="galNum">01</b> / 09</div>
-        <div class="gal-arrows">
-          <button class="arrow" id="galPrev" aria-label="Назад"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
-          <button class="arrow" id="galNext" aria-label="Вперёд"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        </div>
-      </div>
+    <div class="sec-head rv">
+      <span class="kicker">Галерея</span>
+      <h2>Один взгляд <em>стоит тысячи слов</em></h2>
+      <p>Так выглядит отдых в A-Frame village — в любое время года.</p>
     </div>
   </div>
   <div class="slider rv" id="slider">
@@ -667,8 +648,6 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
     var slides=[].slice.call(track.children);
     var slider=document.getElementById('slider');
     var dotsWrap=document.getElementById('galDots');
-    var numEl=document.getElementById('galNum');
-    var prevB=document.getElementById('galPrev'), nextB=document.getElementById('galNext');
     var idx=0, step=0, timer=null;
     slides.forEach(function(_,i){
       var d=document.createElement('button'); d.className='dot'; d.setAttribute('aria-label','Слайд '+(i+1));
@@ -687,13 +666,10 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
       track.style.transform='translate3d('+off+'px,0,0)';
       slides.forEach(function(s,i){s.classList.toggle('active',i===idx)});
       dots.forEach(function(d,i){d.classList.toggle('active',i===idx)});
-      numEl.textContent=('0'+(idx+1)).slice(-2);
     }
     function go(i){ idx=(i+slides.length)%slides.length; setPos(); }
-    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},5000); }
+    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},4000); }
     function rest(){ play(); }
-    prevB.addEventListener('click',function(){go(idx-1);rest();});
-    nextB.addEventListener('click',function(){go(idx+1);rest();});
     slider.addEventListener('mouseenter',function(){clearInterval(timer)});
     slider.addEventListener('mouseleave',play);
     var down=false,sx=0,moved=0;
