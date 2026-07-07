@@ -668,7 +668,7 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
       dots.forEach(function(d,i){d.classList.toggle('active',i===idx)});
     }
     function go(i){ idx=(i+slides.length)%slides.length; setPos(); }
-    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},4000); }
+    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},2000); }
     function rest(){ play(); }
     slider.addEventListener('mouseenter',function(){clearInterval(timer)});
     slider.addEventListener('mouseleave',play);
