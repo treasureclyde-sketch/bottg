@@ -184,10 +184,32 @@ section{position:relative}
 .tile.img .cost{color:#E8C9A8}
 
 /* gallery */
-.gal{columns:3; column-gap:16px; margin-top:52px}
-.gal figure{margin:0 0 16px; break-inside:avoid; border-radius:18px; overflow:hidden; box-shadow:var(--shadow-soft)}
-.gal img{width:100%; transition:transform 1.1s var(--ease)}
-.gal figure:hover img{transform:scale(1.05)}
+/* slider */
+.gal-head{display:flex; align-items:flex-end; justify-content:space-between; gap:24px; flex-wrap:wrap}
+.gal-nav{display:flex; align-items:center; gap:18px}
+.gal-count{font-family:"Playfair Display",serif; font-size:1.05rem; color:var(--muted); font-variant-numeric:tabular-nums}
+.gal-count b{color:var(--ink); font-size:1.5rem}
+.gal-arrows{display:flex; gap:10px}
+.arrow{width:52px; height:52px; border-radius:999px; border:1px solid var(--line); background:var(--card); color:var(--ink); display:grid; place-items:center; cursor:pointer; transition:transform .5s var(--ease),background .4s var(--ease),color .4s var(--ease),border-color .4s var(--ease)}
+.arrow:hover{background:var(--pine); color:#F6F1E9; border-color:var(--pine); transform:translateY(-1px)}
+.arrow:active{transform:scale(.94)}
+.arrow:disabled{opacity:.35; cursor:default; transform:none; background:var(--card); color:var(--ink); border-color:var(--line)}
+.slider{overflow:hidden; margin-top:48px; padding-bottom:8px; cursor:grab}
+.slider.grabbing{cursor:grabbing}
+.slider-track{display:flex; gap:22px; will-change:transform; transition:transform .8s var(--ease)}
+.slide{flex:0 0 66%; position:relative; border-radius:26px; overflow:hidden; aspect-ratio:16/10; box-shadow:var(--shadow-soft); transition:opacity .8s var(--ease),transform .8s var(--ease); opacity:.45; transform:scale(.94)}
+.slide.active{opacity:1; transform:scale(1); box-shadow:var(--shadow-lift)}
+.slide img{width:100%; height:100%; object-fit:cover; pointer-events:none; user-select:none}
+.slide::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(12,16,13,.8)); opacity:0; transition:opacity .6s var(--ease)}
+.slide.active::after{opacity:1}
+.slide figcaption{position:absolute; left:26px; bottom:22px; z-index:2; color:#fff; font-weight:700; font-size:1.15rem; letter-spacing:-.01em; text-shadow:0 2px 18px rgba(0,0,0,.5); opacity:0; transform:translateY(8px); transition:opacity .6s var(--ease),transform .6s var(--ease)}
+.slide.active figcaption{opacity:1; transform:none; transition-delay:.15s}
+.slide figcaption span{display:block; font-family:"Manrope",sans-serif; font-weight:600; font-size:.8rem; letter-spacing:.16em; text-transform:uppercase; color:var(--amber-soft); margin-bottom:5px}
+.dots{display:flex; gap:9px; justify-content:center; margin-top:34px}
+.dot{width:8px; height:8px; border-radius:999px; background:var(--line); border:none; padding:0; cursor:pointer; transition:width .5s var(--ease),background .4s var(--ease)}
+.dot.active{width:26px; background:var(--pine)}
+@media(max-width:900px){.slide{flex-basis:80%}}
+@media(max-width:640px){.slide{flex-basis:86%; aspect-ratio:4/3} .arrow{width:46px;height:46px}}
 
 /* location / cta band */
 .band{background:var(--ink); color:#F3EEE4; border-radius:36px; overflow:hidden; position:relative}
@@ -471,23 +493,35 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
 <!-- GALLERY -->
 <section class="pad" id="gallery" style="background:var(--bg-2)">
   <div class="wrap">
-    <div class="sec-head rv">
-      <span class="kicker">Галерея</span>
-      <h2>Один взгляд <em>стоит тысячи слов</em></h2>
-      <p>Так выглядит отдых в A-Frame village — в любое время года.</p>
-    </div>
-    <div class="gal">
-      <figure class="rv"><img src="img/hero-houses.jpg" alt="Ряд А-фрейм домов зимой"></figure>
-      <figure class="rv d1"><img src="img/interior-loft.jpg" alt="Интерьер второго света"></figure>
-      <figure class="rv d2"><img src="img/bedroom3.jpg" alt="Спальня"></figure>
-      <figure class="rv"><img src="img/kitchen.jpg" alt="Кухня"></figure>
-      <figure class="rv d1"><img src="img/mangal.jpg" alt="Мангальная зона"></figure>
-      <figure class="rv d2"><img src="img/hallway.jpg" alt="Холл с лестницей"></figure>
-      <figure class="rv"><img src="img/bedroom2.jpg" alt="Спальня с видом"></figure>
-      <figure class="rv d1"><img src="img/bedroom-lake.jpg" alt="Спальня с видом на озеро"></figure>
-      <figure class="rv d2"><img src="img/sauna.jpg" alt="Сауна с подсветкой"></figure>
+    <div class="gal-head rv">
+      <div class="sec-head">
+        <span class="kicker">Галерея</span>
+        <h2>Один взгляд <em>стоит тысячи слов</em></h2>
+        <p>Так выглядит отдых в A-Frame village — в любое время года.</p>
+      </div>
+      <div class="gal-nav">
+        <div class="gal-count"><b id="galNum">01</b> / 09</div>
+        <div class="gal-arrows">
+          <button class="arrow" id="galPrev" aria-label="Назад"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></button>
+          <button class="arrow" id="galNext" aria-label="Вперёд"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </div>
+      </div>
     </div>
   </div>
+  <div class="slider rv" id="slider">
+    <div class="slider-track" id="galTrack">
+      <figure class="slide"><img src="img/hero-houses.jpg" alt="Ряд А-фрейм домов зимой"><figcaption><span>Территория</span>А-фрейм посёлок у озера</figcaption></figure>
+      <figure class="slide"><img src="img/exterior-deck.jpg" alt="Терраса дома зимой"><figcaption><span>Экстерьер</span>Тёплая терраса под снегом</figcaption></figure>
+      <figure class="slide"><img src="img/chan.jpg" alt="Банный чан"><figcaption><span>Отдых</span>Банный чан под открытым небом</figcaption></figure>
+      <figure class="slide"><img src="img/living.jpg" alt="Гостиная"><figcaption><span>Интерьер</span>Гостиная для большой компании</figcaption></figure>
+      <figure class="slide"><img src="img/interior-loft.jpg" alt="Второй свет"><figcaption><span>Архитектура</span>Второй свет и лестница наверх</figcaption></figure>
+      <figure class="slide"><img src="img/kitchen.jpg" alt="Кухня"><figcaption><span>Кухня</span>Всё для готовки и уюта</figcaption></figure>
+      <figure class="slide"><img src="img/mangal.jpg" alt="Мангальная зона"><figcaption><span>На воздухе</span>Мангальная зона с печью</figcaption></figure>
+      <figure class="slide"><img src="img/sauna.jpg" alt="Сауна с подсветкой"><figcaption><span>Спа</span>Сауна с релакс-подсветкой</figcaption></figure>
+      <figure class="slide"><img src="img/bedroom-lake.jpg" alt="Спальня с видом на озеро"><figcaption><span>Спальня</span>Пробуждение с видом на озеро</figcaption></figure>
+    </div>
+  </div>
+  <div class="wrap"><div class="dots" id="galDots"></div></div>
 </section>
 
 <!-- CONTACTS -->
@@ -553,6 +587,57 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
   var b=document.getElementById('burger');
   b&&b.addEventListener('click',function(){document.body.classList.toggle('menu-open')});
   document.querySelectorAll('#mmenu a').forEach(function(a){a.addEventListener('click',function(){document.body.classList.remove('menu-open')})});
+
+  // gallery slider
+  var track=document.getElementById('galTrack');
+  if(track){
+    var slides=[].slice.call(track.children);
+    var slider=document.getElementById('slider');
+    var dotsWrap=document.getElementById('galDots');
+    var numEl=document.getElementById('galNum');
+    var prevB=document.getElementById('galPrev'), nextB=document.getElementById('galNext');
+    var idx=0, step=0, timer=null;
+    slides.forEach(function(_,i){
+      var d=document.createElement('button'); d.className='dot'; d.setAttribute('aria-label','Слайд '+(i+1));
+      d.addEventListener('click',function(){go(i);rest();});
+      dotsWrap.appendChild(d);
+    });
+    var dots=[].slice.call(dotsWrap.children);
+    function layout(){
+      var gapStr=getComputedStyle(track).gap||getComputedStyle(track).columnGap||'22px';
+      step=slides[0].getBoundingClientRect().width+(parseFloat(gapStr)||22);
+      setPos();
+    }
+    function setPos(){
+      var sw=slides[0].getBoundingClientRect().width;
+      var off=(slider.clientWidth-sw)/2 - idx*step;
+      track.style.transform='translate3d('+off+'px,0,0)';
+      slides.forEach(function(s,i){s.classList.toggle('active',i===idx)});
+      dots.forEach(function(d,i){d.classList.toggle('active',i===idx)});
+      numEl.textContent=('0'+(idx+1)).slice(-2);
+    }
+    function go(i){ idx=(i+slides.length)%slides.length; setPos(); }
+    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},5000); }
+    function rest(){ play(); }
+    prevB.addEventListener('click',function(){go(idx-1);rest();});
+    nextB.addEventListener('click',function(){go(idx+1);rest();});
+    slider.addEventListener('mouseenter',function(){clearInterval(timer)});
+    slider.addEventListener('mouseleave',play);
+    var down=false,sx=0,moved=0;
+    slider.addEventListener('pointerdown',function(e){down=true;sx=e.clientX;moved=0;slider.classList.add('grabbing');clearInterval(timer);});
+    window.addEventListener('pointermove',function(e){if(down)moved=e.clientX-sx;});
+    window.addEventListener('pointerup',function(){if(!down)return;down=false;slider.classList.remove('grabbing');if(Math.abs(moved)>55)go(idx+(moved<0?1:-1));rest();});
+    document.addEventListener('keydown',function(e){
+      var r=slider.getBoundingClientRect();
+      if(r.top<window.innerHeight&&r.bottom>0){
+        if(e.key==='ArrowLeft'){go(idx-1);rest();}
+        if(e.key==='ArrowRight'){go(idx+1);rest();}
+      }
+    });
+    window.addEventListener('resize',layout);
+    window.addEventListener('load',layout);
+    layout(); setTimeout(layout,350); play();
+  }
 })();
 </script>
 </body>
