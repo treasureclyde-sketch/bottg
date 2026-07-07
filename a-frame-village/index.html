@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A-Frame village — Парк-отель под Уфой</title>
+<meta name="description" content="Самый большой А-фрейм парк-отель в Уфе. Дома у озера, русская баня, банный чан, собственный пляж и десятки развлечений. Забудьте о городе — воссоединитесь с природой.">
+<meta property="og:title" content="A-Frame village — Парк-отель под Уфой">
+<meta property="og:description" content="Дома-шалаши у озера, баня, чан, собственный пляж. Отдых, о котором вы мечтали.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F1E9; --bg-2:#EFE7DA; --card:#FCFAF5;
+  --ink:#201C17; --ink-soft:#403A31; --muted:#5c5545;
+  --pine:#2E4034; --pine-2:#38503f; --amber:#B0663A; --amber-soft:#c98a5f;
+  --line:rgba(32,28,23,.12); --line-2:rgba(32,28,23,.08);
+  --shadow-soft:0 2px 4px rgba(32,28,23,.03), 0 12px 28px -8px rgba(32,28,23,.10), 0 40px 80px -32px rgba(32,28,23,.16);
+  --shadow-lift:0 2px 6px rgba(32,28,23,.05), 0 24px 48px -12px rgba(32,28,23,.20), 0 60px 120px -40px rgba(46,64,52,.28);
+  --r:26px; --ease:cubic-bezier(.32,.72,0,1); --maxw:1220px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:"Manrope",system-ui,sans-serif; font-size:17px; line-height:1.65;
+  -webkit-font-smoothing:antialiased; letter-spacing:-.01em; overflow-x:hidden;
+}
+h1,h2,h3,h4{font-family:"Playfair Display",Georgia,serif; font-weight:700; letter-spacing:-.02em; line-height:1.06; margin:0}
+p{margin:0}
+a{color:inherit; text-decoration:none}
+img{max-width:100%; display:block}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 26px}
+.serif-i{font-style:italic; font-weight:600}
+
+/* film grain */
+body::after{
+  content:""; position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.035; mix-blend-mode:multiply;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ---------- nav ---------- */
+.nav{position:fixed; top:18px; left:0; right:0; z-index:50; display:flex; justify-content:center; padding:0 18px; transition:top .5s var(--ease)}
+.nav-inner{
+  display:flex; align-items:center; gap:26px; width:100%; max-width:1060px;
+  padding:11px 12px 11px 22px; border-radius:999px;
+  background:rgba(246,241,233,.72); backdrop-filter:blur(18px) saturate(1.4); -webkit-backdrop-filter:blur(18px) saturate(1.4);
+  border:1px solid rgba(255,255,255,.55); box-shadow:0 1px 0 rgba(255,255,255,.6) inset, 0 12px 34px -14px rgba(32,28,23,.4);
+}
+.brand{font-family:"Playfair Display",serif; font-weight:800; font-size:19px; letter-spacing:-.02em; white-space:nowrap; display:flex; align-items:center; gap:9px}
+.brand .heart{color:var(--amber)}
+.nav-links{display:flex; gap:4px; margin-left:auto}
+.nav-links a{font-size:14.5px; font-weight:600; color:var(--ink-soft); padding:8px 13px; border-radius:999px; transition:background .4s var(--ease),color .4s var(--ease)}
+.nav-links a:hover{background:rgba(32,28,23,.06); color:var(--ink)}
+.btn{
+  --bg-btn:var(--pine); --fg:#F6F1E9;
+  display:inline-flex; align-items:center; gap:10px; padding:11px 12px 11px 22px; border-radius:999px;
+  background:var(--bg-btn); color:var(--fg); font-weight:700; font-size:14.5px; white-space:nowrap;
+  border:1px solid rgba(255,255,255,.14); cursor:pointer;
+  transition:transform .5s var(--ease), box-shadow .5s var(--ease), background .4s var(--ease);
+  box-shadow:0 10px 24px -10px rgba(46,64,52,.6);
+}
+.btn:hover{transform:translateY(-1px); box-shadow:0 16px 32px -12px rgba(46,64,52,.7)}
+.btn:active{transform:scale(.98)}
+.btn .ic{width:30px; height:30px; border-radius:999px; background:rgba(255,255,255,.16); display:grid; place-items:center; transition:transform .5s var(--ease)}
+.btn:hover .ic{transform:translate(2px,-1px)}
+.btn.amber{--bg-btn:var(--amber); box-shadow:0 10px 24px -10px rgba(176,102,58,.6)}
+.btn.ghost{--bg-btn:transparent; --fg:var(--ink); border-color:var(--line); box-shadow:none}
+.btn.ghost .ic{background:rgba(32,28,23,.07)}
+.btn.big{padding:15px 16px 15px 28px; font-size:16px}
+.nav-burger{display:none; width:44px; height:44px; border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.4); position:relative; cursor:pointer; flex:0 0 auto}
+.nav-burger span{position:absolute; left:12px; right:12px; height:2px; background:var(--ink); border-radius:2px; transition:transform .5s var(--ease),opacity .3s var(--ease)}
+.nav-burger span:nth-child(1){top:16px} .nav-burger span:nth-child(2){bottom:16px}
+body.menu-open .nav-burger span:nth-child(1){top:21px; transform:rotate(45deg)}
+body.menu-open .nav-burger span:nth-child(2){bottom:21px; transform:rotate(-45deg)}
+
+/* mobile menu overlay */
+.m-menu{position:fixed; inset:0; z-index:45; background:rgba(28,26,22,.55); backdrop-filter:blur(22px); -webkit-backdrop-filter:blur(22px);
+  display:flex; flex-direction:column; justify-content:center; gap:8px; padding:40px; opacity:0; visibility:hidden; transition:opacity .5s var(--ease),visibility .5s}
+body.menu-open .m-menu{opacity:1; visibility:visible}
+.m-menu a{font-family:"Playfair Display",serif; font-size:34px; font-weight:600; color:#F6F1E9; padding:6px 0; transform:translateY(24px); opacity:0; transition:transform .6s var(--ease),opacity .6s var(--ease)}
+body.menu-open .m-menu a{transform:none; opacity:1}
+body.menu-open .m-menu a:nth-child(1){transition-delay:.08s} body.menu-open .m-menu a:nth-child(2){transition-delay:.13s}
+body.menu-open .m-menu a:nth-child(3){transition-delay:.18s} body.menu-open .m-menu a:nth-child(4){transition-delay:.23s}
+body.menu-open .m-menu a:nth-child(5){transition-delay:.28s}
+
+/* ---------- hero ---------- */
+.hero{position:relative; min-height:100dvh; display:flex; align-items:flex-end; overflow:hidden}
+.hero-bg{position:absolute; inset:0; z-index:0}
+.hero-bg img{width:100%; height:100%; object-fit:cover; transform:scale(1.08); animation:heroZoom 18s var(--ease) forwards}
+@keyframes heroZoom{to{transform:scale(1)}}
+.hero-bg::after{content:""; position:absolute; inset:0; background:
+  linear-gradient(180deg,rgba(20,26,22,.42) 0%,rgba(20,26,22,0) 26%,rgba(20,26,22,.12) 55%,rgba(18,22,19,.82) 100%);}
+.hero-inner{position:relative; z-index:2; width:100%; padding-top:132px; padding-bottom:60px}
+.eyebrow{display:inline-flex; align-items:center; gap:9px; padding:7px 15px; border-radius:999px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.22em; color:#F6F1E9; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.28); backdrop-filter:blur(6px)}
+.eyebrow .dot{width:6px; height:6px; border-radius:999px; background:var(--amber-soft); box-shadow:0 0 0 4px rgba(201,138,95,.28)}
+.hero h1{color:#FBF7EF; font-size:clamp(2.7rem,6.2vw,5.1rem); font-weight:800; margin:22px 0 0; max-width:15ch; text-shadow:0 2px 40px rgba(0,0,0,.35)}
+.hero h1 em{font-style:italic; font-weight:600; color:#E8C9A8}
+.hero-sub{color:rgba(246,241,233,.9); font-size:clamp(1.05rem,1.7vw,1.3rem); max-width:52ch; margin:24px 0 0; line-height:1.55}
+.hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:34px}
+.hero-cta .btn.ghost{--fg:#F6F1E9; border-color:rgba(255,255,255,.4); background:rgba(255,255,255,.08); backdrop-filter:blur(8px)}
+.hero-cta .btn.ghost .ic{background:rgba(255,255,255,.18)}
+.hero-stats{display:flex; flex-wrap:wrap; gap:34px; margin-top:54px; padding-top:30px; border-top:1px solid rgba(255,255,255,.2)}
+.hero-stats .st b{font-family:"Playfair Display",serif; font-size:2.1rem; font-weight:700; color:#FBF7EF; display:block; line-height:1}
+.hero-stats .st span{color:rgba(246,241,233,.72); font-size:13.5px; font-weight:600; letter-spacing:.02em}
+
+/* ---------- sections ---------- */
+section{position:relative}
+.pad{padding:clamp(80px,11vw,150px) 0}
+.sec-head{max-width:640px}
+.kicker{display:inline-flex; align-items:center; gap:9px; font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.2em; color:var(--amber)}
+.kicker::before{content:""; width:26px; height:1.5px; background:var(--amber); display:inline-block}
+.sec-head h2{font-size:clamp(2.1rem,4.6vw,3.5rem); margin-top:18px; color:var(--ink)}
+.sec-head h2 em{color:var(--pine)}
+.sec-head p{color:var(--muted); margin-top:18px; font-size:1.08rem; max-width:56ch}
+
+/* reveal */
+.rv{opacity:0; transform:translateY(30px); filter:blur(6px); transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.rv.in{opacity:1; transform:none; filter:none}
+.rv.d1{transition-delay:.09s}.rv.d2{transition-delay:.18s}.rv.d3{transition-delay:.27s}.rv.d4{transition-delay:.36s}
+
+/* about */
+.about{display:grid; grid-template-columns:1.05fr .95fr; gap:clamp(30px,5vw,72px); align-items:center}
+.about-media{position:relative}
+.about-media .shell{padding:8px; border-radius:calc(var(--r) + 8px); background:var(--bg-2); border:1px solid var(--line-2); box-shadow:var(--shadow-soft)}
+.about-media img{border-radius:var(--r); aspect-ratio:4/5; object-fit:cover; width:100%}
+.about-media .badge{position:absolute; left:-18px; bottom:26px; background:var(--pine); color:#F6F1E9; padding:18px 22px; border-radius:20px; box-shadow:var(--shadow-lift); max-width:210px}
+.about-media .badge b{font-family:"Playfair Display",serif; font-size:1.5rem; display:block; line-height:1.05}
+.about-media .badge span{font-size:12.5px; color:rgba(246,241,233,.8); font-weight:600}
+.about-body h2{font-size:clamp(1.9rem,3.6vw,2.9rem)}
+.about-body .lead{font-size:1.24rem; color:var(--ink-soft); margin-top:22px; line-height:1.5}
+.about-body .lead em{color:var(--pine); font-style:italic; font-weight:600; font-family:"Playfair Display",serif}
+.feat-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:34px}
+.feat{display:flex; gap:13px; padding:16px 16px; background:var(--card); border:1px solid var(--line-2); border-radius:16px}
+.feat .fi{flex:0 0 40px; height:40px; border-radius:12px; background:rgba(46,64,52,.09); color:var(--pine); display:grid; place-items:center}
+.feat b{font-size:15px; display:block} .feat span{font-size:13px; color:var(--muted)}
+
+/* apartments */
+.houses{display:grid; gap:22px; margin-top:56px}
+.house{
+  display:grid; grid-template-columns:1.15fr 1fr; background:var(--card); border:1px solid var(--line-2);
+  border-radius:calc(var(--r) + 6px); overflow:hidden; box-shadow:var(--shadow-soft);
+  transition:transform .6s var(--ease), box-shadow .6s var(--ease);
+}
+.house:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+.house-media{position:relative; min-height:340px}
+.house-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.2s var(--ease)}
+.house:hover .house-media img{transform:scale(1.05)}
+.house-media .tag{position:absolute; top:18px; left:18px; background:rgba(246,241,233,.92); backdrop-filter:blur(6px); padding:7px 14px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.02em}
+.house-body{padding:clamp(26px,3vw,40px); display:flex; flex-direction:column}
+.house-body h3{font-size:clamp(1.5rem,2.4vw,2rem)}
+.house-body .area{color:var(--amber); font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; margin-top:6px}
+.amen{list-style:none; padding:0; margin:20px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:8px 18px}
+.amen li{font-size:14px; color:var(--ink-soft); display:flex; gap:8px; align-items:flex-start}
+.amen li svg{flex:0 0 16px; margin-top:3px; color:var(--pine)}
+.price-row{margin-top:auto; padding-top:26px; display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap}
+.price b{font-family:"Playfair Display",serif; font-size:2rem; font-weight:700; line-height:1}
+.price span{font-size:12.5px; color:var(--muted); font-weight:600; display:block; margin-top:3px}
+.price.week b{color:var(--pine)}
+.house-body .btn{margin-top:24px; align-self:flex-start}
+.house.feature{grid-template-columns:1fr 1.15fr}
+.house.feature .house-media{order:2}
+.note{font-size:13px; color:var(--muted); margin-top:14px}
+
+/* amenities bento */
+.bento{display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:56px}
+.tile{background:var(--card); border:1px solid var(--line-2); border-radius:22px; padding:26px; display:flex; flex-direction:column; min-height:190px; transition:transform .5s var(--ease),border-color .5s var(--ease),box-shadow .5s var(--ease)}
+.tile:hover{transform:translateY(-3px); border-color:var(--line); box-shadow:var(--shadow-soft)}
+.tile .ti{width:46px; height:46px; border-radius:13px; background:rgba(46,64,52,.09); color:var(--pine); display:grid; place-items:center; margin-bottom:auto}
+.tile h4{font-family:"Manrope",sans-serif; font-weight:700; font-size:17px; letter-spacing:-.01em; margin-top:22px}
+.tile p{font-size:13.5px; color:var(--muted); margin-top:5px; line-height:1.45}
+.tile .cost{margin-top:14px; font-weight:800; color:var(--amber); font-size:14.5px}
+.tile.span2{grid-column:span 2}
+.tile.dark{background:var(--pine); color:#F6F1E9; border-color:transparent; background-image:linear-gradient(150deg,#38503f,#243329)}
+.tile.dark .ti{background:rgba(255,255,255,.14); color:#E8C9A8}
+.tile.dark p{color:rgba(246,241,233,.78)} .tile.dark .cost{color:#E8C9A8}
+.tile.img{position:relative; overflow:hidden; color:#fff; justify-content:flex-end; border:none}
+.tile.img img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; z-index:0; transition:transform 1.1s var(--ease)}
+.tile.img:hover img{transform:scale(1.06)}
+.tile.img::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,14,11,.15) 0%,rgba(10,14,11,0) 26%,rgba(12,16,13,.5) 55%,rgba(10,14,11,.92) 100%); z-index:1}
+.tile.img h4,.tile.img p,.tile.img .cost{position:relative; z-index:2; text-shadow:0 1px 16px rgba(0,0,0,.5)}
+.tile.img p{color:rgba(255,255,255,.9)}
+.tile.img .cost{color:#E8C9A8}
+
+/* gallery */
+.gal{columns:3; column-gap:16px; margin-top:52px}
+.gal figure{margin:0 0 16px; break-inside:avoid; border-radius:18px; overflow:hidden; box-shadow:var(--shadow-soft)}
+.gal img{width:100%; transition:transform 1.1s var(--ease)}
+.gal figure:hover img{transform:scale(1.05)}
+
+/* location / cta band */
+.band{background:var(--ink); color:#F3EEE4; border-radius:36px; overflow:hidden; position:relative}
+.band-grid{display:grid; grid-template-columns:1fr 1fr; align-items:stretch}
+.band-media{position:relative; min-height:100%}
+.band-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.band-body{padding:clamp(38px,5vw,68px)}
+.band-body .kicker{color:var(--amber-soft)}
+.band-body h2{font-size:clamp(2rem,4vw,3.1rem); margin-top:18px; color:#FBF7EF}
+.band-body h2 em{color:#E8C9A8}
+.contact-list{list-style:none; padding:0; margin:32px 0 0; display:flex; flex-direction:column; gap:2px}
+.contact-list li{display:flex; gap:16px; padding:16px 0; border-bottom:1px solid rgba(255,255,255,.12); align-items:center}
+.contact-list .ci{width:42px; height:42px; border-radius:12px; background:rgba(255,255,255,.08); display:grid; place-items:center; color:#E8C9A8; flex:0 0 auto}
+.contact-list small{display:block; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(243,238,228,.55); font-weight:700}
+.contact-list b{font-size:1.15rem; font-weight:700; font-family:"Playfair Display",serif}
+.band-body .btn{margin-top:30px}
+.band-body .btn.amber .ic{background:rgba(0,0,0,.14)}
+
+/* footer */
+footer{padding:60px 0 40px; text-align:center}
+.foot-brand{font-family:"Playfair Display",serif; font-weight:800; font-size:1.6rem; display:inline-flex; gap:9px; align-items:center}
+.foot-brand .heart{color:var(--amber)}
+footer p{color:var(--muted); font-size:14px; margin-top:12px}
+.foot-links{display:flex; gap:22px; justify-content:center; margin:22px 0 0; flex-wrap:wrap}
+.foot-links a{font-size:14px; font-weight:600; color:var(--ink-soft)}
+.foot-rule{height:1px; background:var(--line); max-width:var(--maxw); margin:40px auto 0}
+.copyright{font-size:12.5px; color:var(--muted); margin-top:22px}
+
+/* floating whatsapp */
+.fab{position:fixed; right:20px; bottom:20px; z-index:40; width:60px; height:60px; border-radius:999px; background:#25D366; display:grid; place-items:center; box-shadow:0 14px 30px -8px rgba(37,211,102,.6); transition:transform .5s var(--ease)}
+.fab:hover{transform:scale(1.07)}
+
+@media(max-width:960px){
+  .about{grid-template-columns:1fr} .about-media{order:-1; max-width:460px}
+  .house,.house.feature{grid-template-columns:1fr} .house .house-media{min-height:260px; order:-1}
+  .house.feature .house-media{order:-1}
+  .bento{grid-template-columns:repeat(2,1fr)} .tile.span2{grid-column:span 2}
+  .band-grid{grid-template-columns:1fr} .band-media{min-height:280px}
+  .gal{columns:2}
+}
+@media(max-width:640px){
+  body{font-size:16px}
+  .nav-links{display:none} .nav-inner>.btn{display:none} .nav-burger{display:block; margin-left:auto}
+  .hero-stats{gap:22px} .hero-stats .st b{font-size:1.7rem}
+  .feat-grid,.amen{grid-template-columns:1fr} .bento{grid-template-columns:1fr} .tile.span2{grid-column:span 1}
+  .gal{columns:1} .about-media .badge{left:12px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important} .rv{opacity:1; transform:none; filter:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand">Я <span class="heart">♥</span> A-Frame village</a>
+    <div class="nav-links">
+      <a href="#about">О парк-отеле</a>
+      <a href="#houses">Дома</a>
+      <a href="#amenities">Развлечения</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#contacts">Контакты</a>
+    </div>
+    <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn" target="_blank" rel="noopener">
+      Забронировать
+      <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7M9 7h8v8"/></svg></span>
+    </a>
+    <button class="nav-burger" id="burger" aria-label="Меню"><span></span><span></span></button>
+  </div>
+</nav>
+<div class="m-menu" id="mmenu">
+  <a href="#about">О парк-отеле</a>
+  <a href="#houses">Дома</a>
+  <a href="#amenities">Развлечения</a>
+  <a href="#gallery">Галерея</a>
+  <a href="#contacts">Контакты</a>
+</div>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="img/hero-houses.jpg" alt="А-фрейм дома парк-отеля зимой"></div>
+  <div class="hero-inner">
+    <div class="wrap">
+      <span class="eyebrow"><span class="dot"></span>Парк-отель · Уфа, озеро Алексеевка</span>
+      <h1>Место, где вы забываете о городе <em>и возвращаетесь к себе</em></h1>
+      <p class="hero-sub">Самый большой А-фрейм отель в Уфе. Дома-шалаши на берегу озера, русская баня, банный чан под открытым небом и собственный пляж — всё для отдыха, о котором вы мечтали.</p>
+      <div class="hero-cta">
+        <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn big" target="_blank" rel="noopener">
+          Забронировать дом
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a href="#houses" class="btn ghost big">
+          Смотреть дома и цены
+          <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span>
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="st"><b>8</b><span>домов у&nbsp;озера</span></div>
+        <div class="st"><b>116 м²</b><span>дом на&nbsp;8 гостей</span></div>
+        <div class="st"><b>24/7</b><span>приём гостей</span></div>
+        <div class="st"><b>№1</b><span>А-фрейм отель Уфы</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section class="pad" id="about">
+  <div class="wrap about">
+    <div class="about-body rv">
+      <span class="kicker">О парк-отеле</span>
+      <h2>Природа, тишина и&nbsp;<em>уральский воздух</em> в&nbsp;30 минутах от&nbsp;города</h2>
+      <p class="lead">Потрясающий вид на озеро, свежий воздух и полное уединение. <em>Собственный пляж</em>, волейбольная и футбольная площадки, шатёр для больших праздников и беседки с мангалом у каждого дома.</p>
+      <div class="feat-grid">
+        <div class="feat"><span class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span><div><b>6 домов на 8 гостей</b><span>по 116 м², 4 спальни</span></div></div>
+        <div class="feat"><span class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></span><div><b>Вид на озеро</b><span>из панорамных окон</span></div></div>
+        <div class="feat"><span class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 14c2-3 5-3 8 0M4 20c2-3 5-3 8 0M12 4v6"/></svg></span><div><b>Русская баня</b><span>входит в цену</span></div></div>
+        <div class="feat"><span class="fi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 22V11l7-6 7 6v11M9 22v-5h6v5M9 11h.01M15 11h.01"/></svg></span><div><b>Собственный пляж</b><span>и зона отдыха</span></div></div>
+      </div>
+    </div>
+    <div class="about-media rv d2">
+      <div class="shell"><img src="img/brand-sign.jpg" alt="Я люблю A-Frame village"></div>
+      <div class="badge"><b>–5%</b><span>скидка на день рождения для именинника</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOUSES -->
+<section class="pad" id="houses" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Апартаменты</span>
+      <h2>Три формата отдыха — <em>от пары до большой компании</em></h2>
+      <p>Каждый дом — тёплый, уютный и полностью укомплектован. Заезжайте с вещами и хорошим настроением, остальное уже готово.</p>
+    </div>
+
+    <div class="houses">
+      <!-- Featured big house -->
+      <article class="house feature rv">
+        <div class="house-body">
+          <span class="area">116 м² · до 8 гостей · 4 спальни</span>
+          <h3>Дом с баней и чаном на&nbsp;8 человек</h3>
+          <ul class="amen">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>4 спальни с двуспальными кроватями</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Гостиная со вторым светом</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Тёплые полы, ТВ и колонка</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Кухня и вся посуда</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Мангальная зона с грилем</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Сауна в подарок — 3 часа</li>
+          </ul>
+          <div class="price-row">
+            <div class="price"><b>16 000&nbsp;₽</b><span>будни / сутки</span></div>
+            <div class="price week"><b>20 000&nbsp;₽</b><span>выходные / сутки</span></div>
+          </div>
+          <p class="note">Доплата за чан 2 000 ₽/час (мин. 2 часа). Залог при заезде 6 000 ₽.</p>
+          <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn" target="_blank" rel="noopener">Забронировать этот дом
+            <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+        </div>
+        <div class="house-media"><span class="tag">Хит · для компании</span><img src="img/living.jpg" alt="Гостиная дома на 8 человек"></div>
+      </article>
+
+      <!-- House for 4 -->
+      <article class="house rv d1">
+        <div class="house-media"><span class="tag">40 м²</span><img src="img/bedroom-cozy.jpg" alt="Дом на 4 человек"></div>
+        <div class="house-body">
+          <span class="area">40 м² · до 4 гостей</span>
+          <h3>Дом на&nbsp;4&nbsp;человек</h3>
+          <ul class="amen">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Две двуспальные кровати</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Кухня-гостиная</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Веранда с двумя лежаками</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Беседка с мангалом</li>
+          </ul>
+          <div class="price-row">
+            <div class="price"><b>10 000&nbsp;₽</b><span>будни / сутки</span></div>
+            <div class="price week"><b>12 000&nbsp;₽</b><span>выходные / сутки</span></div>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn ghost" target="_blank" rel="noopener">Забронировать
+            <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+        </div>
+      </article>
+
+      <!-- House for 2 -->
+      <article class="house rv d2">
+        <div class="house-media"><span class="tag">20 м² · для двоих</span><img src="img/bedroom-lake.jpg" alt="Дом на 2 человек с видом на озеро"></div>
+        <div class="house-body">
+          <span class="area">20 м² · романтика для двоих</span>
+          <h3>Дом на&nbsp;2&nbsp;человек</h3>
+          <ul class="amen">
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Двуспальная кровать у окна</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Панорамный вид на озеро</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Кухня и санузел с душевой</li>
+            <li><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6 9 17l-5-5"/></svg>Баня с чаном рядом — от 3 000 ₽</li>
+          </ul>
+          <div class="price-row">
+            <div class="price"><b>8 000&nbsp;₽</b><span>будни / сутки</span></div>
+            <div class="price week"><b>10 000&nbsp;₽</b><span>выходные / сутки</span></div>
+          </div>
+          <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn ghost" target="_blank" rel="noopener">Забронировать
+            <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- AMENITIES -->
+<section class="pad" id="amenities">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Услуги и развлечения</span>
+      <h2>Развлечения <em>на любой вкус</em> — прямо на территории</h2>
+      <p>От неспешного парения в чане до квадроциклов и прогулок на сапбордах. Скучать не придётся ни зимой, ни летом.</p>
+    </div>
+
+    <div class="bento">
+      <div class="tile img span2 rv"><img src="img/chan.jpg" alt="Банный чан">
+        <h4>Банный чан под открытым небом</h4>
+        <p>Горячая вода, звёздное небо и морозный воздух — то самое уральское удовольствие.</p>
+        <div class="cost">от 2 000 ₽ / час</div>
+      </div>
+      <div class="tile dark rv d1">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 14c2-3 5-3 8 0s6 3 8 0M4 19c2-3 5-3 8 0s6 3 8 0M12 3v7"/></svg></span>
+        <h4>Русская баня</h4>
+        <p>Настоящая дровяная баня для гостей домов 1–6.</p>
+        <div class="cost">входит в цену</div>
+      </div>
+      <div class="tile rv d2">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v6M8 4l1 4M16 4l-1 4M5 12h14l-1.5 9h-11L5 12Z"/></svg></span>
+        <h4>Мангальная зона</h4>
+        <p>Беседки с мангалом и печью под казан.</p>
+        <div class="cost">1 000 ₽ / час</div>
+      </div>
+
+      <div class="tile rv">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M6 17h6l3-6h4M9 11l3 6"/></svg></span>
+        <h4>Квадроциклы</h4>
+        <p>Мощные полноприводные, на двоих.</p>
+        <div class="cost">от 3 500 ₽ / час</div>
+      </div>
+      <div class="tile rv d1">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 18c3 0 3-2 6-2s3 2 6 2 3-2 6-2M8 13l4-9 4 9M12 4v9"/></svg></span>
+        <h4>САП-прогулки</h4>
+        <p>Зеркальная гладь озера и лёгкий ветер.</p>
+        <div class="cost">от 700 ₽ / час</div>
+      </div>
+      <div class="tile img rv d2"><img src="img/sauna.jpg" alt="Сауна с подсветкой">
+        <h4>Сауна с подсветкой</h4>
+        <p>Современная парная с релакс-подсветкой — идеально после чана.</p>
+        <div class="cost">входит в проживание</div>
+      </div>
+
+      <div class="tile rv">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="7" width="20" height="12" rx="4"/><path d="M7 12h3M8.5 10.5v3M15 11h.01M18 13h.01"/></svg></span>
+        <h4>Игровая приставка</h4>
+        <p>2 джойстика и игры. Каждый 3-й час в подарок.</p>
+        <div class="cost">500 ₽ / час</div>
+      </div>
+      <div class="tile rv d1">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 8h12v4a6 6 0 0 1-12 0V8ZM9 3c0 1.5 1 2 1 3.5M14 3c0 1.5-1 2-1 3.5M8 21h8"/></svg></span>
+        <h4>Паровые коктейли</h4>
+        <p>Атмосфера, уют и персональный подход.</p>
+        <div class="cost">1 500 ₽</div>
+      </div>
+      <div class="tile rv d2">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 3v18M5 8h14M7 12h10M9 16h6"/></svg></span>
+        <h4>Детская и спорт-площадка</h4>
+        <p>Безопасные снаряды и место для активного отдыха.</p>
+        <div class="cost">бесплатно</div>
+      </div>
+      <div class="tile rv d3">
+        <span class="ti"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 21s-7-4.5-9-9a4 4 0 0 1 9-2 4 4 0 0 1 9 2c-2 4.5-9 9-9 9Z"/></svg></span>
+        <h4>Шатёр и праздники под ключ</h4>
+        <p>Шатёр 75 м² и терраса 225 м², шоу-программы, покер, мафия, халат в аренду.</p>
+        <div class="cost">от 30 000 ₽</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="pad" id="gallery" style="background:var(--bg-2)">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="kicker">Галерея</span>
+      <h2>Один взгляд <em>стоит тысячи слов</em></h2>
+      <p>Так выглядит отдых в A-Frame village — в любое время года.</p>
+    </div>
+    <div class="gal">
+      <figure class="rv"><img src="img/exterior-deck.jpg" alt="Терраса дома зимой"></figure>
+      <figure class="rv d1"><img src="img/interior-loft.jpg" alt="Интерьер второго света"></figure>
+      <figure class="rv d2"><img src="img/bedroom3.jpg" alt="Спальня"></figure>
+      <figure class="rv"><img src="img/kitchen.jpg" alt="Кухня"></figure>
+      <figure class="rv d1"><img src="img/mangal.jpg" alt="Мангальная зона"></figure>
+      <figure class="rv d2"><img src="img/hallway.jpg" alt="Холл с лестницей"></figure>
+      <figure class="rv"><img src="img/bedroom2.jpg" alt="Спальня с видом"></figure>
+      <figure class="rv d1"><img src="img/bedroom-lake.jpg" alt="Спальня с видом на озеро"></figure>
+      <figure class="rv d2"><img src="img/sauna.jpg" alt="Сауна с подсветкой"></figure>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACTS -->
+<section class="pad" id="contacts">
+  <div class="wrap">
+    <div class="band rv">
+      <div class="band-grid">
+        <div class="band-media"><img src="img/exterior-deck.jpg" alt="A-Frame village"></div>
+        <div class="band-body">
+          <span class="kicker">Бронирование · 24/7</span>
+          <h2>Забронируйте свой дом <em>уже на эти выходные</em></h2>
+          <ul class="contact-list">
+            <li><span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg></span><div><small>Телефон · круглосуточно</small><b>+7 932 222-20-43</b></div></li>
+            <li><span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div><small>Адрес</small><b>Респ. Башкортостан, Уфимский р-н, д. Алексеевка, ул. Озёрная 38к1</b></div></li>
+          </ul>
+          <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn amber big" target="_blank" rel="noopener">
+            Написать в WhatsApp
+            <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="#top" class="foot-brand">Я <span class="heart">♥</span> A-Frame village</a>
+    <p>Парк-отель у озера · Уфа</p>
+    <div class="foot-links">
+      <a href="#about">О парк-отеле</a>
+      <a href="#houses">Дома и цены</a>
+      <a href="#amenities">Развлечения</a>
+      <a href="#gallery">Галерея</a>
+      <a href="tel:+79322222043">+7 932 222-20-43</a>
+    </div>
+  </div>
+  <div class="foot-rule"></div>
+  <p class="copyright">© 2026 A-Frame village. Все права защищены.</p>
+</footer>
+
+<a class="fab" href="https://api.whatsapp.com/send?phone=79322222043" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.45-.15-.64.15-.19.28-.74.94-.9 1.13-.17.19-.34.21-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.29 0-.44.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.08-.15-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.02 2.76 1.17 2.95c.15.19 2.02 3.08 4.9 4.32.68.29 1.22.47 1.63.6.69.22 1.31.19 1.8.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34ZM12 22a10 10 0 1 1 8.7-5.03L22 22l-5.1-1.34A9.96 9.96 0 0 1 12 22Z"/></svg>
+</a>
+
+<script>
+(function(){
+  // scroll reveal
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12, rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+
+  // nav hide on scroll down
+  var nav=document.getElementById('nav'), last=0;
+  window.addEventListener('scroll',function(){
+    var y=window.scrollY;
+    nav.style.top = (y>last && y>300 && !document.body.classList.contains('menu-open')) ? '-90px' : '18px';
+    last=y;
+  },{passive:true});
+
+  // mobile menu
+  var b=document.getElementById('burger');
+  b&&b.addEventListener('click',function(){document.body.classList.toggle('menu-open')});
+  document.querySelectorAll('#mmenu a').forEach(function(a){a.addEventListener('click',function(){document.body.classList.remove('menu-open')})});
+})();
+</script>
+</body>
+</html>
