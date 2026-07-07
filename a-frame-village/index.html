@@ -144,10 +144,20 @@ section{position:relative}
   transition:transform .6s var(--ease), box-shadow .6s var(--ease);
 }
 .house:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
-.house-media{position:relative; min-height:340px}
-.house-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transition:transform 1.2s var(--ease)}
-.house:hover .house-media img{transform:scale(1.05)}
-.house-media .tag{position:absolute; top:18px; left:18px; background:rgba(246,241,233,.92); backdrop-filter:blur(6px); padding:7px 14px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.02em}
+.house-media{position:relative; min-height:340px; overflow:hidden; touch-action:pan-y}
+.house-media::after{content:""; position:absolute; left:0; right:0; bottom:0; height:76px; background:linear-gradient(transparent,rgba(0,0,0,.34)); z-index:2; pointer-events:none}
+.hm-track{position:absolute; inset:0; display:flex; transition:transform .7s var(--ease); will-change:transform}
+.hm-track img{flex:0 0 100%; width:100%; height:100%; object-fit:cover; pointer-events:none; user-select:none}
+.house-media .tag{position:absolute; top:18px; left:18px; z-index:3; background:rgba(246,241,233,.92); backdrop-filter:blur(6px); padding:7px 14px; border-radius:999px; font-size:12px; font-weight:700; letter-spacing:.02em}
+.hm-arrow{position:absolute; top:50%; transform:translateY(-50%); width:40px; height:40px; border-radius:999px; background:rgba(246,241,233,.9); backdrop-filter:blur(4px); border:none; display:grid; place-items:center; cursor:pointer; z-index:4; color:var(--ink); opacity:0; transition:opacity .4s var(--ease),background .3s var(--ease),transform .3s var(--ease)}
+.house-media:hover .hm-arrow{opacity:1}
+.hm-arrow:hover{background:#fff}
+.hm-arrow:active{transform:translateY(-50%) scale(.9)}
+.hm-arrow.prev{left:14px} .hm-arrow.next{right:14px}
+.hm-dots{position:absolute; bottom:15px; left:0; right:0; display:flex; gap:6px; justify-content:center; z-index:4}
+.hm-dot{width:7px; height:7px; border-radius:999px; background:rgba(255,255,255,.55); border:none; padding:0; cursor:pointer; transition:width .4s var(--ease),background .3s var(--ease)}
+.hm-dot.active{width:20px; background:#fff}
+@media(hover:none){.hm-arrow{opacity:1; background:rgba(246,241,233,.82)}}
 .house-body{padding:clamp(26px,3vw,40px); display:flex; flex-direction:column}
 .house-body h3{font-size:clamp(1.5rem,2.4vw,2rem)}
 .house-body .area{color:var(--amber); font-weight:700; font-size:13px; letter-spacing:.08em; text-transform:uppercase; margin-top:6px}
@@ -368,12 +378,34 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
           <a href="https://api.whatsapp.com/send?phone=79322222043" class="btn" target="_blank" rel="noopener">Забронировать этот дом
             <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
         </div>
-        <div class="house-media"><span class="tag">Хит · для компании</span><img src="img/living.jpg" alt="Гостиная дома на 8 человек"></div>
+        <div class="house-media" data-gallery>
+          <span class="tag">Хит · для компании</span>
+          <div class="hm-track">
+            <img src="img/living.jpg" alt="Гостиная дома на 8 человек">
+            <img src="img/living2.jpg" alt="Столовая с панорамными окнами">
+            <img src="img/interior-loft.jpg" alt="Второй свет и лестница">
+            <img src="img/kitchen.jpg" alt="Кухня дома на 8">
+            <img src="img/bedroom3.jpg" alt="Спальня дома на 8">
+          </div>
+          <button class="hm-arrow prev" aria-label="Назад"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="hm-arrow next" aria-label="Вперёд"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <div class="hm-dots"></div>
+        </div>
       </article>
 
       <!-- House for 4 -->
       <article class="house rv d1">
-        <div class="house-media"><span class="tag">40 м²</span><img src="img/bedroom-cozy.jpg" alt="Дом на 4 человек"></div>
+        <div class="house-media" data-gallery>
+          <span class="tag">40 м²</span>
+          <div class="hm-track">
+            <img src="img/bedroom-cozy.jpg" alt="Спальня дома на 4">
+            <img src="img/bedroom-wood2.jpg" alt="Вторая спальня дома на 4">
+            <img src="img/mangal.jpg" alt="Беседка с мангалом">
+          </div>
+          <button class="hm-arrow prev" aria-label="Назад"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="hm-arrow next" aria-label="Вперёд"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <div class="hm-dots"></div>
+        </div>
         <div class="house-body">
           <span class="area">40 м² · до 4 гостей</span>
           <h3>Дом на&nbsp;4&nbsp;человек</h3>
@@ -394,7 +426,17 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
 
       <!-- House for 2 -->
       <article class="house rv d2">
-        <div class="house-media"><span class="tag">20 м² · для двоих</span><img src="img/bedroom-lake.jpg" alt="Дом на 2 человек с видом на озеро"></div>
+        <div class="house-media" data-gallery>
+          <span class="tag">20 м² · для двоих</span>
+          <div class="hm-track">
+            <img src="img/exterior-night.jpg" alt="Дом на 2 вечером">
+            <img src="img/bedroom-lake.jpg" alt="Спальня с видом на озеро">
+            <img src="img/bedroom2.jpg" alt="Спальня дома на 2">
+          </div>
+          <button class="hm-arrow prev" aria-label="Назад"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+          <button class="hm-arrow next" aria-label="Вперёд"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button>
+          <div class="hm-dots"></div>
+        </div>
         <div class="house-body">
           <span class="area">20 м² · романтика для двоих</span>
           <h3>Дом на&nbsp;2&nbsp;человек</h3>
@@ -638,6 +680,28 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
     window.addEventListener('load',layout);
     layout(); setTimeout(layout,350); play();
   }
+
+  // per-house photo galleries
+  document.querySelectorAll('[data-gallery]').forEach(function(g){
+    var hmTrack=g.querySelector('.hm-track');
+    var imgs=[].slice.call(hmTrack.children);
+    if(imgs.length<2) return;
+    var dotsW=g.querySelector('.hm-dots'); var i=0;
+    imgs.forEach(function(_,k){
+      var d=document.createElement('button'); d.className='hm-dot'+(k===0?' active':''); d.setAttribute('aria-label','Фото '+(k+1));
+      d.addEventListener('click',function(e){e.stopPropagation();set(k);});
+      dotsW.appendChild(d);
+    });
+    var hmDots=[].slice.call(dotsW.children);
+    function set(k){ i=(k+imgs.length)%imgs.length; hmTrack.style.transform='translateX('+(-i*100)+'%)'; hmDots.forEach(function(d,j){d.classList.toggle('active',j===i)}); }
+    g.querySelector('.hm-arrow.prev').addEventListener('click',function(e){e.stopPropagation();set(i-1);});
+    g.querySelector('.hm-arrow.next').addEventListener('click',function(e){e.stopPropagation();set(i+1);});
+    var dn=false,sx=0,mv=0;
+    g.addEventListener('pointerdown',function(e){dn=true;sx=e.clientX;mv=0;});
+    g.addEventListener('pointermove',function(e){if(dn)mv=e.clientX-sx;});
+    g.addEventListener('pointerup',function(){if(!dn)return;dn=false;if(Math.abs(mv)>40)set(i+(mv<0?1:-1));});
+    g.addEventListener('pointerleave',function(){dn=false;});
+  });
 })();
 </script>
 </body>
