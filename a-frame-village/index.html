@@ -196,7 +196,7 @@ section{position:relative}
 /* gallery slider */
 .slider{overflow:hidden; margin-top:48px; padding-bottom:8px; cursor:grab}
 .slider.grabbing{cursor:grabbing}
-.slider-track{display:flex; gap:22px; will-change:transform; transition:transform .8s var(--ease)}
+.slider-track{display:flex; gap:22px; will-change:transform; transition:transform .5s var(--ease)}
 .slide{flex:0 0 66%; position:relative; border-radius:26px; overflow:hidden; aspect-ratio:16/10; box-shadow:var(--shadow-soft); transition:opacity .8s var(--ease),transform .8s var(--ease); opacity:.45; transform:scale(.94)}
 .slide.active{opacity:1; transform:scale(1); box-shadow:var(--shadow-lift)}
 .slide img{width:100%; height:100%; object-fit:cover; pointer-events:none; user-select:none}
@@ -257,7 +257,7 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
   .feat-grid,.amen{grid-template-columns:1fr} .bento{grid-template-columns:1fr} .tile.span2{grid-column:span 1}
   .gal{columns:1} .about-media .badge{left:12px}
 }
-@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important} .rv{opacity:1; transform:none; filter:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important} .rv{opacity:1; transform:none; filter:none} .slider-track{transition:transform .5s ease!important}}
 </style>
 </head>
 <body>
@@ -668,10 +668,8 @@ footer p{color:var(--muted); font-size:14px; margin-top:12px}
       dots.forEach(function(d,i){d.classList.toggle('active',i===idx)});
     }
     function go(i){ idx=(i+slides.length)%slides.length; setPos(); }
-    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},2000); }
+    function play(){ clearInterval(timer); timer=setInterval(function(){go(idx+1)},1500); }
     function rest(){ play(); }
-    slider.addEventListener('mouseenter',function(){clearInterval(timer)});
-    slider.addEventListener('mouseleave',play);
     var down=false,sx=0,moved=0;
     slider.addEventListener('pointerdown',function(e){down=true;sx=e.clientX;moved=0;slider.classList.add('grabbing');clearInterval(timer);});
     window.addEventListener('pointermove',function(e){if(down)moved=e.clientX-sx;});
