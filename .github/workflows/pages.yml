@@ -1,10 +1,11 @@
-name: Deploy A-Frame village to GitHub Pages
+name: Deploy sites to GitHub Pages
 
 on:
   push:
     branches: [claude/install-mcp-servers-lh9cd6]
     paths:
       - "a-frame-village/**"
+      - "volna-city/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -27,6 +28,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Assemble site (A-Frame at root, ВолнаСити under /volna)
+        run: |
+          mkdir -p _site
+          cp -r a-frame-village/. _site/
+          mkdir -p _site/volna
+          cp -r volna-city/. _site/volna/
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
@@ -35,7 +43,7 @@ jobs:
       - name: Upload site artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: a-frame-village
+          path: _site
 
       - name: Deploy to GitHub Pages
         id: deployment
