@@ -6,6 +6,7 @@ on:
     paths:
       - "a-frame-village/**"
       - "volna-city/**"
+      - "borisov/**"
       - ".github/workflows/pages.yml"
   workflow_dispatch:
 
@@ -28,12 +29,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Assemble site (A-Frame at root, ВолнаСити under /volna)
+      - name: Assemble site (A-Frame at root, ВолнаСити under /volna, Borisov under /borisov)
         run: |
           mkdir -p _site
           cp -r a-frame-village/. _site/
           mkdir -p _site/volna
           cp -r volna-city/. _site/volna/
+          mkdir -p _site/borisov
+          cp -r borisov/. _site/borisov/
 
       - name: Configure Pages
         uses: actions/configure-pages@v5

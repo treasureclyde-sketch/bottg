@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Borisov — кофейня, коворкинг и костюмы в центре Уфы</title>
+<meta name="description" content="Borisov на улице Пархоменко, 156А — кофейня, коворкинг и шоурум костюмов под одной крышей. Индустриальный лофт, кирпич и латунь, авторский кофе и рабочие пространства. Уфа.">
+<meta property="og:title" content="Borisov — Уфа">
+<meta property="og:description" content="Кофейня, коворкинг и костюмы в одном пространстве. Улица Пархоменко, 156А, Уфа.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#131110; --bg2:#1b1815; --card:#1f1c19; --card-2:#252119;
+  --ink:#F3ECE1; --ink-soft:rgba(243,236,225,.76); --muted:rgba(243,236,225,.52);
+  --brass:#C9A24B; --brass-soft:#E6C878; --brick:#B5522E; --brick-soft:#D07750;
+  --line:rgba(243,236,225,.11); --line-2:rgba(243,236,225,.07);
+  --shadow-soft:0 2px 4px rgba(0,0,0,.2), 0 14px 30px -12px rgba(0,0,0,.55), 0 40px 80px -36px rgba(0,0,0,.6);
+  --shadow-lift:0 2px 6px rgba(0,0,0,.3), 0 24px 50px -16px rgba(201,162,75,.22), 0 60px 120px -44px rgba(0,0,0,.7);
+  --r:22px; --ease:cubic-bezier(.32,.72,0,1); --maxw:1220px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0; background:var(--bg); color:var(--ink); font-family:"Manrope",system-ui,sans-serif; font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased; letter-spacing:-.01em; overflow-x:hidden}
+h1,h2,h3,h4{font-family:"Fraunces",Georgia,serif; font-weight:700; letter-spacing:-.02em; line-height:1.07; margin:0}
+p{margin:0} a{color:inherit; text-decoration:none} img{max-width:100%; display:block}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 26px}
+body::after{content:""; position:fixed; inset:0; z-index:60; pointer-events:none; opacity:.05; mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* nav */
+.nav{position:fixed; top:16px; left:0; right:0; z-index:50; display:flex; justify-content:center; padding:0 16px; transition:top .5s var(--ease)}
+.nav-inner{display:flex; align-items:center; gap:22px; width:100%; max-width:1120px; padding:9px 10px 9px 18px; border-radius:999px;
+  background:rgba(19,17,16,.72); backdrop-filter:blur(18px) saturate(1.3); -webkit-backdrop-filter:blur(18px) saturate(1.3);
+  border:1px solid rgba(243,236,225,.1); box-shadow:0 1px 0 rgba(255,255,255,.04) inset, 0 14px 34px -16px rgba(0,0,0,.7)}
+.brand{display:flex; align-items:center; gap:10px; font-family:"Fraunces",serif; font-weight:700; font-size:18.5px; white-space:nowrap}
+.brand .mark{width:30px; height:30px; border-radius:8px; background:linear-gradient(150deg,var(--brass),#8a6b28); display:grid; place-items:center; color:#131110; font-weight:800; font-size:15px; flex:0 0 auto}
+.nav-links{display:flex; gap:2px; margin-left:auto}
+.nav-links a{font-size:14px; font-weight:600; color:var(--ink-soft); padding:8px 12px; border-radius:999px; white-space:nowrap; transition:background .4s var(--ease),color .4s var(--ease)}
+.nav-links a:hover{background:rgba(243,236,225,.08); color:var(--ink)}
+.btn{--bg-btn:var(--brass); --fg:#161310; display:inline-flex; align-items:center; gap:10px; padding:10px 12px 10px 20px; border-radius:999px; background:var(--bg-btn); color:var(--fg); font-weight:700; font-size:14px; white-space:nowrap; border:1px solid rgba(255,255,255,.1); cursor:pointer; transition:transform .5s var(--ease), box-shadow .5s var(--ease); box-shadow:0 10px 22px -10px rgba(201,162,75,.5)}
+.btn:hover{transform:translateY(-1px); box-shadow:0 16px 30px -12px rgba(201,162,75,.6)}
+.btn:active{transform:scale(.98)}
+.btn .ic{width:28px; height:28px; border-radius:999px; background:rgba(0,0,0,.14); display:grid; place-items:center; transition:transform .5s var(--ease)}
+.btn:hover .ic{transform:translate(2px,-1px)}
+.btn.ghost{--bg-btn:transparent; --fg:var(--ink); border-color:var(--line); box-shadow:none} .btn.ghost .ic{background:rgba(243,236,225,.08)}
+.btn.big{padding:14px 15px 14px 26px; font-size:15.5px}
+.nav-burger{display:none; width:42px; height:42px; border-radius:999px; border:1px solid var(--line); background:rgba(243,236,225,.04); position:relative; cursor:pointer; flex:0 0 auto}
+.nav-burger span{position:absolute; left:11px; right:11px; height:2px; background:var(--ink); border-radius:2px; transition:transform .5s var(--ease)}
+.nav-burger span:nth-child(1){top:15px} .nav-burger span:nth-child(2){bottom:15px}
+body.menu-open .nav-burger span:nth-child(1){top:20px; transform:rotate(45deg)}
+body.menu-open .nav-burger span:nth-child(2){bottom:20px; transform:rotate(-45deg)}
+.m-menu{position:fixed; inset:0; z-index:45; background:rgba(10,9,8,.82); backdrop-filter:blur(20px); display:flex; flex-direction:column; justify-content:center; gap:6px; padding:40px; opacity:0; visibility:hidden; transition:opacity .5s var(--ease),visibility .5s}
+body.menu-open .m-menu{opacity:1; visibility:visible}
+.m-menu a{font-family:"Fraunces",serif; font-size:32px; font-weight:600; color:var(--ink); padding:6px 0; transform:translateY(20px); opacity:0; transition:transform .6s var(--ease),opacity .6s var(--ease)}
+body.menu-open .m-menu a{transform:none; opacity:1}
+body.menu-open .m-menu a:nth-child(1){transition-delay:.06s}body.menu-open .m-menu a:nth-child(2){transition-delay:.11s}body.menu-open .m-menu a:nth-child(3){transition-delay:.16s}body.menu-open .m-menu a:nth-child(4){transition-delay:.21s}body.menu-open .m-menu a:nth-child(5){transition-delay:.26s}
+
+/* hero */
+.hero{position:relative; min-height:100dvh; display:flex; align-items:flex-end; overflow:hidden}
+.hero-bg{position:absolute; inset:0; z-index:0}
+.hero-bg img{width:100%; height:100%; object-fit:cover; transform:scale(1.08); animation:hz 20s var(--ease) forwards; filter:saturate(1.05)}
+@keyframes hz{to{transform:scale(1)}}
+.hero-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(10,9,8,.68) 0%,rgba(10,9,8,.32) 26%,rgba(10,9,8,.4) 55%,rgba(8,7,6,.92) 100%)}
+.hero-inner{position:relative; z-index:2; width:100%; padding-top:130px; padding-bottom:56px}
+.eyebrow{display:inline-flex; align-items:center; gap:9px; padding:7px 15px; border-radius:999px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.2em; color:var(--ink); background:rgba(243,236,225,.07); border:1px solid rgba(243,236,225,.2); backdrop-filter:blur(6px)}
+.eyebrow .dot{width:6px; height:6px; border-radius:999px; background:var(--brass-soft); box-shadow:0 0 0 4px rgba(230,200,120,.25)}
+.hero h1{color:#FAF6EE; font-size:clamp(2.5rem,6vw,5rem); font-weight:700; margin:22px 0 0; max-width:16ch; text-shadow:0 2px 40px rgba(0,0,0,.4)}
+.hero h1 em{font-style:italic; font-weight:500; color:var(--brass-soft)}
+.hero-sub{color:rgba(243,236,225,.86); font-size:clamp(1.02rem,1.7vw,1.25rem); max-width:54ch; margin:22px 0 0; line-height:1.55}
+.hero-cta{display:flex; flex-wrap:wrap; gap:14px; margin-top:32px}
+.hero-cta .btn.ghost{--fg:#FAF6EE; border-color:rgba(243,236,225,.3); background:rgba(243,236,225,.06)}
+.hero-stats{display:flex; flex-wrap:wrap; gap:32px; margin-top:48px; padding-top:26px; border-top:1px solid rgba(243,236,225,.16)}
+.hero-stats .st b{font-family:"Fraunces",serif; font-size:1.9rem; font-weight:700; color:#FAF6EE; display:block; line-height:1}
+.hero-stats .st span{color:rgba(243,236,225,.6); font-size:13px; font-weight:600}
+
+/* sections */
+.pad{padding:clamp(76px,10vw,136px) 0}
+.kicker{display:inline-flex; align-items:center; gap:9px; font-size:11.5px; font-weight:800; text-transform:uppercase; letter-spacing:.2em; color:var(--brass)}
+.kicker::before{content:""; width:26px; height:1.5px; background:var(--brass); display:inline-block}
+.sec-head{max-width:640px}
+.sec-head h2{font-size:clamp(1.9rem,4.2vw,3.2rem); margin-top:16px; color:var(--ink)}
+.sec-head h2 em{color:var(--brass-soft); font-style:italic}
+.sec-head p{color:var(--muted); margin-top:16px; font-size:1.05rem; max-width:56ch}
+.rv{opacity:0; transform:translateY(28px); filter:blur(6px); transition:opacity .9s var(--ease),transform .9s var(--ease),filter .9s var(--ease)}
+.rv.in{opacity:1; transform:none; filter:none}
+.rv.d1{transition-delay:.09s}.rv.d2{transition-delay:.18s}.rv.d3{transition-delay:.27s}
+
+/* pillars */
+.pillars{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:52px}
+.pillar{background:var(--card); border:1px solid var(--line-2); border-radius:calc(var(--r) + 4px); overflow:hidden; box-shadow:var(--shadow-soft); transition:transform .6s var(--ease),box-shadow .6s var(--ease)}
+.pillar:hover{transform:translateY(-4px); box-shadow:var(--shadow-lift)}
+.pillar-media{position:relative; aspect-ratio:4/3; overflow:hidden}
+.pillar-media img{width:100%; height:100%; object-fit:cover; transition:transform 1.1s var(--ease)}
+.pillar:hover .pillar-media img{transform:scale(1.06)}
+.pillar-media::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(10,9,8,.75))}
+.pillar-tag{position:absolute; top:16px; left:16px; z-index:2; background:rgba(19,17,16,.7); backdrop-filter:blur(6px); border:1px solid rgba(243,236,225,.18); padding:6px 13px; border-radius:999px; font-size:11.5px; font-weight:700; letter-spacing:.04em}
+.pillar-body{padding:24px}
+.pillar-body h3{font-size:1.4rem}
+.pillar-body p{color:var(--muted); font-size:14.5px; margin-top:8px}
+
+/* menu / food */
+.food{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:52px}
+.food-card{background:var(--card); border:1px solid var(--line-2); border-radius:20px; overflow:hidden; box-shadow:var(--shadow-soft); transition:transform .5s var(--ease),box-shadow .5s}
+.food-card:hover{transform:translateY(-3px); box-shadow:var(--shadow-lift)}
+.food-card .fmedia{aspect-ratio:1/1; overflow:hidden}
+.food-card .fmedia img{width:100%; height:100%; object-fit:cover; transition:transform 1s var(--ease)}
+.food-card:hover .fmedia img{transform:scale(1.07)}
+.food-card .fbody{padding:16px 18px 20px}
+.food-card h4{font-family:"Manrope",sans-serif; font-weight:700; font-size:15px}
+.food-card p{color:var(--muted); font-size:13px; margin-top:5px}
+
+/* interior slider */
+.slider{overflow:hidden; margin-top:48px; padding-bottom:8px}
+.slider-track{display:flex; gap:20px; will-change:transform; transition:transform .55s var(--ease)}
+.slide{flex:0 0 62%; position:relative; border-radius:24px; overflow:hidden; aspect-ratio:16/10; box-shadow:var(--shadow-soft); opacity:.4; transform:scale(.94); transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.slide.active{opacity:1; transform:scale(1); box-shadow:var(--shadow-lift)}
+.slide img{width:100%; height:100%; object-fit:cover}
+.slide figcaption{position:absolute; left:24px; bottom:20px; z-index:2; color:#FAF6EE; font-weight:700; font-size:1.1rem; text-shadow:0 2px 16px rgba(0,0,0,.6); opacity:0; transition:opacity .5s var(--ease)}
+.slide.active figcaption{opacity:1; transition-delay:.15s}
+.slide::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(8,7,6,.85));opacity:0;transition:opacity .6s} .slide.active::after{opacity:1}
+.dots{display:flex; gap:8px; justify-content:center; margin-top:30px}
+.dot{width:8px;height:8px;border-radius:999px;background:var(--line);border:none;padding:0;cursor:pointer;transition:width .5s var(--ease),background .4s}
+.dot.active{width:26px;background:var(--brass)}
+
+/* coworking */
+.cowork{display:grid; grid-template-columns:1fr 1fr; gap:clamp(28px,4vw,56px); align-items:center}
+.cowork-media{position:relative}
+.cowork-media .shell{padding:8px; border-radius:calc(var(--r) + 8px); background:var(--card); border:1px solid var(--line-2); box-shadow:var(--shadow-soft)}
+.cowork-media img{border-radius:var(--r); aspect-ratio:4/5; object-fit:cover; width:100%}
+.cowork-media .badge{position:absolute; left:-16px; bottom:24px; background:var(--brass); color:#161310; padding:16px 20px; border-radius:16px; box-shadow:var(--shadow-lift); max-width:200px}
+.cowork-media .badge b{font-family:"Fraunces",serif; font-size:1.4rem; display:block; line-height:1.05}
+.cowork-media .badge span{font-size:12px; color:rgba(22,19,16,.75); font-weight:700}
+.amen{list-style:none; padding:0; margin:26px 0 0; display:grid; grid-template-columns:1fr 1fr; gap:12px 20px}
+.amen li{display:flex; gap:10px; align-items:flex-start; font-size:14.5px; color:var(--ink-soft)}
+.amen li svg{flex:0 0 18px; margin-top:2px; color:var(--brass)}
+
+/* reviews */
+.reviews{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:52px}
+.review{background:var(--card); border:1px solid var(--line-2); border-radius:20px; padding:26px; display:flex; flex-direction:column; transition:transform .5s var(--ease),box-shadow .5s}
+.review:hover{transform:translateY(-3px); box-shadow:var(--shadow-soft)}
+.stars{color:var(--brass); font-size:14px; letter-spacing:2px}
+.review p{color:var(--ink-soft); font-size:14.5px; margin-top:14px; flex:1; line-height:1.55}
+.review .who{margin-top:18px; display:flex; align-items:center; gap:10px}
+.review .av{width:34px; height:34px; border-radius:999px; background:linear-gradient(150deg,var(--brass),#8a6b28); display:grid; place-items:center; font-family:"Fraunces",serif; font-weight:700; color:#161310; font-size:14px}
+.review .who b{font-size:13.5px; font-weight:700} .review .who span{display:block; font-size:11.5px; color:var(--muted)}
+
+/* contact band */
+.band{background:linear-gradient(160deg,#1a1712,#0f0d0b); border:1px solid var(--line-2); border-radius:32px; overflow:hidden; position:relative}
+.band-grid{display:grid; grid-template-columns:1fr 1fr}
+.band-media{position:relative; min-height:100%} .band-media img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
+.band-body{padding:clamp(38px,5vw,64px)}
+.band-body .kicker{color:var(--brass-soft)}
+.band-body h2{font-size:clamp(1.9rem,3.6vw,2.9rem); margin-top:16px; color:#FAF6EE} .band-body h2 em{color:var(--brick-soft); font-style:italic}
+.clist{list-style:none; padding:0; margin:28px 0 0; display:flex; flex-direction:column}
+.clist li{display:flex; gap:15px; padding:15px 0; border-bottom:1px solid rgba(243,236,225,.1); align-items:center}
+.clist .ci{width:42px;height:42px;border-radius:12px;background:rgba(243,236,225,.06);display:grid;place-items:center;color:var(--brass-soft);flex:0 0 auto}
+.clist small{display:block; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:rgba(243,236,225,.5); font-weight:700}
+.clist b{font-size:1.05rem; font-weight:700; font-family:"Fraunces",serif}
+.band-body .btn{margin-top:28px}
+
+footer{padding:56px 0 40px; text-align:center}
+.foot-brand{font-family:"Fraunces",serif; font-weight:700; font-size:1.4rem; display:inline-flex; gap:9px; align-items:center; justify-content:center}
+footer p{color:var(--muted); font-size:14px; margin-top:10px}
+.foot-links{display:flex; gap:20px; justify-content:center; margin:20px 0 0; flex-wrap:wrap}
+.foot-links a{font-size:14px; font-weight:600; color:var(--ink-soft)}
+.foot-rule{height:1px; background:var(--line); max-width:var(--maxw); margin:36px auto 0}
+.copyright{font-size:12px; color:var(--muted); margin-top:20px}
+.fab{position:fixed; right:20px; bottom:20px; z-index:40; width:58px; height:58px; border-radius:999px; background:#25D366; display:grid; place-items:center; box-shadow:0 14px 30px -8px rgba(37,211,102,.55); transition:transform .5s var(--ease)}
+.fab:hover{transform:scale(1.07)}
+
+@media(max-width:980px){
+  .pillars{grid-template-columns:1fr} .food{grid-template-columns:repeat(2,1fr)}
+  .cowork{grid-template-columns:1fr} .cowork-media{order:-1; max-width:440px}
+  .reviews{grid-template-columns:repeat(2,1fr)}
+  .band-grid{grid-template-columns:1fr} .band-media{min-height:260px}
+}
+@media(max-width:640px){
+  body{font-size:16px}
+  .nav-links,.nav-inner>.btn{display:none} .nav-burger{display:block; margin-left:auto}
+  .hero-stats{gap:20px} .hero-stats .st b{font-size:1.5rem}
+  .food,.reviews,.amen{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none;filter:none}}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="brand"><span class="mark">B</span>Borisov</a>
+    <div class="nav-links">
+      <a href="#concept">Пространство</a>
+      <a href="#menu">Кофе и еда</a>
+      <a href="#cowork">Коворкинг</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contacts">Контакты</a>
+    </div>
+    <a href="https://wa.me/79174415656" class="btn" target="_blank" rel="noopener">Написать
+      <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    <button class="nav-burger" id="burger" aria-label="Меню"><span></span><span></span></button>
+  </div>
+</nav>
+<div class="m-menu" id="mmenu">
+  <a href="#concept">Пространство</a><a href="#menu">Кофе и еда</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a>
+</div>
+
+<header class="hero" id="top">
+  <div class="hero-bg"><img src="img/lounge.jpg" alt="Лаунж-зона Borisov с хрустальными люстрами"></div>
+  <div class="hero-inner"><div class="wrap">
+    <span class="eyebrow"><span class="dot"></span>Кофейня · Коворкинг · Костюмы · Уфа</span>
+    <h1>Место, где <em>дело, стиль и кофе</em> — под одной крышей</h1>
+    <p class="hero-sub">Borisov на улице Пархоменко — индустриальный лофт с кирпичом и латунью, авторским кофе, рабочими пространствами и шоурумом костюмов. Здесь встречаются, работают и проводят вечера.</p>
+    <div class="hero-cta">
+      <a href="https://wa.me/79174415656" class="btn big" target="_blank" rel="noopener">Написать в WhatsApp
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+      <a href="#concept" class="btn ghost big">Посмотреть пространство
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></span></a>
+    </div>
+    <div class="hero-stats">
+      <div class="st"><b>3</b><span>пространства в одном месте</span></div>
+      <div class="st"><b>72</b><span>отзыва гостей</span></div>
+      <div class="st"><b>2</b><span>этажа лофта</span></div>
+      <div class="st"><b>★</b><span>кофейня · коворкинг · костюмы</span></div>
+    </div>
+  </div></div>
+</header>
+
+<!-- CONCEPT -->
+<section class="pad" id="concept"><div class="wrap">
+  <div class="sec-head rv"><span class="kicker">Пространство</span><h2>Три формата, <em>одна атмосфера</em></h2><p>Borisov — это не просто кофейня. Это лофт на два этажа: кирпич, латунь, хрустальные люстры и шум эспрессо-машины.</p></div>
+  <div class="pillars">
+    <article class="pillar rv"><div class="pillar-media"><span class="pillar-tag">Кофейня</span><img src="img/barista.jpg" alt="Барная стойка Borisov"></div>
+      <div class="pillar-body"><h3>Кофейня</h3><p>Авторский кофе, брускетты и завтраки. Приветливый персонал и атмосфера, в которую хочется возвращаться.</p></div></article>
+    <article class="pillar rv d1"><div class="pillar-media"><span class="pillar-tag">Коворкинг</span><img src="img/cowork-lounge.jpg" alt="Коворкинг-зона Borisov"></div>
+      <div class="pillar-body"><h3>Коворкинг</h3><p>Рабочие столы, переговорная с экраном и тихие уголки — можно спокойно поработать или провести встречу.</p></div></article>
+    <article class="pillar rv d2"><div class="pillar-media"><span class="pillar-tag">Костюмы</span><img src="img/brick-nook.jpg" alt="Зона в Borisov"></div>
+      <div class="pillar-body"><h3>Костюмы</h3><p>Шоурум мужских костюмов рядом с кофейней — стиль и дело решаются в одном месте, без лишних поездок по городу.</p></div></article>
+  </div>
+</div></section>
+
+<!-- MENU / FOOD -->
+<section class="pad" id="menu" style="background:var(--bg2)"><div class="wrap">
+  <div class="sec-head rv"><span class="kicker">Кофе и еда</span><h2>Кофе с характером, <em>завтраки — с душой</em></h2><p>Латте-арт, свежая брускетта, овсянка с ягодами и сытный скрэмбл — то, ради чего сюда приходят снова и снова.</p></div>
+  <div class="food">
+    <div class="food-card rv"><div class="fmedia"><img src="img/latte.jpg" alt="Латте с рисунком"></div><div class="fbody"><h4>Авторский латте</h4><p>С фирменным рисунком на пенке</p></div></div>
+    <div class="food-card rv d1"><div class="fmedia"><img src="img/bruschetta.jpg" alt="Брускетта с прошутто и яйцом пашот"></div><div class="fbody"><h4>Брускетта</h4><p>Прошутто, яйцо пашот, томаты черри</p></div></div>
+    <div class="food-card rv d2"><div class="fmedia"><img src="img/oatmeal.jpg" alt="Овсянка с ягодами"></div><div class="fbody"><h4>Овсянка на завтрак</h4><p>С гранолой, клубникой и черникой</p></div></div>
+    <div class="food-card rv d3"><div class="fmedia"><img src="img/breakfast.jpg" alt="Тарелка скрэмбл с прошутто"></div><div class="fbody"><h4>Скрэмбл-тарелка</h4><p>Яйца, прошутто, хумус, свежие овощи</p></div></div>
+  </div>
+</div></section>
+
+<!-- GALLERY (interior slider) -->
+<section class="pad"><div class="wrap">
+  <div class="sec-head rv"><span class="kicker">Интерьер</span><h2>Кирпич, латунь <em>и хрустальный свет</em></h2><p>Каждый угол Borisov снят на плёнку внимания к деталям.</p></div>
+</div>
+<div class="slider rv" id="slider"><div class="slider-track" id="galTrack">
+  <figure class="slide"><img src="img/chandelier.jpg" alt="Хрустальная люстра"><figcaption>Хрустальные люстры под потолком лофта</figcaption></figure>
+  <figure class="slide"><img src="img/mezzanine.jpg" alt="Второй этаж и антресоль"><figcaption>Антресоль с видом на весь зал</figcaption></figure>
+  <figure class="slide"><img src="img/meeting-room.jpg" alt="Переговорная комната"><figcaption>Переговорная на большую компанию</figcaption></figure>
+  <figure class="slide"><img src="img/cowork-tables.jpg" alt="Столы для коворкинга"><figcaption>Просторные столы для работы и встреч</figcaption></figure>
+  <figure class="slide"><img src="img/staff.jpg" alt="Персонал Borisov"><figcaption>Внимательный сервис на два этажа</figcaption></figure>
+  <figure class="slide"><img src="img/exterior.jpg" alt="Фасад Borisov на улице Пархоменко"><figcaption>Фасад на улице Пархоменко, 156А</figcaption></figure>
+</div></div>
+<div class="wrap"><div class="dots" id="galDots"></div></div>
+</section>
+
+<!-- COWORKING -->
+<section class="pad" id="cowork" style="background:var(--bg2)"><div class="wrap cowork">
+  <div class="cowork-media rv"><div class="shell"><img src="img/meeting-room.jpg" alt="Переговорная комната Borisov"></div>
+    <div class="badge"><b>8+</b><span>мест за одним столом переговорной</span></div>
+  </div>
+  <div class="rv d1">
+    <span class="kicker">Коворкинг</span>
+    <h2 style="font-size:clamp(1.9rem,3.6vw,2.9rem); margin-top:16px">Работайте <em>с видом на кирпич и латунь</em></h2>
+    <p style="color:var(--muted); margin-top:16px">Просторные столы, тихие кресла у брусчатой стены и отдельная переговорная с экраном — для встреч, презентаций и даже стендапов: у нас уже выступали местные комики.</p>
+    <ul class="amen">
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Переговорная с экраном</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 13a10 10 0 0 1 14 0M8.5 16.5a5 5 0 0 1 7 0M12 20h.01"/></svg>Быстрый Wi-Fi</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 8h12v4a6 6 0 0 1-12 0V8ZM9 3c0 1.5 1 2 1 3.5M14 3c0 1.5-1 2-1 3.5"/></svg>Кофе прямо к столу</li>
+      <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 21v-4a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4M12 13a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"/></svg>Тихие зоны и общий зал</li>
+    </ul>
+    <a href="https://wa.me/79174415656" class="btn" target="_blank" rel="noopener" style="margin-top:26px">Забронировать место
+      <span class="ic"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+  </div>
+</div></section>
+
+<!-- REVIEWS -->
+<section class="pad" id="reviews"><div class="wrap">
+  <div class="sec-head rv"><span class="kicker">Отзывы</span><h2>72 отзыва — <em>говорим за нас</em></h2><p>Настоящие слова гостей Borisov.</p></div>
+  <div class="reviews">
+    <div class="review rv"><div class="stars">★★★★★</div><p>«Год назад, после моего возвращения с Бали, когда моё настроение было на нуле, коллеги пригласили меня в это атмосферное место. Еженедельно провожу здесь встречи — персонал открытый и заботливый.»</p><div class="who"><span class="av">О</span><div><b>Оксана М.</b><span>23 июня</span></div></div></div>
+    <div class="review rv d1"><div class="stars">★★★★★</div><p>«Приветливый персонал, вкусное кофе и вкусная еда. Приятная атмосфера, уютно — можно даже спокойно поработать.»</p><div class="who"><span class="av">Н</span><div><b>Надежда Озолина</b><span>19 апреля</span></div></div></div>
+    <div class="review rv d2"><div class="stars">★★★★★</div><p>«Всё отлично. Вежливый персонал. Всегда чисто.»</p><div class="who"><span class="av">К</span><div><b>Карина</b><span>26 апреля</span></div></div></div>
+    <div class="review rv d3"><div class="stars">★★★★★</div><p>«Зачётик. Выступал тут со стендапом.»</p><div class="who"><span class="av">Н</span><div><b>Никита Шумилов</b><span>5 апреля</span></div></div></div>
+  </div>
+</div></section>
+
+<!-- CONTACTS -->
+<section class="pad" id="contacts"><div class="wrap">
+  <div class="band rv"><div class="band-grid">
+    <div class="band-media"><img src="img/exterior.jpg" alt="Фасад Borisov"></div>
+    <div class="band-body">
+      <span class="kicker">Заходите в гости</span>
+      <h2>Кофе, работа и стиль — <em>ждём вас в Borisov</em></h2>
+      <ul class="clist">
+        <li><span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.6A2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.5c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z"/></svg></span><div><small>Телефон</small><b>+7 (969) 050-85-78</b></div></li>
+        <li><span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M21 10c0 7-9 12-9 12s-9-5-9-12a9 9 0 0 1 18 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><div><small>Адрес</small><b>Уфа, ул. Пархоменко, 156А</b></div></li>
+        <li><span class="ci"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M17 2H7a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2ZM12 18h.01"/></svg></span><div><small>ВКонтакте</small><b>vk.com/club229797348</b></div></li>
+      </ul>
+      <a href="https://wa.me/79174415656" class="btn big" target="_blank" rel="noopener">Написать в WhatsApp
+        <span class="ic"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></a>
+    </div>
+  </div></div>
+</div></section>
+
+<footer><div class="wrap">
+  <a href="#top" class="foot-brand">Borisov</a>
+  <p>Кофейня · Коворкинг · Костюмы — ул. Пархоменко, 156А, Уфа</p>
+  <div class="foot-links"><a href="#concept">Пространство</a><a href="#menu">Кофе и еда</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="tel:+79690508578">+7 (969) 050-85-78</a></div>
+</div><div class="foot-rule"></div><p class="copyright">© 2026 Borisov. Все права защищены.</p></footer>
+
+<a class="fab" href="https://wa.me/79174415656" target="_blank" rel="noopener" aria-label="WhatsApp">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.5 14.4c-.3-.15-1.7-.85-2-.95-.26-.1-.45-.15-.64.15-.19.28-.74.94-.9 1.13-.17.19-.34.21-.63.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.29 0-.44.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.48.1-.19.05-.36-.02-.51-.08-.15-.64-1.55-.88-2.12-.23-.55-.47-.48-.64-.49h-.55c-.19 0-.5.07-.76.36-.26.29-1 .98-1 2.38s1.02 2.76 1.17 2.95c.15.19 2.02 3.08 4.9 4.32.68.29 1.22.47 1.63.6.69.22 1.31.19 1.8.11.55-.08 1.7-.69 1.94-1.36.24-.67.24-1.24.17-1.36-.07-.12-.26-.19-.55-.34ZM12 22a10 10 0 1 1 8.7-5.03L22 22l-5.1-1.34A9.96 9.96 0 0 1 12 22Z"/></svg>
+</a>
+
+<script>
+(function(){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.12,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+  var nav=document.getElementById('nav'),last=0;
+  window.addEventListener('scroll',function(){var y=window.scrollY;nav.style.top=(y>last&&y>300&&!document.body.classList.contains('menu-open'))?'-90px':'16px';last=y},{passive:true});
+  var b=document.getElementById('burger');
+  b&&b.addEventListener('click',function(){document.body.classList.toggle('menu-open')});
+  document.querySelectorAll('#mmenu a').forEach(function(a){a.addEventListener('click',function(){document.body.classList.remove('menu-open')})});
+  // gallery auto slider
+  var track=document.getElementById('galTrack');
+  if(track){
+    var slides=[].slice.call(track.children),slider=document.getElementById('slider'),dotsWrap=document.getElementById('galDots'),idx=0,step=0,timer=null;
+    slides.forEach(function(_,i){var d=document.createElement('button');d.className='dot';d.addEventListener('click',function(){go(i);play()});dotsWrap.appendChild(d)});
+    var dots=[].slice.call(dotsWrap.children);
+    function layout(){var g=parseFloat(getComputedStyle(track).gap)||20;step=slides[0].getBoundingClientRect().width+g;setPos()}
+    function setPos(){var sw=slides[0].getBoundingClientRect().width;var off=(slider.clientWidth-sw)/2-idx*step;track.style.transform='translate3d('+off+'px,0,0)';slides.forEach(function(s,i){s.classList.toggle('active',i===idx)});dots.forEach(function(d,i){d.classList.toggle('active',i===idx)})}
+    function go(i){idx=(i+slides.length)%slides.length;setPos()}
+    function play(){clearInterval(timer);timer=setInterval(function(){go(idx+1)},2000)}
+    window.addEventListener('resize',layout);window.addEventListener('load',layout);
+    layout();setTimeout(layout,350);play();
+  }
+})();
+</script>
+</body>
+</html>
