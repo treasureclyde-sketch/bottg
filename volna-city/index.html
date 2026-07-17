@@ -60,16 +60,9 @@ body.menu-open .m-menu a:nth-child(1){transition-delay:.06s}body.menu-open .m-me
 
 /* hero */
 .hero{position:relative; min-height:100dvh; display:flex; align-items:flex-end; overflow:hidden}
-.hero-bg{position:absolute; inset:0; z-index:0; background:linear-gradient(160deg,var(--teal-d),var(--teal) 62%,var(--teal-soft));
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='280' height='210' viewBox='0 0 280 210'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='7' stroke-linecap='round' opacity='0.16'%3E%3Cpath d='M-10 35c17.5-26 35-26 52.5 0s35 26 52.5 0 35-26 52.5 0 35 26 52.5 0 35-26 52.5 0 35 26 52.5 0'/%3E%3Cpath d='M-10 105c17.5-26 35-26 52.5 0s35 26 52.5 0 35-26 52.5 0 35 26 52.5 0 35-26 52.5 0 35 26 52.5 0'/%3E%3Cpath d='M-10 175c17.5-26 35-26 52.5 0s35 26 52.5 0 35-26 52.5 0 35 26 52.5 0 35-26 52.5 0 35 26 52.5 0'/%3E%3C/g%3E%3C/svg%3E"),
-    linear-gradient(160deg,var(--teal-d),var(--teal) 62%,var(--teal-soft));
-  background-size:340px 255px, cover;
-  background-repeat:repeat, no-repeat;
-  animation:wavedrift 26s linear infinite;
-}
-@keyframes wavedrift{from{background-position:0 0,0 0}to{background-position:340px 0,0 0}}
-.hero-bg::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(8,26,30,.22) 0%,rgba(8,26,30,.05) 24%,rgba(8,20,24,.18) 55%,rgba(6,18,21,.68) 100%)}
+.hero-bg{position:absolute; inset:0; z-index:0; background:linear-gradient(160deg,var(--teal-d),var(--teal) 62%,var(--teal-soft)); overflow:hidden}
+.hero-bg canvas{position:absolute; inset:0; width:100%; height:100%; display:block; z-index:0}
+.hero-bg::after{content:""; position:absolute; inset:0; z-index:1; background:linear-gradient(180deg,rgba(8,26,30,.18) 0%,rgba(8,26,30,.04) 24%,rgba(8,20,24,.16) 55%,rgba(6,18,21,.66) 100%)}
 .hero-inner{position:relative; z-index:2; width:100%; padding-top:130px; padding-bottom:58px}
 .eyebrow{display:inline-flex; align-items:center; gap:9px; padding:7px 15px; border-radius:999px; font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.2em; color:#F7F4EE; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.28); backdrop-filter:blur(6px)}
 .eyebrow .dot{width:6px; height:6px; border-radius:999px; background:var(--teal-soft); box-shadow:0 0 0 4px rgba(47,162,171,.3)}
@@ -234,7 +227,7 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
 </div>
 
 <header class="hero" id="top">
-  <div class="hero-bg" role="img" aria-label="Волна ВолнаСити"></div>
+  <div class="hero-bg" role="img" aria-label="Волна ВолнаСити"><canvas id="waveCanvas"></canvas></div>
   <div class="hero-inner"><div class="wrap">
     <span class="eyebrow"><span class="dot"></span>Отель в самом центре Уфы</span>
     <h1>Ваш дом в&nbsp;сердце <em>Уфы</em></h1>
@@ -419,6 +412,70 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
     window.addEventListener('resize',layout);window.addEventListener('load',layout);
     layout();setTimeout(layout,350);play();
   }
+})();
+</script>
+<script src="vendor/three.min.js"></script>
+<script>
+(function(){
+  var canvas=document.getElementById('waveCanvas');
+  if(!canvas||!window.THREE) return;
+  try{
+    var reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var renderer=new THREE.WebGLRenderer({canvas:canvas,alpha:true,antialias:true});
+    renderer.setClearColor(0x000000,0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+    var scene=new THREE.Scene();
+    var camera,width,height,layers=[];
+    var defs=[
+      {yPct:.26,ampPct:.045,freq:1.7,speed:.32,thickPct:.085,opacity:.15,phase:0},
+      {yPct:.54,ampPct:.055,freq:1.15,speed:.20,thickPct:.10,opacity:.12,phase:2.2},
+      {yPct:.82,ampPct:.065,freq:.85,speed:.13,thickPct:.12,opacity:.09,phase:4.4}
+    ];
+    function buildShape(def,w,h){
+      var yc=h*(1-def.yPct), amp=h*def.ampPct, thick=h*def.thickPct;
+      var seg=64, k=(Math.PI*2*def.freq)/w;
+      function topY(x){return yc+amp*Math.sin(x*k+def._phase)+thick/2}
+      function botY(x){return yc+amp*Math.sin(x*k+def._phase)-thick/2}
+      var shape=new THREE.Shape();
+      shape.moveTo(0,topY(0));
+      for(var i=1;i<=seg;i++){var x=w*i/seg;shape.lineTo(x,topY(x))}
+      for(var i=seg;i>=0;i--){var x=w*i/seg;shape.lineTo(x,botY(x))}
+      shape.closePath();
+      return shape;
+    }
+    function rebuild(){
+      width=canvas.clientWidth; height=canvas.clientHeight;
+      if(!width||!height) return;
+      renderer.setSize(width,height,false);
+      camera=new THREE.OrthographicCamera(0,width,height,0,0.1,1000);
+      camera.position.z=10;
+      layers.forEach(function(l){scene.remove(l.mesh);l.mesh.geometry.dispose();l.mesh.material.dispose()});
+      layers=defs.map(function(def){
+        def._phase=def.phase;
+        var geom=new THREE.ShapeGeometry(buildShape(def,width,height));
+        var mat=new THREE.MeshBasicMaterial({color:0xffffff,transparent:true,opacity:def.opacity,depthTest:false});
+        var mesh=new THREE.Mesh(geom,mat);
+        scene.add(mesh);
+        return {def:def,mesh:mesh};
+      });
+    }
+    rebuild();
+    window.addEventListener('resize',rebuild);
+    renderer.render(scene,camera);
+    if(reduceMotion) return;
+    var clock=new THREE.Clock();
+    (function animate(){
+      requestAnimationFrame(animate);
+      var dt=Math.min(clock.getDelta(),.05);
+      layers.forEach(function(l){
+        l.def._phase+=dt*l.def.speed;
+        var newGeom=new THREE.ShapeGeometry(buildShape(l.def,width,height));
+        l.mesh.geometry.dispose();
+        l.mesh.geometry=newGeom;
+      });
+      renderer.render(scene,camera);
+    })();
+  }catch(e){ /* WebGL unavailable - CSS gradient background remains */ }
 })();
 </script>
 </body>
