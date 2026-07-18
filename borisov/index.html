@@ -119,6 +119,9 @@ body.menu-open .m-menu a:nth-child(1){transition-delay:.06s}body.menu-open .m-me
 .dish-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; min-height:96px}
 .dish-body h4{font-family:"Manrope",sans-serif; font-weight:700; font-size:14.5px; line-height:1.3; letter-spacing:-.01em}
 .dish-price{margin-top:auto; font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; color:var(--brass-soft)}
+.dish-desc{color:var(--muted); font-size:12.5px; line-height:1.45; margin-top:-2px}
+.dish.pz .dish-body{min-height:auto}
+.dish.pz .dish-price{font-family:"Manrope",sans-serif; font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--brass-soft); opacity:.8}
 .menu-list{display:grid; grid-template-columns:1fr 1fr; gap:16px}
 .mrow{display:flex; gap:18px; background:var(--card); border:1px solid var(--line-2); border-radius:18px; padding:22px 24px; transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 .mrow:hover{transform:translateY(-2px); box-shadow:var(--shadow-soft)}
@@ -314,13 +317,13 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
     <article class="dish rv d3"><div class="dish-media"><img src="img/m-chizkeikeskimo.jpg" alt="Чизкейк-эскимо" loading="lazy"></div><div class="dish-body"><h4>Чизкейк-эскимо</h4><div class="dish-price">420 ₽</div></div></article>
   </div>
   <div class="menu-cat rv"><span class="menu-cat-tag">Пицца</span><span class="menu-cat-desc">На хрустящем римском тесте, основание 20×25 см</span><span class="menu-cat-count">4</span></div>
-  <div class="menu-list">
-    <div class="mrow rv"><span class="mnum">01</span><div><h4>Четыре сыра</h4><p>Нежный сливочный соус и большое количество сыра на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
-    <div class="mrow rv d1"><span class="mnum">02</span><div><h4>Альфредо</h4><p>Нежный сливочный соус, куриное филе су-вид под моцареллой на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
-    <div class="mrow rv d2"><span class="mnum">03</span><div><h4>Груша и горгонзола</h4><p>Нежный сливочный сыр и сладкая груша в сочетании с пикантным голубым сыром на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
-    <div class="mrow rv d3"><span class="mnum">04</span><div><h4>Пепперони</h4><p>Томатный соус с прованскими травами и пикантные колбаски пепперони на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
+  <div class="menu-grid">
+    <article class="dish pz rv"><div class="dish-media"><img src="img/dish-pizza-4-syra.jpg" alt="Пицца Четыре сыра" loading="lazy"></div><div class="dish-body"><h4>Четыре сыра</h4><p class="dish-desc">Нежный сливочный соус и большое количество сыра.</p><div class="dish-price">Римское тесто · 20×25</div></div></article>
+    <article class="dish pz rv d1"><div class="dish-media"><img src="img/dish-pizza-alfredo.jpg" alt="Пицца Альфредо" loading="lazy"></div><div class="dish-body"><h4>Альфредо</h4><p class="dish-desc">Сливочный соус, куриное филе су-вид под моцареллой.</p><div class="dish-price">Римское тесто · 20×25</div></div></article>
+    <article class="dish pz rv d2"><div class="dish-media"><img src="img/dish-pizza-grusha.jpg" alt="Пицца Груша и горгонзола" loading="lazy"></div><div class="dish-body"><h4>Груша и горгонзола</h4><p class="dish-desc">Сливочный сыр, сладкая груша и пикантный голубой сыр.</p><div class="dish-price">Римское тесто · 20×25</div></div></article>
+    <article class="dish pz rv d3"><div class="dish-media"><img src="img/dish-pizza-pepperoni.jpg" alt="Пицца Пепперони" loading="lazy"></div><div class="dish-body"><h4>Пепперони</h4><p class="dish-desc">Томатный соус с прованскими травами и пепперони.</p><div class="dish-price">Римское тесто · 20×25</div></div></article>
   </div>
-  <p class="menu-note rv">Полное меню с ценами и фото пиццы — на&nbsp;Яндекс&nbsp;Картах и&nbsp;в&nbsp;заведении. Бронь и&nbsp;заказ — в&nbsp;WhatsApp.</p>
+  <p class="menu-note rv">Актуальные цены и полный список — на&nbsp;Яндекс&nbsp;Картах и&nbsp;в&nbsp;заведении. Бронь и&nbsp;заказ — в&nbsp;WhatsApp.</p>
 </div></section>
 
 <!-- GALLERY (interior slider) -->
