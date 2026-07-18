@@ -95,24 +95,38 @@ body.menu-open .m-menu a:nth-child(1){transition-delay:.06s}body.menu-open .m-me
 .pillar-media img{width:100%; height:100%; object-fit:cover; transition:transform 1.1s var(--ease)}
 .pillar:hover .pillar-media img{transform:scale(1.06)}
 .pillar-media::after{content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(0,0,0,0) 55%,rgba(10,9,8,.75))}
-.pillar-media.icon-only{display:flex; align-items:center; justify-content:center; background:linear-gradient(150deg,#2a2318,#161310)}
-.pillar-media.icon-only::after{display:none}
-.pillar-media.icon-only svg{color:var(--brass); opacity:.9}
+.pillar-media.emblem{display:flex; align-items:center; justify-content:center; background:radial-gradient(120% 120% at 50% 0%,#2b2318,#141110)}
+.pillar-media.emblem::after{display:none}
+.pillar-media.emblem .mono{font-family:"Fraunces",serif; font-weight:700; font-size:5.5rem; color:var(--brass); opacity:.28; line-height:1}
+.pillar-media.emblem .mono-sub{position:absolute; bottom:20px; left:0; right:0; text-align:center; font-size:11px; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:var(--brass-soft); opacity:.75}
 .pillar-tag{position:absolute; top:16px; left:16px; z-index:2; background:rgba(19,17,16,.7); backdrop-filter:blur(6px); border:1px solid rgba(243,236,225,.18); padding:6px 13px; border-radius:999px; font-size:11.5px; font-weight:700; letter-spacing:.04em}
 .pillar-body{padding:24px}
 .pillar-body h3{font-size:1.4rem}
 .pillar-body p{color:var(--muted); font-size:14.5px; margin-top:8px}
 
-/* menu / food */
-.food{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:52px}
-.food-card{background:var(--card); border:1px solid var(--line-2); border-radius:20px; overflow:hidden; box-shadow:var(--shadow-soft); transition:transform .5s var(--ease),box-shadow .5s}
-.food-card:hover{transform:translateY(-3px); box-shadow:var(--shadow-lift)}
-.food-card .fmedia{aspect-ratio:1/1; overflow:hidden}
-.food-card .fmedia img{width:100%; height:100%; object-fit:cover; transition:transform 1s var(--ease)}
-.food-card:hover .fmedia img{transform:scale(1.07)}
-.food-card .fbody{padding:16px 18px 20px}
-.food-card h4{font-family:"Manrope",sans-serif; font-weight:700; font-size:15px}
-.food-card p{color:var(--muted); font-size:13px; margin-top:5px}
+/* menu */
+.menu-cat{display:flex; align-items:baseline; gap:16px; margin:48px 0 20px; padding-bottom:14px; border-bottom:1px solid var(--line)}
+.menu-cat:first-of-type{margin-top:44px}
+.menu-cat-tag{font-family:"Fraunces",serif; font-weight:700; font-size:1.7rem; color:var(--ink)}
+.menu-cat-desc{color:var(--muted); font-size:14px; flex:1}
+.menu-cat-count{font-family:"Fraunces",serif; font-size:1.1rem; color:var(--brass); font-variant-numeric:tabular-nums}
+.menu-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:16px}
+.dish{background:var(--card); border:1px solid var(--line-2); border-radius:18px; overflow:hidden; box-shadow:var(--shadow-soft); transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.dish:hover{transform:translateY(-3px); box-shadow:var(--shadow-lift)}
+.dish-media{aspect-ratio:4/3; overflow:hidden}
+.dish-media img{width:100%; height:100%; object-fit:cover; transition:transform 1s var(--ease)}
+.dish:hover .dish-media img{transform:scale(1.06)}
+.dish-body{padding:14px 16px 16px; display:flex; flex-direction:column; gap:10px; min-height:96px}
+.dish-body h4{font-family:"Manrope",sans-serif; font-weight:700; font-size:14.5px; line-height:1.3; letter-spacing:-.01em}
+.dish-price{margin-top:auto; font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem; color:var(--brass-soft)}
+.menu-list{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+.mrow{display:flex; gap:18px; background:var(--card); border:1px solid var(--line-2); border-radius:18px; padding:22px 24px; transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.mrow:hover{transform:translateY(-2px); box-shadow:var(--shadow-soft)}
+.mrow .mnum{font-family:"Fraunces",serif; font-weight:700; font-size:1.1rem; color:var(--brass); opacity:.5; line-height:1.2; flex:0 0 auto}
+.mrow h4{font-family:"Fraunces",serif; font-weight:700; font-size:1.15rem}
+.mrow p{color:var(--muted); font-size:13.5px; margin-top:7px; line-height:1.5}
+.mrow .msize{display:inline-block; margin-top:10px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--brass-soft); opacity:.85}
+@media(max-width:760px){ .menu-list{grid-template-columns:1fr} }
 
 /* interior slider */
 .slider{overflow:hidden; margin-top:48px; padding-bottom:8px}
@@ -141,13 +155,13 @@ body.menu-open .m-menu a:nth-child(1){transition-delay:.06s}body.menu-open .m-me
 
 /* reviews */
 .reviews{display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:52px}
-.review{background:var(--card); border:1px solid var(--line-2); border-radius:20px; padding:26px; display:flex; flex-direction:column; transition:transform .5s var(--ease),box-shadow .5s}
+.review{position:relative; background:var(--card); border:1px solid var(--line-2); border-radius:20px; padding:28px 26px 24px; display:flex; flex-direction:column; overflow:hidden; transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
 .review:hover{transform:translateY(-3px); box-shadow:var(--shadow-soft)}
-.stars{color:var(--brass); font-size:14px; letter-spacing:2px}
-.review p{color:var(--ink-soft); font-size:14.5px; margin-top:14px; flex:1; line-height:1.55}
-.review .who{margin-top:18px; display:flex; align-items:center; gap:10px}
-.review .av{width:36px; height:36px; flex:0 0 36px; border-radius:999px; background:linear-gradient(150deg,var(--brass),#8a6b28); display:flex; align-items:center; justify-content:center; font-family:"Manrope",sans-serif; font-weight:800; color:#161310; font-size:15px; line-height:1; text-align:center; padding:0}
-.review .who b{font-size:13.5px; font-weight:700} .review .who span{display:block; font-size:11.5px; color:var(--muted)}
+.review .quote{position:absolute; top:8px; right:20px; font-family:"Fraunces",serif; font-weight:700; font-size:5rem; line-height:1; color:var(--brass); opacity:.16; pointer-events:none}
+.stars{color:var(--brass); font-size:14px; letter-spacing:3px; position:relative}
+.review p{color:var(--ink-soft); font-size:14.5px; margin-top:14px; flex:1; line-height:1.55; position:relative}
+.review .who{margin-top:20px; padding-top:16px; border-top:1px solid var(--line-2)}
+.review .who b{display:block; font-size:14px; font-weight:700; font-family:"Fraunces",serif} .review .who span{display:block; font-size:12px; color:var(--muted); margin-top:2px}
 
 /* contact band */
 .band{background:linear-gradient(160deg,#1a1712,#0f0d0b); border:1px solid var(--line-2); border-radius:32px; overflow:hidden; position:relative}
@@ -174,17 +188,20 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
 .fab:hover{transform:scale(1.07)}
 
 @media(max-width:980px){
-  .pillars{grid-template-columns:1fr} .food{grid-template-columns:repeat(2,1fr)}
+  .pillars{grid-template-columns:1fr} .menu-grid{grid-template-columns:repeat(3,1fr)}
   .cowork{grid-template-columns:1fr} .cowork-media{order:-1; max-width:440px}
   .reviews{grid-template-columns:repeat(2,1fr)}
   .band-grid{grid-template-columns:1fr} .band-media{min-height:260px}
 }
+@media(max-width:760px){ .menu-grid{grid-template-columns:repeat(2,1fr)} }
 @media(max-width:640px){
   body{font-size:16px}
   .nav-links,.nav-inner>.btn{display:none} .nav-burger{display:block; margin-left:auto}
   .hero-stats{gap:20px} .hero-stats .st b{font-size:1.5rem}
-  .food,.reviews,.amen{grid-template-columns:1fr}
+  .reviews,.amen{grid-template-columns:1fr}
+  .menu-cat{flex-wrap:wrap; gap:6px 14px} .menu-cat-desc{flex-basis:100%; order:3}
 }
+.menu-note{text-align:center; color:var(--muted); font-size:13.5px; margin-top:40px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none;filter:none}}
 </style>
 </head>
@@ -195,7 +212,7 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
     <a href="#top" class="brand"><span class="mark">B</span>Borisov</a>
     <div class="nav-links">
       <a href="#concept">Пространство</a>
-      <a href="#menu">Кофе и еда</a>
+      <a href="#menu">Меню</a>
       <a href="#cowork">Коворкинг</a>
       <a href="#reviews">Отзывы</a>
       <a href="#contacts">Контакты</a>
@@ -206,11 +223,11 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
   </div>
 </nav>
 <div class="m-menu" id="mmenu">
-  <a href="#concept">Пространство</a><a href="#menu">Кофе и еда</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a>
+  <a href="#concept">Пространство</a><a href="#menu">Меню</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="#contacts">Контакты</a>
 </div>
 
 <header class="hero" id="top">
-  <div class="hero-bg"><img src="img/chandelier.jpg" alt="Хрустальная люстра в лофте Borisov"></div>
+  <div class="hero-bg"><img src="img/hero-food.jpg" alt="Большой завтрак Борисова с лососем"></div>
   <div class="hero-inner"><div class="wrap">
     <span class="eyebrow"><span class="dot"></span>Кофейня · Коворкинг · Костюмы · Уфа</span>
     <h1>Место, где <em>дело, стиль и кофе</em> — под одной крышей</h1>
@@ -238,22 +255,72 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
       <div class="pillar-body"><h3>Кофейня</h3><p>Авторский кофе, брускетты и завтраки. Приветливый персонал и атмосфера, в которую хочется возвращаться.</p></div></article>
     <article class="pillar rv d1"><div class="pillar-media"><span class="pillar-tag">Коворкинг</span><img src="img/cowork-lounge.jpg" alt="Коворкинг-зона Borisov"></div>
       <div class="pillar-body"><h3>Коворкинг</h3><p>Рабочие столы, переговорная с экраном и тихие уголки — можно спокойно поработать или провести встречу.</p></div></article>
-    <article class="pillar rv d2"><div class="pillar-media icon-only"><span class="pillar-tag">Костюмы</span>
-        <svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 21V9l4-4h8l4 4v12M4 9l4 3 4-3 4 3 4-3M12 5v4"/></svg>
+    <article class="pillar rv d2"><div class="pillar-media emblem"><span class="pillar-tag">Костюмы</span>
+        <span class="mono">B</span><span class="mono-sub">Showroom</span>
       </div>
       <div class="pillar-body"><h3>Костюмы</h3><p>Шоурум мужских костюмов рядом с кофейней — стиль и дело решаются в одном месте, без лишних поездок по городу.</p></div></article>
   </div>
 </div></section>
 
-<!-- MENU / FOOD -->
+<!-- MENU -->
 <section class="pad" id="menu" style="background:var(--bg2)"><div class="wrap">
-  <div class="sec-head rv"><span class="kicker">Кофе и еда</span><h2>Кофе с характером, <em>завтраки — с душой</em></h2><p>Латте-арт, свежая брускетта, овсянка с ягодами и сытный скрэмбл — то, ради чего сюда приходят снова и снова.</p></div>
-  <div class="food">
-    <div class="food-card rv"><div class="fmedia"><img src="img/latte.jpg" alt="Латте с рисунком"></div><div class="fbody"><h4>Авторский латте</h4><p>С фирменным рисунком на пенке</p></div></div>
-    <div class="food-card rv d1"><div class="fmedia"><img src="img/bruschetta.jpg" alt="Брускетта с прошутто и яйцом пашот"></div><div class="fbody"><h4>Брускетта</h4><p>Прошутто, яйцо пашот, томаты черри</p></div></div>
-    <div class="food-card rv d2"><div class="fmedia"><img src="img/oatmeal.jpg" alt="Овсянка с ягодами"></div><div class="fbody"><h4>Овсянка на завтрак</h4><p>С гранолой, клубникой и черникой</p></div></div>
-    <div class="food-card rv d3"><div class="fmedia"><img src="img/breakfast.jpg" alt="Тарелка скрэмбл с прошутто"></div><div class="fbody"><h4>Скрэмбл-тарелка</h4><p>Яйца, прошутто, хумус, свежие овощи</p></div></div>
+  <div class="sec-head rv"><span class="kicker">Меню</span><h2>Кофе, завтраки <em>и десерты</em></h2><p>Реальное меню Borisov — авторские напитки, большие завтраки и домашние десерты. Цены актуальны на сайте Яндекс&nbsp;Карт.</p></div>
+  <div class="menu-cat rv"><span class="menu-cat-tag">Напитки</span><span class="menu-cat-desc">Авторский кофе, матча, фреши и лимонады</span><span class="menu-cat-count">21</span></div>
+  <div class="menu-grid">
+    <article class="dish rv"><div class="dish-media"><img src="img/m-espresso-tonik.jpg" alt="Эспрессо тоник" loading="lazy"></div><div class="dish-body"><h4>Эспрессо тоник</h4><div class="dish-price">420 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-filtr-kofe-450-ml.jpg" alt="Фильтр кофе 450 мл" loading="lazy"></div><div class="dish-body"><h4>Фильтр кофе 450 мл</h4><div class="dish-price">340 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-kakao-bez-sahara-350-ml.jpg" alt="Какао без сахара 350 мл" loading="lazy"></div><div class="dish-body"><h4>Какао без сахара 350 мл</h4><div class="dish-price">400 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-raf-kofe-450-ml.jpg" alt="Раф кофе 450 мл" loading="lazy"></div><div class="dish-body"><h4>Раф кофе 450 мл</h4><div class="dish-price">470 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-filtr-kofe-350-ml.jpg" alt="Фильтр кофе 350 мл" loading="lazy"></div><div class="dish-body"><h4>Фильтр кофе 350 мл</h4><div class="dish-price">290 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-bambl-siciliiskii-apelsin.jpg" alt="Бамбл сицилийский апельсин" loading="lazy"></div><div class="dish-body"><h4>Бамбл сицилийский апельсин</h4><div class="dish-price">480 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-amerikano-250-ml.jpg" alt="Американо 250 мл" loading="lazy"></div><div class="dish-body"><h4>Американо 250 мл</h4><div class="dish-price">240 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-raf-kofe-350-ml.jpg" alt="Раф кофе 350 мл" loading="lazy"></div><div class="dish-body"><h4>Раф кофе 350 мл</h4><div class="dish-price">420 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-matcha-latte.jpg" alt="Матча латте" loading="lazy"></div><div class="dish-body"><h4>Матча латте</h4><div class="dish-price">420 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-bambl-fresh.jpg" alt="Бамбл фреш" loading="lazy"></div><div class="dish-body"><h4>Бамбл фреш</h4><div class="dish-price">540 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-kakao-bez-sahara-250-ml.jpg" alt="Какао без сахара 250 мл" loading="lazy"></div><div class="dish-body"><h4>Какао без сахара 250 мл</h4><div class="dish-price">340 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-kakao-bez-sahara-450-ml.jpg" alt="Какао без сахара 450 мл" loading="lazy"></div><div class="dish-body"><h4>Какао без сахара 450 мл</h4><div class="dish-price">450 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-apelsinovyi-fresh.jpg" alt="Апельсиновый фреш" loading="lazy"></div><div class="dish-body"><h4>Апельсиновый фреш</h4><div class="dish-price">480 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-amerikano-350-ml.jpg" alt="Американо 350 мл" loading="lazy"></div><div class="dish-body"><h4>Американо 350 мл</h4><div class="dish-price">270 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-latte-450.jpg" alt="Латте 450" loading="lazy"></div><div class="dish-body"><h4>Латте 450</h4><div class="dish-price">400 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-kapuchino-450.jpg" alt="Капучино 450" loading="lazy"></div><div class="dish-body"><h4>Капучино 450</h4><div class="dish-price">400 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-kapuchino-250.jpg" alt="Капучино 250" loading="lazy"></div><div class="dish-body"><h4>Капучино 250</h4><div class="dish-price">320 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-filtr-kofe-250.jpg" alt="Фильтр кофе 250" loading="lazy"></div><div class="dish-body"><h4>Фильтр кофе 250</h4><div class="dish-price">240 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-latte-350.jpg" alt="Латте 350" loading="lazy"></div><div class="dish-body"><h4>Латте 350</h4><div class="dish-price">360 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-kapuchino-350.jpg" alt="Капучино 350" loading="lazy"></div><div class="dish-body"><h4>Капучино 350</h4><div class="dish-price">360 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-flet-uait.jpg" alt="Флэт уайт" loading="lazy"></div><div class="dish-body"><h4>Флэт уайт</h4><div class="dish-price">320 ₽</div></div></article>
   </div>
+  <div class="menu-cat rv"><span class="menu-cat-tag">Завтрак</span><span class="menu-cat-desc">Плато, большие завтраки, бриоши и каши</span><span class="menu-cat-count">14</span></div>
+  <div class="menu-grid">
+    <article class="dish rv"><div class="dish-media"><img src="img/m-plato-s-proshutto.jpg" alt="Плато с прошутто" loading="lazy"></div><div class="dish-body"><h4>Плато с прошутто</h4><div class="dish-price">1 050 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-syrniki-s-yagodnym-sousom-i-smetan.jpg" alt="Сырники с ягодным соусом и сметаной" loading="lazy"></div><div class="dish-body"><h4>Сырники с ягодным соусом и сметаной</h4><div class="dish-price">690 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-grechnevaya-kasha-s-yaicom-pashot.jpg" alt="Гречневая каша с яйцом пашот" loading="lazy"></div><div class="dish-body"><h4>Гречневая каша с яйцом пашот</h4><div class="dish-price">510 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-bolshoi-zavtrak-borisova-s-kuricei.jpg" alt="Большой завтрак Борисова с курицей" loading="lazy"></div><div class="dish-body"><h4>Большой завтрак Борисова с курицей</h4><div class="dish-price">1 100 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-bolshoi-zavtrak-borisova-s-proshut.jpg" alt="Большой завтрак Борисова с прошутто" loading="lazy"></div><div class="dish-body"><h4>Большой завтрак Борисова с прошутто</h4><div class="dish-price">1 100 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-bolshoi-zavtrak-borisova-s-lososem.jpg" alt="Большой завтрак Борисова с лососем" loading="lazy"></div><div class="dish-body"><h4>Большой завтрак Борисова с лососем</h4><div class="dish-price">1 100 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-plato-s-lososem.jpg" alt="Плато с лососем" loading="lazy"></div><div class="dish-body"><h4>Плато с лососем</h4><div class="dish-price">1 050 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-zelenyi-salat.jpg" alt="Зеленый салат" loading="lazy"></div><div class="dish-body"><h4>Зеленый салат</h4><div class="dish-price">540 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-omlet-s-krevetkami.jpg" alt="Омлет с креветками" loading="lazy"></div><div class="dish-body"><h4>Омлет с креветками</h4><div class="dish-price">950 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-plato-s-kuricei.jpg" alt="Плато с курицей" loading="lazy"></div><div class="dish-body"><h4>Плато с курицей</h4><div class="dish-price">950 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-ovsyanaya-kasha-s-yagodnym-sousom.jpg" alt="Овсяная каша с ягодным соусом" loading="lazy"></div><div class="dish-body"><h4>Овсяная каша с ягодным соусом</h4><div class="dish-price">470 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-briosh-s-lososem.jpg" alt="Бриошь с лососем" loading="lazy"></div><div class="dish-body"><h4>Бриошь с лососем</h4><div class="dish-price">1 200 ₽</div></div></article>
+    <article class="dish rv"><div class="dish-media"><img src="img/m-briosh-s-kuricei.jpg" alt="Бриошь с курицей" loading="lazy"></div><div class="dish-body"><h4>Бриошь с курицей</h4><div class="dish-price">780 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-briosh-s-krevetkami.jpg" alt="Бриошь с креветками" loading="lazy"></div><div class="dish-body"><h4>Бриошь с креветками</h4><div class="dish-price">1 020 ₽</div></div></article>
+  </div>
+  <div class="menu-cat rv"><span class="menu-cat-tag">Десерты</span><span class="menu-cat-desc">Домашние десерты к кофе</span><span class="menu-cat-count">4</span></div>
+  <div class="menu-grid">
+    <article class="dish rv"><div class="dish-media"><img src="img/m-kartoshka-tryufel.jpg" alt="Картошка трюфель" loading="lazy"></div><div class="dish-body"><h4>Картошка трюфель</h4><div class="dish-price">360 ₽</div></div></article>
+    <article class="dish rv d1"><div class="dish-media"><img src="img/m-traifl-kinder.jpg" alt="Трайфл киндер" loading="lazy"></div><div class="dish-body"><h4>Трайфл киндер</h4><div class="dish-price">420 ₽</div></div></article>
+    <article class="dish rv d2"><div class="dish-media"><img src="img/m-kartoshka-kirillovna.jpg" alt="Картошка Кирилловна" loading="lazy"></div><div class="dish-body"><h4>Картошка Кирилловна</h4><div class="dish-price">300 ₽</div></div></article>
+    <article class="dish rv d3"><div class="dish-media"><img src="img/m-chizkeikeskimo.jpg" alt="Чизкейк-эскимо" loading="lazy"></div><div class="dish-body"><h4>Чизкейк-эскимо</h4><div class="dish-price">420 ₽</div></div></article>
+  </div>
+  <div class="menu-cat rv"><span class="menu-cat-tag">Пицца</span><span class="menu-cat-desc">На хрустящем римском тесте, основание 20×25 см</span><span class="menu-cat-count">4</span></div>
+  <div class="menu-list">
+    <div class="mrow rv"><span class="mnum">01</span><div><h4>Четыре сыра</h4><p>Нежный сливочный соус и большое количество сыра на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
+    <div class="mrow rv d1"><span class="mnum">02</span><div><h4>Альфредо</h4><p>Нежный сливочный соус, куриное филе су-вид под моцареллой на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
+    <div class="mrow rv d2"><span class="mnum">03</span><div><h4>Груша и горгонзола</h4><p>Нежный сливочный сыр и сладкая груша в сочетании с пикантным голубым сыром на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
+    <div class="mrow rv d3"><span class="mnum">04</span><div><h4>Пепперони</h4><p>Томатный соус с прованскими травами и пикантные колбаски пепперони на хрустящем римском тесте.</p><span class="msize">Римское тесто · 20×25</span></div></div>
+  </div>
+  <p class="menu-note rv">Полное меню с ценами и фото пиццы — на&nbsp;Яндекс&nbsp;Картах и&nbsp;в&nbsp;заведении. Бронь и&nbsp;заказ — в&nbsp;WhatsApp.</p>
 </div></section>
 
 <!-- GALLERY (interior slider) -->
@@ -295,10 +362,10 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
 <section class="pad" id="reviews"><div class="wrap">
   <div class="sec-head rv"><span class="kicker">Отзывы</span><h2>72 отзыва — <em>говорим за нас</em></h2><p>Настоящие слова гостей Borisov.</p></div>
   <div class="reviews">
-    <div class="review rv"><div class="stars">★★★★★</div><p>«Год назад, после моего возвращения с Бали, когда моё настроение было на нуле, коллеги пригласили меня в это атмосферное место. Еженедельно провожу здесь встречи — персонал открытый и заботливый.»</p><div class="who"><span class="av">О</span><div><b>Оксана М.</b><span>23 июня</span></div></div></div>
-    <div class="review rv d1"><div class="stars">★★★★★</div><p>«Приветливый персонал, вкусное кофе и вкусная еда. Приятная атмосфера, уютно — можно даже спокойно поработать.»</p><div class="who"><span class="av">Н</span><div><b>Надежда Озолина</b><span>19 апреля</span></div></div></div>
-    <div class="review rv d2"><div class="stars">★★★★★</div><p>«Всё отлично. Вежливый персонал. Всегда чисто.»</p><div class="who"><span class="av">К</span><div><b>Карина</b><span>26 апреля</span></div></div></div>
-    <div class="review rv d3"><div class="stars">★★★★★</div><p>«Зачётик. Выступал тут со стендапом.»</p><div class="who"><span class="av">Н</span><div><b>Никита Шумилов</b><span>5 апреля</span></div></div></div>
+    <div class="review rv"><span class="quote">”</span><div class="stars">★★★★★</div><p>«Год назад, после моего возвращения с Бали, когда моё настроение было на нуле, коллеги пригласили меня в это атмосферное место. Еженедельно провожу здесь встречи — персонал открытый и заботливый.»</p><div class="who"><b>Оксана М.</b><span>23 июня</span></div></div>
+    <div class="review rv d1"><span class="quote">”</span><div class="stars">★★★★★</div><p>«Приветливый персонал, вкусное кофе и вкусная еда. Приятная атмосфера, уютно — можно даже спокойно поработать.»</p><div class="who"><b>Надежда Озолина</b><span>19 апреля</span></div></div>
+    <div class="review rv d2"><span class="quote">”</span><div class="stars">★★★★★</div><p>«Всё отлично. Вежливый персонал. Всегда чисто.»</p><div class="who"><b>Карина</b><span>26 апреля</span></div></div>
+    <div class="review rv d3"><span class="quote">”</span><div class="stars">★★★★★</div><p>«Зачётик. Выступал тут со стендапом.»</p><div class="who"><b>Никита Шумилов</b><span>5 апреля</span></div></div>
   </div>
 </div></section>
 
@@ -323,7 +390,7 @@ footer p{color:var(--muted); font-size:14px; margin-top:10px}
 <footer><div class="wrap">
   <a href="#top" class="foot-brand">Borisov</a>
   <p>Кофейня · Коворкинг · Костюмы — ул. Пархоменко, 156А, Уфа</p>
-  <div class="foot-links"><a href="#concept">Пространство</a><a href="#menu">Кофе и еда</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="tel:+79690508578">+7 (969) 050-85-78</a></div>
+  <div class="foot-links"><a href="#concept">Пространство</a><a href="#menu">Меню</a><a href="#cowork">Коворкинг</a><a href="#reviews">Отзывы</a><a href="tel:+79690508578">+7 (969) 050-85-78</a></div>
 </div><div class="foot-rule"></div><p class="copyright">© 2026 Borisov. Все права защищены.</p></footer>
 
 <a class="fab" href="https://wa.me/79174415656" target="_blank" rel="noopener" aria-label="WhatsApp">
